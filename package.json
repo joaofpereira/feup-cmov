@@ -1,0 +1,16 @@
+{
+  "name": "cafeteria",
+  "version": "0.0.0",
+  "main": "./cafeteria-server/app.js",
+  "scripts": {
+    "start": "npm install && node ./cafeteria-server/app.js"
+  },
+  "dependencies": {
+    "body-parser": "~1.15.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "express": "~4.13.4",
+    "serve-favicon": "~2.3.0",
+    "pg":"*"
+  }
+}
