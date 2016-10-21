@@ -9,13 +9,10 @@ var Product = require('./product.js')
 
 var app = express();
 
-var p = new Product('Joao', 1);
-var p2 = new Product('Carlos', 2);
-
-console.log(p.name);
+var p = new Product('batata', 0.6);
+var p2 = new Product('queque', 1.0	);
 
 //db.startDB();
-
 //db.insertProduct(p);
 //db.insertProduct(p2);
 
@@ -39,12 +36,16 @@ function callback(res, obj) {
 	});
 }
 
+
+/**
+*   HTTP GET functions
+*/
 app.get('/', function (req, res) {
 	res.send('Hello World!');
 });
 
-app.get('/api/user', function (req, res) {
-	res.send('Ola user!');
+app.get('/api/user/:username', function (req, res) {
+	db.getProductByUsername(req, res, callback);
 });
 
 app.get('/api/product/:name', function (req, res) {
@@ -53,6 +54,14 @@ app.get('/api/product/:name', function (req, res) {
 
 app.get('/api/products', function (req, res) {
 	db.getProducts(res, callback);
+});
+
+/**
+*   HTTP POST functions
+*/
+
+app.post('/api/register', function(req, res) {
+	db.insertUser(req, res, callback);
 });
 
 app.listen(process.env.PORT || 5000);
