@@ -29,11 +29,34 @@ app.use(bodyParser.urlencoded({
  */
 app.use(bodyParser.json());
 
-function callback(res, obj) {
-	res.json({
-		success: true,
-		data: obj
-	});
+function callback(res, obj, err) {
+	if(err != null) {
+		if(err.constraint == 'users_username_key') {
+			res.json({
+				code: 400,
+				success: false,
+				message: "Username already exists."
+			});
+		} else if(err.constraint == 'users_email_key') {
+			res.json({
+				code: 400,
+				success: false,
+				message: "Email already exists."
+			});
+		} else {
+			res.json({
+				code: 400,
+				success: false,
+				error: err
+			});
+		}
+	} else {
+		res.json({
+			code: 200,
+			success: true,
+			data: obj
+		});
+	}
 }
 
 
