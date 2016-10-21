@@ -50,6 +50,11 @@ function callback(res, obj, err) {
 				error: err
 			});
 		}
+	} else if(obj == null){
+		res.json({
+			code: 404,
+			success: false
+		});
 	} else {
 		res.json({
 			code: 200,
@@ -68,7 +73,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/api/user/:username', function (req, res) {
-	db.getProductByUsername(req, res, callback);
+	db.getUserByUsername(req, res, callback);
 });
 
 app.get('/api/product/:name', function (req, res) {

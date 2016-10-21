@@ -108,9 +108,11 @@ exports.getProductByName = function getProductByName(req, res, callback) {
 	const query = client.query("SELECT * FROM products WHERE products.name='" + name +"'",
 		function(err, result) {
 			if (err) {
-					console.log(err);
+				console.log(err);
+			} else if(result.rows.length == 0){
+				callback(res, null, null);
 			} else {
-					callback(res, result.rows[0], null);
+				callback(res, result.rows[0], null);
 			}
 	});
 	query.on('end', () => { client.end(); });
