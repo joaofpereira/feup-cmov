@@ -1,7 +1,9 @@
-package com.example.joao.cafeteria_client_app;
+package com.example.joao.cafeteria_client_app.Authentication;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.joao.cafeteria_client_app.R;
 
 public class RegisterActivity extends AppCompatActivity {
 

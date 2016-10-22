@@ -1,5 +1,5 @@
 const pg = require('pg');
-const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 
 function initClient() {
 	const client = new pg.Client({
@@ -52,7 +52,7 @@ exports.insertUser= function insertUser(req, res, callback){
 	var client = initClient();
 
 	client.connect();
-	const query = client.query('INSERT INTO users (name, username, email, password, creditcardinfo, hash_pin) VALUES ($1, $2, $3, $4, $5, $6) RETURNING users.id', [user.name, user.username, user.email, crytpVar(user.password), user.creditCardInfo, 000],
+	const query = client.query('INSERT INTO users (name, username, email, password, creditcardinfo, hash_pin) VALUES ($1, $2, $3, $4, $5, $6) RETURNING users.id', [user.name, user.username, user.email, encrypt(user.password), user.creditCardInfo, 000],
 		function(err, result) {
 			if (err) {
 				callback(res, null, err);
@@ -139,7 +139,7 @@ function updateUserHashPin(userID, pin, res, callback) {
 	var client = initClient();
 
 	client.connect();
-	const query = client.query("UPDATE users SET hash_pin='" + crytpVar(pin) + "' WHERE id='" + userID + "' RETURNING *",
+	const query = client.query("UPDATE users SET hash_pin='" + encrypt(pin) + "' WHERE id='" + userID + "' RETURNING *",
 		function(err, result) {
 			if (err) {
 				console.log(err);
@@ -164,7 +164,7 @@ function generatePin () {
     return ("0" + Math.floor(Math.random() * (max - min + 1)) + min).substr(-4);
 }
 
-function crytpVar(elem) {
-	var hash = crypto.createHash('sha1');
-	return hash.update(elem).digest('hex');
+function encrypt(elem) {
+	var salt = bcrypt.genSaltSync(10);
+	return bcrypt.hashSync(elem, salt);
 }

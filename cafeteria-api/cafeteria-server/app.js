@@ -1,7 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var dotenv = require('dotenv');
-var bcrypt = require('bcrypt');
 
 dotenv.load();
 
