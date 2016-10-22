@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_register"
@@ -10,8 +11,174 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.joao.cafeteria_client_app.Authentication.RegisterActivity">
 
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/register_layout">
+
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" >
+
+            <TextView
+                android:text="Register"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/textView"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+        </TableRow>
+
+        <TableRow android:layout_marginTop="50px" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:text="Name"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="#e0e0eb"
+                android:textColor="#003300"
+                android:id="@+id/name_text_view"
+                android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="textPersonName"
+                android:ems="10"
+                android:id="@+id/register_name_field"
+                android:hint="Insert your name" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="30px" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:text="Username"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="#e0e0eb"
+                android:textColor="#003300"
+                android:id="@+id/username_text_view"
+                android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="text"
+                android:ems="10"
+                android:id="@+id/register_username_field"
+                android:hint="Insert your username" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="30px" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:text="Email"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="#e0e0eb"
+                android:textColor="#003300"
+                android:id="@+id/email_text_view"
+                android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:inputType="textEmailAddress"
+                android:ems="10"
+                android:id="@+id/register_email_field"
+                android:hint="Insert your email"/>
+
+        </TableRow>
+
+        <TableRow android:layout_marginTop="30px" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:text="Password"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="#e0e0eb"
+                android:textColor="#003300"
+                android:id="@+id/password_text_view"
+                android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="textPassword"
+                android:ems="10"
+                android:id="@+id/register_password_field"
+                android:hint="Insert your password" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="30px" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <TextView
+                android:text="Credit Card"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:background="#e0e0eb"
+                android:textColor="#003300"
+                android:id="@+id/credit_card_text_view"
+                android:textAppearance="@style/TextAppearance.AppCompat.Menu" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:inputType="number"
+                android:ems="10"
+                android:id="@+id/register_credit_card_field"
+                android:hint="Insert your credit card" />
+        </TableRow>
+
+        <TableRow android:layout_marginTop="70px" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal" >
+
+            <Button
+                android:text="Apply"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/register_apply_button" />
+        </TableRow>
+
+    </TableLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
+        android:id="@+id/product_name" />
 </RelativeLayout>
