@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import com.example.joao.cafeteria_client_app.API.CafeteriaRestClientUsage;
 import com.example.joao.cafeteria_client_app.R;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 
@@ -35,8 +36,16 @@ public class RegisterActivity extends AppCompatActivity {
         {
             public void onClick(View v)
             {
+                RequestParams params = new RequestParams();
+
+                params.put("name", name_field.getText().toString());
+                params.put("username", username_field.getText().toString());
+                params.put("email", email_field.getText().toString());
+                params.put("password", password_field.getText().toString());
+                params.put("creditCardInfo", creditCardInfo_field.getText());
+
                 try {
-                    CafeteriaRestClientUsage.getProduct("batata");
+                    CafeteriaRestClientUsage.register(params);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
