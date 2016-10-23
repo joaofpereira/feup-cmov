@@ -1,4 +1,4 @@
-package com.example.joao.cafeteria_client_app.Authentication;
+package com.example.joao.cafeteria_client_app.Cafeteria;
 
 import java.util.UUID;
 
@@ -19,14 +19,19 @@ public class User {
         this.creditCardInfo = creditCardInfo;
     }
 
-    public String toString() {
-        return "User\nUuid: " + this.uuid +"\nName: " + this.name + "\nUsername: " + this.username + "\nEmail: " + this.email + "\nHash_pin: " + this.hash_pin + "\nCreditCardInfo: " + this.creditCardInfo + "\n";
+    public UUID getID() {
+        return this.uuid;
     }
 
-    public UUID getID(){
-        return uuid;
+    public String getName() {
+        return this.name;
     }
-    public String getHash_pin(){
-        return hash_pin;
+
+    public String getHash_pin() {
+        return this.hash_pin;
+    }
+
+    public String toString() {
+        return "User\nUUID: " + this.uuid.toString() +"\nName: " + this.name + "\nUsername: " + this.username + "\nEmail: " + this.email + "\nHash_pin: " + this.hash_pin + "\nCreditCardInfo: " + this.creditCardInfo + "\n";
     }
 }
