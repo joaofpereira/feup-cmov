@@ -1,7 +1,9 @@
 package com.example.joao.cafeteria_client_app.Authentication;
 
-import android.support.v7.app.AppCompatActivity;
+
+import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +21,8 @@ public class RegisterActivity extends AppCompatActivity {
     EditText name_field = null, username_field = null, email_field = null, password_field = null, creditCardInfo_field = null;
     Button register_apply = null;
 
+    Activity registerActivity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         register_apply = (Button) findViewById(R.id.register_apply_button);
 
+        registerActivity = this;
         register_apply.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
@@ -45,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
                 params.put("creditCardInfo", creditCardInfo_field.getText());
 
                 try {
-                    CafeteriaRestClientUsage.register(params);
+                    CafeteriaRestClientUsage.register( registerActivity, params);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
