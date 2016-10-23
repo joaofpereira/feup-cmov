@@ -16,7 +16,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class CafeteriaRestClientUsage {
 
-    public static void register(final Activity activity,RequestParams params) throws JSONException {
+    public static void register(final Activity activity, RequestParams params) throws JSONException {
 
         CafeteriaRestClient.post("register/", params, new JsonHttpResponseHandler() {
             @Override
@@ -32,7 +32,7 @@ public class CafeteriaRestClientUsage {
                     Log.i("", user.toString() + "\nPin: " + pin + "\n");
                     Log.i("uuid: ", user.getID().toString() + "\nPin: " + user.getHash_pin() + "\n");
 
-                    SharedPreferences sp = activity.getSharedPreferences("credentials", Activity.MODE_PRIVATE);
+                    SharedPreferences sp = activity.getSharedPreferences("com.example.joao.cafeteria_client_app", Activity.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString("uuid", user.getID().toString());
                     editor.putString("hash_pin", user.getHash_pin());

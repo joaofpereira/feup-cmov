@@ -37,6 +37,7 @@ public class RegisterActivity extends AppCompatActivity {
         register_apply = (Button) findViewById(R.id.register_apply_button);
 
         registerActivity = this;
+
         register_apply.setOnClickListener(new View.OnClickListener()
         {
             public void onClick(View v)
