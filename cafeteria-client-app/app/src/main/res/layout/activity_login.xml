@@ -2,7 +2,7 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/register_layout"
+    android:id="@+id/login_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context="com.example.joao.cafeteria_client_app.Authentication.RegisterActivity">
+        tools:context="com.example.joao.cafeteria_client_app.Authentication.LoginActivity">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/register_content" />
+        <include layout="@layout/login_content" />
 
     </android.support.design.widget.CoordinatorLayout>
 

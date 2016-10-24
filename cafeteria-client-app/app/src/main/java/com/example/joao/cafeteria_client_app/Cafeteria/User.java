@@ -1,8 +1,9 @@
 package com.example.joao.cafeteria_client_app.Cafeteria;
 
+import java.io.Serializable;
 import java.util.UUID;
 
-public class User {
+public class User implements Serializable {
     private UUID uuid;
     private String name;
     private String username;
