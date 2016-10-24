@@ -28,7 +28,7 @@ public class CafeteriaRestClientUsage {
                     JSONObject userJSON = data.getJSONObject("user");
 
                     User user = new User(UUID.fromString(userJSON.getString("id")), userJSON.getString("name"), userJSON.getString("username"), userJSON.getString("email"), userJSON.getString("hash_pin"), userJSON.getString("creditcardinfo"));
-                    int pin = data.getInt("pin");
+                    String pin = data.getString("pin");
 
                     register.onRegisterCompleted(pin, user);
 

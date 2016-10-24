@@ -2,6 +2,7 @@ package com.example.joao.cafeteria_client_app.Authentication;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +28,7 @@ public class RegisterActivity extends AppCompatActivity implements Callback{
     RegisterActivity registerActivity;
     SharedPreferences sharedPreferences;
 
-    int pin;
+    String pin;
     User user;
 
     @Override
@@ -74,13 +75,18 @@ public class RegisterActivity extends AppCompatActivity implements Callback{
     }
 
     @Override
-    public void onRegisterCompleted(int pin, User user) {
+    public void onRegisterCompleted(String pin, User user) {
         this.pin = pin;
         this.user = user;
 
         Log.i("", this.user.toString() + "\nPin: " + this.pin + "\n");
 
         saveSharedPreferences();
+
+        Intent intent = new Intent(registerActivity, ShowPinActivity.class);
+        intent.putExtra("pin", this.pin);
+
+        startActivity(intent);
     }
 
     private void saveSharedPreferences() {
