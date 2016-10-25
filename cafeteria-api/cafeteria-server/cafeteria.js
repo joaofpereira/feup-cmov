@@ -54,8 +54,9 @@ function createTableProducts() {
 	const query = client.query(
 		'DROP TABLE IF EXISTS products;' +
 		'CREATE TABLE products (' +
-		'id UUID PRIMARY KEY DEFAULT gen_random_uuid(),'+
-		'name VARCHAR(120) not null, '+
+		'id SERIAL PRIMARY KEY not null,' +
+		'name VARCHAR(120) not null,' +
+		'keyword VARCHAR(20) not null unique,' +
 		'price FLOAT not null)');
 
 	query.on('end', () => { client.end(); });
@@ -101,7 +102,7 @@ exports.insertProduct = function insertProduct(product){
 	var client = initClient();
 
 	client.connect();
-	const query = client.query('INSERT INTO products (name, price) VALUES ($1, $2) RETURNING *', [product.name, product.price],
+	const query = client.query('INSERT INTO products (name, keyword, price) VALUES ($1, $2, $3) RETURNING *', [product.name, product.keyword, product.price],
 		function(err, result) {
 			if (err) {
 					console.log(err);
