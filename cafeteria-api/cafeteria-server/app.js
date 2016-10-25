@@ -12,7 +12,7 @@ var app = express();
 var p = new Product('Batata Portugal', 0.6);
 var p2 = new Product('Leite Agros', 1.0);
 
-db.startDB();
+//db.startDB();
 //db.insertProduct(p);
 //db.insertProduct(p2);
 
