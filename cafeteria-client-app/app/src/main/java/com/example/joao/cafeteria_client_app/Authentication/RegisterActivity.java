@@ -91,7 +91,10 @@ public class RegisterActivity extends AppCompatActivity implements Callback, Nav
                 params.put("username", input_username.getText().toString());
                 params.put("email", input_email.getText().toString());
                 params.put("password", input_password.getText().toString());
-                params.put("creditCardInfo", creditCardForm.getCreditCard());
+                params.put("creditCardNumber", creditCardForm.getCreditCard().getCardNumber());
+                params.put("securityCode", creditCardForm.getCreditCard().getSecurityCode());
+                params.put("expMonth", creditCardForm.getCreditCard().getExpMonth().toString());
+                params.put("expUser", creditCardForm.getCreditCard().getExpYear().toString());
 
                 try {
                     CafeteriaRestClientUsage.register(registerActivity, params);

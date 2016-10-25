@@ -13,6 +13,22 @@ function initClient() {
 	return client;
 }
 
+function createTableCreditCards() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'DROP TABLE IF EXISTS creditcards CASCADE;' +
+		'CREATE TABLE creditcards (' +
+		'id SERIAL PRIMARY KEY not null,'+
+		'cardNumber VARCHAR(16) not null,' +
+		'securityCode VARCHAR(3) not null,' +
+		'expMonth VARCHAR(2) not null,' +
+		'expYear VARCHAR(2) not null)');
+
+	query.on('end', () => { client.end(); });
+}
+
 function createTableUsers() {
 	var client = initClient();
 
@@ -25,7 +41,7 @@ function createTableUsers() {
 		'username VARCHAR(120) not null unique,' +
 		'email VARCHAR(120) not null unique, '+
 		'password VARCHAR(120) not null, '+
-		'creditCardInfo VARCHAR(16) not null, '+
+		'creditcard INT references creditcards(id),'+
 		'hash_pin TEXT not null)');
 
 	query.on('end', () => { client.end(); });
@@ -45,20 +61,36 @@ function createTableProducts() {
 	query.on('end', () => { client.end(); });
 }
 
-exports.insertUser= function insertUser(req, res, callback){
+exports.insertCreditCard= function insertCreditCard(req, res, callbackInsertUser){
 
-	var user = req.body;
-	console.log(user);
+	var creditcard = req.body;
 	var client = initClient();
 
 	client.connect();
-	const query = client.query('INSERT INTO users (name, username, email, password, creditcardinfo, hash_pin) VALUES ($1, $2, $3, $4, $5, $6) RETURNING users.id', [user.name, user.username, user.email, encrypt(user.password), user.creditCardInfo, 000],
+	const query = client.query('INSERT INTO creditcards (cardNumber, securityCode, expMonth, expYear) VALUES ($1, $2, $3, $4) RETURNING *', [creditcard.cardNumber, creditcard.securityCode, creditcard.expMonth, creditcard.expYear],
+		function(err, result) {
+			if (err) {
+				callbackInsertUser(res, null, err);
+			} else {
+				callbackInsertUser(req, res, result.rows[0], null);
+			}
+		});
+	query.on('end', () => { client.end(); });
+}
+
+exports.insertUser= function insertUser(req, res, creditCard, callback){
+
+	var user = req.body;
+	var client = initClient();
+
+	client.connect();
+	const query = client.query('INSERT INTO users (name, username, email, password, creditcard, hash_pin) VALUES ($1, $2, $3, $4, $5, $6) RETURNING users.id', [user.name, user.username, user.email, encrypt(user.password), creditCard.id, 000],
 		function(err, result) {
 			if (err) {
 				callback(res, null, err);
 			} else {
 				var pin = generatePin();
-				updateUserHashPin(result.rows[0].id, pin, res, callback);
+				updateUserHashPin(result.rows[0].id, pin, creditCard, res, callback);
 			}
 		});
 	query.on('end', () => { client.end(); });
@@ -135,7 +167,7 @@ exports.getProducts = function getProducts(res, callback) {
 	query.on('end', () => { client.end(); });
 }
 
-function updateUserHashPin(userID, pin, res, callback) {
+function updateUserHashPin(userID, pin, creditCard, res, callback) {
 	var client = initClient();
 
 	client.connect();
@@ -146,7 +178,8 @@ function updateUserHashPin(userID, pin, res, callback) {
 			} else {
 				callback(res, {
 					'user': result.rows[0],
-					'pin': pin
+					'pin': pin,
+					'creditCard': creditCard
 				}, null);
 			}
 	});
@@ -154,6 +187,7 @@ function updateUserHashPin(userID, pin, res, callback) {
 }
 
 exports.startDB = function startDB() {
+	createTableCreditCards();
 	createTableUsers();
 	createTableProducts();
 }

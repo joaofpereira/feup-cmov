@@ -12,7 +12,7 @@ var app = express();
 var p = new Product('batata', 0.6);
 var p2 = new Product('queque', 1.0	);
 
-//db.startDB();
+db.startDB();
 //db.insertProduct(p);
 //db.insertProduct(p2);
 
@@ -64,6 +64,9 @@ function callback(res, obj, err) {
 	}
 }
 
+function callbackInsertUser(req, res, creditCard, err) {
+	db.insertUser(req, res, creditCard, callback);
+}
 
 /**
 *   HTTP GET functions
@@ -89,7 +92,11 @@ app.get('/api/products', function (req, res) {
 */
 
 app.post('/api/register', function(req, res) {
-	db.insertUser(req, res, callback);
+	db.insertCreditCard(req, res, callbackInsertUser);
+});
+
+app.post('/api/creditcard', function(req, res) {
+	db.insertCreditCard(req, res, callback);
 });
 
 app.listen(process.env.PORT || 5000);
