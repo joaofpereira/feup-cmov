@@ -56,7 +56,7 @@ function createTableProducts() {
 		'CREATE TABLE products (' +
 		'id SERIAL PRIMARY KEY not null,' +
 		'name VARCHAR(120) not null,' +
-		'keyword VARCHAR(20) not null unique,' +
+		'keyword VARCHAR(100) not null unique,' +
 		'price FLOAT not null)');
 
 	query.on('end', () => { client.end(); });
