@@ -1,7 +1,5 @@
 package com.example.joao.cafeteria_client_app.API;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import org.json.*;

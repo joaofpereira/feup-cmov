@@ -18,7 +18,7 @@ function createTableCreditCards() {
 
 	client.connect();
 	const query = client.query(
-		'DROP TABLE IF EXISTS creditcards CASCADE;' +
+		'DROP TABLE creditcards CASCADE;' +
 		'CREATE TABLE creditcards (' +
 		'id SERIAL PRIMARY KEY not null,'+
 		'cardNumber VARCHAR(16) not null,' +
@@ -41,7 +41,7 @@ function createTableUsers() {
 		'username VARCHAR(120) not null unique,' +
 		'email VARCHAR(120) not null unique, '+
 		'password VARCHAR(120) not null, '+
-		'creditcard INT references creditcards(id),'+
+		'creditcard INTEGER references creditcards(id),'+
 		'hash_pin TEXT not null)');
 
 	query.on('end', () => { client.end(); });
