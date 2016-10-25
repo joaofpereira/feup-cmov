@@ -56,7 +56,6 @@ function createTableProducts() {
 		'CREATE TABLE products (' +
 		'id SERIAL PRIMARY KEY not null,' +
 		'name VARCHAR(120) not null,' +
-		'keyword VARCHAR(100) not null unique,' +
 		'price FLOAT not null)');
 
 	query.on('end', () => { client.end(); });
@@ -102,7 +101,7 @@ exports.insertProduct = function insertProduct(product){
 	var client = initClient();
 
 	client.connect();
-	const query = client.query('INSERT INTO products (name, keyword, price) VALUES ($1, $2, $3) RETURNING *', [product.name, product.keyword, product.price],
+	const query = client.query("INSERT INTO products (name, price) VALUES ($1, $2) RETURNING *", [product.name, product.price],
 		function(err, result) {
 			if (err) {
 					console.log(err);

@@ -9,8 +9,8 @@ var Product = require('./product.js')
 
 var app = express();
 
-var p = new Product('Batata Portugal', 'potato_portuguese', 0.6);
-var p2 = new Product('Leite Agros', 'milk_agros', 1.0);
+var p = new Product('Batata Portugal', 0.6);
+var p2 = new Product('Leite Agros', 1.0);
 
 db.startDB();
 //db.insertProduct(p);
