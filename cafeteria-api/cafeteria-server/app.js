@@ -12,7 +12,7 @@ var app = express();
 var p = new Product('Batata Portugal', 0.6);
 var p2 = new Product('Leite Agros', 1.0);
 
-db.startDB();
+//db.startDB();
 //db.insertProduct(p);
 //db.insertProduct(p2);
 
@@ -39,13 +39,13 @@ function callback(res, obj, err) {
 			});
 		} else if(err.constraint == 'users_email_key') {
 			res.json({
-				code: 400,
+				code: 401,
 				success: false,
 				message: "Email already exists."
 			});
 		} else {
 			res.json({
-				code: 400,
+				code: 403,
 				success: false,
 				error: err
 			});

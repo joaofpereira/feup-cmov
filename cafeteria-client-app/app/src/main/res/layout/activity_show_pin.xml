@@ -11,11 +11,33 @@
     tools:context="com.example.joao.cafeteria_client_app.Authentication.ShowPinActivity">
 
     <TextView
-        android:text="Ola Mundo"
+        android:text="Your personal pin is"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="90dp"
-        android:id="@+id/show_pin_id" />
+        android:id="@+id/show_pin_message"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+    <TextView
+        android:text="Pin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/show_pin_id"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="150dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+    <Button
+        android:text="Ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/show_pin_id"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="52dp"
+        android:id="@+id/show_pin_btn_id"
+        android:elevation="0dp"
+        android:visibility="visible" />
 </RelativeLayout>
