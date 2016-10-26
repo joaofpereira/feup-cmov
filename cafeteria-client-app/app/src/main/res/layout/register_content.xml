@@ -9,6 +9,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.joao.cafeteria_client_app.Authentication.RegisterActivity"
     tools:showIn="@layout/app_bar">
@@ -45,7 +47,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Name"
-                    android:inputType="textCapWords" />
+                    android:inputType="textCapWords"/>
             </android.support.design.widget.TextInputLayout>
 
             <!--  Username Label -->
@@ -133,6 +135,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:gravity="center"
+                android:textColor="#0000FF"
                 android:text="Already a member? Login"
                 android:textSize="16dip" />
 

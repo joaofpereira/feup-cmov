@@ -23,6 +23,7 @@ import com.devmarvel.creditcardentry.library.CreditCardForm;
 import com.example.joao.cafeteria_client_app.API.CafeteriaRestClientUsage;
 import com.example.joao.cafeteria_client_app.Cafeteria.User;
 import com.example.joao.cafeteria_client_app.R;
+import com.google.gson.Gson;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
@@ -178,9 +179,15 @@ public class RegisterActivity extends AppCompatActivity implements Callback, Nav
 
     private void saveSharedPreferences() {
         sharedPreferences = getSharedPreferences("com.example.joao.cafeteria_client_app", Activity.MODE_PRIVATE);
+
+        Gson gson = new Gson();
+        String user = gson.toJson(this.user);
+
+        Log.i("USER JSON: ", user);
+
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("uuid", user.getID().toString());
-        editor.putString("hash_pin", user.getHash_pin());
+        editor.putString("user", user);
+        editor.putString("pin", this.pin);
         editor.apply();
     }
 

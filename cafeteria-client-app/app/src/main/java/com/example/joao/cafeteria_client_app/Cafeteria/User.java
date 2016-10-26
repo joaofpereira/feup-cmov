@@ -27,6 +27,10 @@ public class User implements Serializable {
         return this.name;
     }
 
+    public String getEmail() {
+        return this.email;
+    }
+
     public String getHash_pin() {
         return this.hash_pin;
     }

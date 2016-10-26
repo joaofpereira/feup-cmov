@@ -9,6 +9,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.joao.cafeteria_client_app.Authentication.LoginActivity"
     tools:showIn="@layout/app_bar">
@@ -60,7 +62,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Pin"
-                    android:inputType="number" />
+                    android:inputType="numberPassword" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.v7.widget.AppCompatButton
@@ -77,6 +79,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
+                android:textColor="#0000FF"
                 android:gravity="center"
                 android:text="No account yet? Create one"
                 android:textSize="16dip" />
