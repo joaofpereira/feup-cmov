@@ -5,7 +5,9 @@ import android.util.Log;
 import org.json.*;
 
 import com.example.joao.cafeteria_client_app.Authentication.RegisterActivity;
+import com.example.joao.cafeteria_client_app.Cafeteria.Product;
 import com.example.joao.cafeteria_client_app.Cafeteria.User;
+import com.example.joao.cafeteria_client_app.Shop.ProductActivity;
 import com.loopj.android.http.*;
 
 import java.util.UUID;
@@ -61,6 +63,26 @@ public class CafeteriaRestClientUsage {
                     String name = data.getString("name");
 
                     Log.i("", "Name: of product:" + name);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    public static void getAllProduct(final ProductActivity product) throws JSONException {
+
+        CafeteriaRestClient.get("products", null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+                try {
+                    JSONArray productJSON = response.getJSONArray("data");
+
+                    Log.i("", productJSON.toString());
+
+
 
                 } catch (JSONException e) {
                     e.printStackTrace();
