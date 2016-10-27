@@ -50,9 +50,9 @@ public class ProductActivity extends AppCompatActivity implements NavigationView
 
 
 
-        quantity = (EditText) findViewById(R.id.input_email);
-        add_to_cart_button = (Button) findViewById(R.id.btn_login);
-        _price = (TextView) findViewById(R.id.link_signup);
+        quantity = (EditText) findViewById(R.id.input_quantity);
+        add_to_cart_button = (Button) findViewById(R.id.btn_addToCart);
+        _price = (TextView) findViewById(R.id.price);
 
         productActivity= this;
 

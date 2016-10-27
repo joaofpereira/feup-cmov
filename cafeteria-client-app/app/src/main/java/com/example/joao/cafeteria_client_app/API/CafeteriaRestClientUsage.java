@@ -78,9 +78,11 @@ public class CafeteriaRestClientUsage {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
 
                 try {
+
                     JSONArray productJSON = response.getJSONArray("data");
 
                     Log.i("", productJSON.toString());
+
 
 
 
