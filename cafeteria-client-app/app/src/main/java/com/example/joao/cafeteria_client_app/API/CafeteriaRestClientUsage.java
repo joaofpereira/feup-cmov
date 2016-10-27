@@ -71,7 +71,7 @@ public class CafeteriaRestClientUsage {
         });
     }
 
-    public static void getAllProduct(final ProductActivity product) throws JSONException {
+    public static void getAllProduct(final ProductActivity productActivity) throws JSONException {
 
         CafeteriaRestClient.get("products", null, new JsonHttpResponseHandler() {
             @Override
@@ -82,6 +82,16 @@ public class CafeteriaRestClientUsage {
                     JSONArray productJSON = response.getJSONArray("data");
 
                     Log.i("", productJSON.toString());
+
+
+                    for (int i = 0; i < productJSON.length(); i++) {
+                        JSONObject jsonProductObject = productJSON.getJSONObject(i);
+
+                        Product prod = new Product(UUID.fromString(jsonProductObject.getString("id")),jsonProductObject.getString("name"),Float.parseFloat(jsonProductObject.getString("price")));
+
+
+                        productActivity.add_To_Prod_list(prod);
+                    }
 
 
 

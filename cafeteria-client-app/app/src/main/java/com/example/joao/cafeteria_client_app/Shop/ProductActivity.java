@@ -37,6 +37,8 @@ import java.util.ArrayList;
 
 public class ProductActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+
+
     ArrayList<Product> prod_list;
     Button add_to_cart_button;
     TextView _price;
@@ -46,7 +48,7 @@ public class ProductActivity extends AppCompatActivity implements NavigationView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_products);
 
 
 
@@ -77,7 +79,7 @@ public class ProductActivity extends AppCompatActivity implements NavigationView
         });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.products_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+      /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
@@ -85,8 +87,8 @@ public class ProductActivity extends AppCompatActivity implements NavigationView
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-
+*/
+/*
         add_to_cart_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,9 +96,9 @@ public class ProductActivity extends AppCompatActivity implements NavigationView
               * TO-DO
               *
               *
-              * */
+              *
             }
-        });
+        });*/
 
     }
 
@@ -167,5 +169,17 @@ public class ProductActivity extends AppCompatActivity implements NavigationView
     private void removeInputTextError(EditText ed) {
         ed.setError(null);
         ed.setTextColor(Color.parseColor("#000000"));
+    }
+
+    public ArrayList<Product> getProd_list() {
+        return prod_list;
+    }
+
+    public void setProd_list(ArrayList<Product> prod_list) {
+        this.prod_list = prod_list;
+    }
+
+    public void add_To_Prod_list(Product prod) {
+        this.prod_list.add(prod);
     }
 }
