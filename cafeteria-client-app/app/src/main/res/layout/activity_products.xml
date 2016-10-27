@@ -14,7 +14,7 @@ tools:openDrawer="start">
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.joao.cafeteria_client_app.Authentication.ProductActivity">
+    tools:context="com.example.joao.cafeteria_client_app.Cafeteria.ProductActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@ tools:openDrawer="start">
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/login_content" />
+    <include layout="@layout/products_content" />
 
 </android.support.design.widget.CoordinatorLayout>
 

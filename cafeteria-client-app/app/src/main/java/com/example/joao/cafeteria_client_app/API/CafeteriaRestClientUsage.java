@@ -4,18 +4,45 @@ import android.util.Log;
 
 import org.json.*;
 
+import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
 import com.example.joao.cafeteria_client_app.Authentication.RegisterActivity;
 import com.example.joao.cafeteria_client_app.Cafeteria.Product;
 import com.example.joao.cafeteria_client_app.Cafeteria.User;
-import com.example.joao.cafeteria_client_app.Shop.ProductActivity;
+import com.example.joao.cafeteria_client_app.Cafeteria.ProductActivity;
 import com.loopj.android.http.*;
 
 import java.util.UUID;
 
 import cz.msebera.android.httpclient.Header;
 
-
 public class CafeteriaRestClientUsage {
+
+    public static void login(final LoginActivity login, RequestParams params) throws JSONException {
+
+        CafeteriaRestClient.post("login/", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    int code = response.getInt("code");
+
+                    if (code == 200) {
+
+
+                    } else {
+
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("ERROR: ", responseString + "\nStatusCode: " + statusCode + "\n");
+            }
+        });
+    }
 
     public static void register(final RegisterActivity register, RequestParams params) throws JSONException {
 
@@ -102,5 +129,4 @@ public class CafeteriaRestClientUsage {
             }
         });
     }
-
 }

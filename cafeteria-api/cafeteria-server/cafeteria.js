@@ -112,16 +112,17 @@ exports.insertProduct = function insertProduct(product){
 	query.on('end', () => { client.end(); });
 }
 
-exports.getUserByUsername = function getUserByUsername(req, res, callback) {
+exports.getUserByEmail = function getUserByEmail(req, res, callback) {
 	var client = initClient();
 
-	var username = req.params['username'];
+	var username = req.params['email'];
+	var pin = req.params['pin'];
 
 	client.connect();
-	const query = client.query("SELECT * FROM users WHERE users.username='" + username +"'",
+	const query = client.query("SELECT * FROM users WHERE users.username='" + username +"' AND users.hash_pin='" + encrypt(pin) + "' RETURNING *",
 		function(err, result) {
 			if (err) {
-					console.log(err);
+					callback(res, null, err);
 			} else {
 					callback(res, result.rows[0], null);
 			}

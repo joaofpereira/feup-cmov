@@ -24,10 +24,10 @@
 
         </activity>
         <activity
-            android:name=".Shop.ProductActivity"
+            android:name=".Cafeteria.ProductActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
+            <intent-filter android:label="@string/app_name">
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
