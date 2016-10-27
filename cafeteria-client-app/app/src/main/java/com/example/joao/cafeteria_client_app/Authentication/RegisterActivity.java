@@ -29,7 +29,7 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 
 
-public class RegisterActivity extends AppCompatActivity implements Callback, NavigationView.OnNavigationItemSelectedListener {
+public class RegisterActivity extends AppCompatActivity implements Callback {
 
     EditText input_name = null, input_username = null, input_email = null, input_password = null;
     CreditCardForm creditCardForm;
@@ -74,13 +74,13 @@ public class RegisterActivity extends AppCompatActivity implements Callback, Nav
         });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.register_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        navigationView.setNavigationItemSelectedListener(this);*/
 
         registerActivity = this;
 
@@ -126,7 +126,7 @@ public class RegisterActivity extends AppCompatActivity implements Callback, Nav
     }
 
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    /*@SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -149,7 +149,7 @@ public class RegisterActivity extends AppCompatActivity implements Callback, Nav
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.register_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
+    }*/
 
     @Override
     public void onRegisterCompleted(String pin, User user) {
