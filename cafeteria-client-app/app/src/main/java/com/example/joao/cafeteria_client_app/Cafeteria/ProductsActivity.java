@@ -9,23 +9,32 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.joao.cafeteria_client_app.API.CafeteriaRestClientUsage;
 import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
 import com.example.joao.cafeteria_client_app.R;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
 public class ProductsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    ArrayList<Product> prod_list;
+    ArrayList<Product> productsList;
+    ProductsAdapter productsAdapter;
+
     Button add_to_cart_button;
     TextView _price;
     EditText quantity;
+    RecyclerView recyclerView;
 
     ProductsActivity productsActivity;
     SharedPreferences sharedPreferences;
@@ -37,30 +46,12 @@ public class ProductsActivity extends AppCompatActivity implements NavigationVie
 
         sharedPreferences = getSharedPreferences("com.example.joao.cafeteria_client_app", Activity.MODE_PRIVATE);
 
-        quantity = (EditText) findViewById(R.id.input_quantity);
-        add_to_cart_button = (Button) findViewById(R.id.btn_addToCart);
-        _price = (TextView) findViewById(R.id.price);
-
         productsActivity = this;
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        /*try {
-            CafeteriaRestClientUsage.getAllProduct(productsActivity);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
-
-        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
+        recyclerView = (RecyclerView) findViewById(R.id.products_list_id);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.products_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -70,18 +61,19 @@ public class ProductsActivity extends AppCompatActivity implements NavigationVie
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-/*
-        add_to_cart_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              /*
-              * TO-DO
-              *
-              *
-              *
-            }
-        });*/
 
+        productsAdapter = new ProductsAdapter(productsList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(productsAdapter);
+
+
+        try {
+            CafeteriaRestClientUsage.getProducts(productsActivity);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -124,14 +116,6 @@ public class ProductsActivity extends AppCompatActivity implements NavigationVie
     }
 
     public ArrayList<Product> getProd_list() {
-        return prod_list;
-    }
-
-    public void setProd_list(ArrayList<Product> prod_list) {
-        this.prod_list = prod_list;
-    }
-
-    public void add_To_Prod_list(Product prod) {
-        this.prod_list.add(prod);
+        return productsList;
     }
 }

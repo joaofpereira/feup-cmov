@@ -183,9 +183,9 @@ exports.getProducts = function getProducts(res, callback) {
 		function(err, result) {
 			client.end();
 			if (err) {
-					console.log(err);
+					callback(res, null, err);
 			} else {
-					callback(res, result.rows, null);
+					callback(res, {'products': result.rows}, null);
 			}
 	});
 }
