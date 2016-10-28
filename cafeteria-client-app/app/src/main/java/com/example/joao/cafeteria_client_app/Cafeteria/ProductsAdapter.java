@@ -14,16 +14,16 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
     private List<Product> productsList;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView title, year, genre;
+        public TextView name;
 
         public MyViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.product_name);
+            name = (TextView) view.findViewById(R.id.product_name);
         }
     }
 
-    public ProductsAdapter(List<Product> moviesList) {
-        this.productsList = moviesList;
+    public ProductsAdapter(List<Product> productsList) {
+        this.productsList = productsList;
     }
 
     @Override
@@ -36,8 +36,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Product movie = productsList.get(position);
-        holder.title.setText(movie.getName());
+        Product product = productsList.get(position);
+        holder.name.setText(product.getName());
     }
 
     @Override

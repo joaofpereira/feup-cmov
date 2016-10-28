@@ -210,8 +210,8 @@ function updateUserHashPin(userID, pin, creditCard, res, callback) {
 }
 
 exports.startDB = function startDB() {
-	createTableCreditCards();
-	createTableUsers();
+	//createTableCreditCards();
+	//createTableUsers();
 	createTableProducts();
 }
 

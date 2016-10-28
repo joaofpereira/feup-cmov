@@ -11,10 +11,20 @@ var app = express();
 
 var p = new Product('Batata Portugal', 0.6);
 var p2 = new Product('Leite Agros', 1.0);
+var p3 = new Product('Lanche', 1.0);
+var p4 = new Product('Café', 0.6);
+var p5 = new Product('Mista', 1.5);
+var p6 = new Product('Rebuçado', 0.1);
+var p7 = new Product('Pipocas', 1.5);
 
 //db.startDB();
-//db.insertProduct(p);
-//db.insertProduct(p2);
+/*db.insertProduct(p);
+db.insertProduct(p2);
+db.insertProduct(p3);
+db.insertProduct(p4);
+db.insertProduct(p5);
+db.insertProduct(p6);
+db.insertProduct(p7);*/
 
 /** bodyParser.urlencoded(options)
  * Parses the text as URL encoded data (which is how browsers tend to send form data from regular forms set to POST)

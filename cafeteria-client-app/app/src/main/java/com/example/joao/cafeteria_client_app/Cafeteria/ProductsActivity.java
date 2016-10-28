@@ -13,9 +13,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.joao.cafeteria_client_app.API.CafeteriaRestClientUsage;
@@ -25,15 +24,13 @@ import com.example.joao.cafeteria_client_app.R;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class ProductsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ProductsActivity extends AppCompatActivity implements CallbackProducts, NavigationView.OnNavigationItemSelectedListener {
 
-    ArrayList<Product> productsList;
+    List<Product> productsList = new ArrayList<Product>();
     ProductsAdapter productsAdapter;
 
-    Button add_to_cart_button;
-    TextView _price;
-    EditText quantity;
     RecyclerView recyclerView;
 
     ProductsActivity productsActivity;
@@ -61,13 +58,6 @@ public class ProductsActivity extends AppCompatActivity implements NavigationVie
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
-        productsAdapter = new ProductsAdapter(productsList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(productsAdapter);
-
 
         try {
             CafeteriaRestClientUsage.getProducts(productsActivity);
@@ -115,7 +105,16 @@ public class ProductsActivity extends AppCompatActivity implements NavigationVie
         return true;
     }
 
-    public ArrayList<Product> getProd_list() {
-        return productsList;
+    @Override
+    public void onGetProductsCompleted(List<Product> products) {
+        Log.i("", "Entrei no onGet\n");
+
+        this.productsList = products;
+
+        productsAdapter = new ProductsAdapter(productsList);
+        RecyclerView.LayoutManager productsManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(productsManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(productsAdapter);
     }
 }

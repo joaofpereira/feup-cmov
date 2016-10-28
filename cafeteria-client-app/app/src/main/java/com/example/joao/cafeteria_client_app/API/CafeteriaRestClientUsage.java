@@ -11,6 +11,8 @@ import com.example.joao.cafeteria_client_app.Cafeteria.User;
 import com.example.joao.cafeteria_client_app.Cafeteria.ProductsActivity;
 import com.loopj.android.http.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import cz.msebera.android.httpclient.Header;
@@ -107,18 +109,23 @@ public class CafeteriaRestClientUsage {
 
                     JSONArray productsJSON = response.getJSONObject("data").getJSONArray("products");
 
-                    Log.i("", productsJSON.toString());
+                    List<Product> products = new ArrayList<Product>();
 
+                    for (int i = 0; i < productsJSON.length(); i++) {
+                        JSONObject product = productsJSON.getJSONObject(i);
 
-                    /*for (int i = 0; i < productJSON.length(); i++) {
-                        JSONObject jsonProductObject = productJSON.getJSONObject(i);
+                        int id = product.getInt("id");
+                        String name = product.getString("name");
+                        float price = Float.parseFloat(product.getString("price"));
 
-                        Product prod = new Product(jsonProductObject.getString("id")), jsonProductObject.getString("name"), Float.parseFloat(jsonProductObject.getString("price")));
+                        Product p = new Product(id, name, price);
 
+                        products.add(p);
+                    }
 
-                        productsActivity.add_To_Prod_list(prod);
-                    }*/
+                    Log.i("Products: ", productsJSON.toString());
 
+                    productsActivity.onGetProductsCompleted(products);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
