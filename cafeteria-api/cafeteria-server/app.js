@@ -80,8 +80,8 @@ function callbackInsertUser(req, res, creditCard, err) {
 	db.insertUser(req, res, creditCard, callback);
 }
 
-function callbackGetUser(res, user, callback) {
-	db.getCreditCardByID(res, user, callback);
+function callbackGetUser(res, user, pin, callback) {
+	db.getCreditCardByID(res, user, pin, callback);
 }
 
 /**

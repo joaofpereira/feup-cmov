@@ -129,7 +129,7 @@ exports.getUserByEmail = function getUserByEmail(req, res, callback, callbackGet
 					callback(res, null, "no user found");
 				else {
 					if(bcrypt.compareSync(pin, result.rows[0].hash_pin))
-						callbackGetUser(res, result.rows[0], callback);
+						callbackGetUser(res, result.rows[0], pin, callback);
 					else
 						callback(res, null, "wrong pin");
 				}
@@ -137,7 +137,7 @@ exports.getUserByEmail = function getUserByEmail(req, res, callback, callbackGet
 	});
 }
 
-exports.getCreditCardByID = function getCreditCardByID(res, user, callback) {
+exports.getCreditCardByID = function getCreditCardByID(res, user, pin, callback) {
 	var client = initClient();
 
 	client.connect();
@@ -149,6 +149,7 @@ exports.getCreditCardByID = function getCreditCardByID(res, user, callback) {
 			} else {
 				callback(res, {
 					'user': user,
+					'pin': pin,
 					'creditCard': result.rows[0]
 				}, null);
 			}
