@@ -7,14 +7,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.example.joao.cafeteria_client_app.Cafeteria.ProductsActivity;
 import com.example.joao.cafeteria_client_app.R;
 
 public class ShowPinActivity extends AppCompatActivity {
 
     TextView show_pin;
     Button ok_btn;
+
+    ShowPinActivity showPinActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,8 @@ public class ShowPinActivity extends AppCompatActivity {
         show_pin = (TextView) findViewById(R.id.show_pin_id);
         ok_btn = (Button) findViewById(R.id.show_pin_btn_id);
 
+        showPinActivity = this;
+
         Intent intent= getIntent();
 
         show_pin.setText(intent.getExtras().getString("pin"));
@@ -32,7 +36,8 @@ public class ShowPinActivity extends AppCompatActivity {
         ok_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getBaseContext(), "ta fixe xD!", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(showPinActivity, ProductsActivity.class);
+                startActivity(intent);
             }
         });
     }

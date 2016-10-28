@@ -8,7 +8,7 @@ import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
 import com.example.joao.cafeteria_client_app.Authentication.RegisterActivity;
 import com.example.joao.cafeteria_client_app.Cafeteria.Product;
 import com.example.joao.cafeteria_client_app.Cafeteria.User;
-import com.example.joao.cafeteria_client_app.Cafeteria.ProductActivity;
+import com.example.joao.cafeteria_client_app.Cafeteria.ProductsActivity;
 import com.loopj.android.http.*;
 
 import java.util.UUID;
@@ -26,10 +26,14 @@ public class CafeteriaRestClientUsage {
                     int code = response.getInt("code");
 
                     if (code == 200) {
+                        JSONObject data = response.getJSONObject("data");
+                        User user = createUser(data);
+                        String pin = data.getString("pin");
 
+                        login.onLoginCompleted(pin, user);
 
                     } else {
-
+                        login.onLoginFailed(response.getString("message"));
                     }
 
                 } catch (JSONException e) {
@@ -54,12 +58,7 @@ public class CafeteriaRestClientUsage {
 
                     if (code == 200) {
                         JSONObject data = response.getJSONObject("data");
-                        JSONObject userJSON = data.getJSONObject("user");
-
-                        JSONObject creditCardJSON = data.getJSONObject("creditCard");
-
-                        User user = new User(UUID.fromString(userJSON.getString("id")), userJSON.getString("name"), userJSON.getString("username"), userJSON.getString("email"), userJSON.getString("hash_pin"));
-                        user.createCreditCard(creditCardJSON.getInt("id"), creditCardJSON.getString("cardnumber"), creditCardJSON.getString("expmonth"), creditCardJSON.getString("expyear"));
+                        User user = createUser(data);
                         String pin = data.getString("pin");
 
                         register.onRegisterCompleted(pin, user);
@@ -98,7 +97,7 @@ public class CafeteriaRestClientUsage {
         });
     }
 
-    public static void getAllProduct(final ProductActivity productActivity) throws JSONException {
+    public static void getAllProduct(final ProductsActivity productsActivity) throws JSONException {
 
         CafeteriaRestClient.get("products", null, new JsonHttpResponseHandler() {
             @Override
@@ -114,13 +113,11 @@ public class CafeteriaRestClientUsage {
                     for (int i = 0; i < productJSON.length(); i++) {
                         JSONObject jsonProductObject = productJSON.getJSONObject(i);
 
-                        Product prod = new Product(UUID.fromString(jsonProductObject.getString("id")),jsonProductObject.getString("name"),Float.parseFloat(jsonProductObject.getString("price")));
+                        Product prod = new Product(UUID.fromString(jsonProductObject.getString("id")), jsonProductObject.getString("name"), Float.parseFloat(jsonProductObject.getString("price")));
 
 
-                        productActivity.add_To_Prod_list(prod);
+                        productsActivity.add_To_Prod_list(prod);
                     }
-
-
 
 
                 } catch (JSONException e) {
@@ -128,5 +125,16 @@ public class CafeteriaRestClientUsage {
                 }
             }
         });
+    }
+
+    public static User createUser(JSONObject data) throws JSONException {
+        JSONObject userJSON = data.getJSONObject("user");
+
+        JSONObject creditCardJSON = data.getJSONObject("creditCard");
+
+        User user = new User(UUID.fromString(userJSON.getString("id")), userJSON.getString("name"), userJSON.getString("username"), userJSON.getString("email"), userJSON.getString("hash_pin"));
+        user.createCreditCard(creditCardJSON.getInt("id"), creditCardJSON.getString("cardnumber"), creditCardJSON.getString("expmonth"), creditCardJSON.getString("expyear"));
+
+        return user;
     }
 }

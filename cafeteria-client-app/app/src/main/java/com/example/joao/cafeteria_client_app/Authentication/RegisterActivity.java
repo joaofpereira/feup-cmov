@@ -1,6 +1,7 @@
 package com.example.joao.cafeteria_client_app.Authentication;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -31,6 +32,7 @@ public class RegisterActivity extends AppCompatActivity implements CallbackRegis
     CreditCardForm creditCardForm;
     TextView _loginLink;
     Button register_btn = null;
+    ProgressDialog progressDialog;
 
     RegisterActivity registerActivity;
     SharedPreferences sharedPreferences;
@@ -60,15 +62,12 @@ public class RegisterActivity extends AppCompatActivity implements CallbackRegis
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.register_layout);
-
         registerActivity = this;
 
         register_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (!validFields()) {
                     register_btn.setEnabled(true);
-
                     return;
                 }
 
@@ -83,7 +82,10 @@ public class RegisterActivity extends AppCompatActivity implements CallbackRegis
                 params.put("expMonth", creditCardForm.getCreditCard().getExpMonth().toString());
                 params.put("expYear", creditCardForm.getCreditCard().getExpYear().toString());
 
-                Log.i("POST", params.toString());
+                progressDialog = new ProgressDialog(RegisterActivity.this, R.style.AppTheme_Dark_Dialog);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Creating account...");
+                progressDialog.show();
 
                 try {
                     CafeteriaRestClientUsage.register(registerActivity, params);
@@ -108,7 +110,7 @@ public class RegisterActivity extends AppCompatActivity implements CallbackRegis
         this.pin = pin;
         this.user = user;
 
-        Log.i("", this.user.toString() + "\nPin: " + this.pin + "\n");
+        progressDialog.dismiss();
 
         saveSharedPreferences();
 
@@ -120,6 +122,8 @@ public class RegisterActivity extends AppCompatActivity implements CallbackRegis
 
     @Override
     public void onRegisterFailed(int code, String msg) {
+        progressDialog.dismiss();
+
         if (code == 400) {
             displayInputTextError(input_username, msg);
         } else if (code == 401) {

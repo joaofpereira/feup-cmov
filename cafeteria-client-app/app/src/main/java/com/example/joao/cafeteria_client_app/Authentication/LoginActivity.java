@@ -1,6 +1,7 @@
 package com.example.joao.cafeteria_client_app.Authentication;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joao.cafeteria_client_app.API.CafeteriaRestClientUsage;
+import com.example.joao.cafeteria_client_app.Cafeteria.ProductsActivity;
 import com.example.joao.cafeteria_client_app.Cafeteria.User;
 import com.example.joao.cafeteria_client_app.R;
 import com.google.gson.Gson;
@@ -30,10 +32,13 @@ public class LoginActivity extends AppCompatActivity implements CallbackLogin {
     Button login_button;
     TextView _signupLink;
     EditText input_email, input_pin;
-
-    SharedPreferences sharedPreferences;
+    ProgressDialog progressDialog;
 
     LoginActivity loginActivity;
+    SharedPreferences sharedPreferences;
+
+    String pin;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +54,6 @@ public class LoginActivity extends AppCompatActivity implements CallbackLogin {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.login_layout);
 
         loginActivity = this;
 
@@ -140,12 +143,20 @@ public class LoginActivity extends AppCompatActivity implements CallbackLogin {
                 return;
             }
 
-            Toast.makeText(getBaseContext(), "Login Successfull", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "Login Successful", Toast.LENGTH_LONG).show();
+
+            startProductsActivity();
         } else {
             RequestParams params = new RequestParams();
 
             params.put("email", email);
             params.put("pin", pin);
+
+            progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme_Dark_Dialog);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Authenticating...");
+            progressDialog.show();
+
             try {
                 CafeteriaRestClientUsage.login(loginActivity, params);
             } catch (JSONException e) {
@@ -160,12 +171,38 @@ public class LoginActivity extends AppCompatActivity implements CallbackLogin {
 
     @Override
     public void onLoginCompleted(String pin, User user) {
+        this.user = user;
+        this.pin = pin;
 
+        progressDialog.dismiss();
+
+        saveSharedPreferences();
+
+        startProductsActivity();
     }
 
     @Override
-    public void onLoginFailed(int code, String msg) {
+    public void onLoginFailed(String msg) {
+        progressDialog.dismiss();
 
+        Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
+    private void startProductsActivity() {
+        Intent intent = new Intent(loginActivity, ProductsActivity.class);
+        startActivity(intent);
+    }
+
+    private void saveSharedPreferences() {
+        sharedPreferences = getSharedPreferences("com.example.joao.cafeteria_client_app", Activity.MODE_PRIVATE);
+
+        Gson gson = new Gson();
+        String user = gson.toJson(this.user);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("user", user);
+        editor.putString("pin", this.pin);
+        editor.apply();
     }
 
     private void displayInputTextError(EditText ed, String msg) {
