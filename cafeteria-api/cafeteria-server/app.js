@@ -43,9 +43,21 @@ function callback(res, obj, err) {
 				success: false,
 				message: "Email already exists."
 			});
-		} else {
+		} else if (err=='no user found') {
+			res.json({
+				code: 402,
+				success: false,
+				message: "No user with that email found."
+			});
+		} else if (err=='wrong pin') {
 			res.json({
 				code: 403,
+				success: false,
+				message: "Wrong pin."
+			});
+		} else {
+			res.json({
+				code: 404,
 				success: false,
 				error: err
 			});
@@ -66,6 +78,10 @@ function callback(res, obj, err) {
 
 function callbackInsertUser(req, res, creditCard, err) {
 	db.insertUser(req, res, creditCard, callback);
+}
+
+function callbackGetUser(res, user, callback) {
+	db.getCreditCardByID(res, user, callback);
 }
 
 /**
@@ -92,7 +108,7 @@ app.get('/api/products', function (req, res) {
 */
 
 app.post('/api/login', function(req, res) {
-	db.getUserByEmail(req, res, callback);
+	db.getUserByEmail(req, res, callback, callbackGetUser);
 });
 
 app.post('/api/register', function(req, res) {

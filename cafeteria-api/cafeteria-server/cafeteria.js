@@ -112,26 +112,45 @@ exports.insertProduct = function insertProduct(product){
 	});
 }
 
-exports.getUserByEmail = function getUserByEmail(req, res, callback) {
+exports.getUserByEmail = function getUserByEmail(req, res, callback, callbackGetUser) {
 	var client = initClient();
 
 	var email = req.body.email;
 	var pin = req.body.pin;
 
 	client.connect();
-	const query = client.query("SELECT * FROM users WHERE users.username='" + email +"' RETURNING *",
+	const query = client.query("SELECT * FROM users WHERE users.email='" + email +"'",
 		function(err, result) {
 			client.end();
-			console.log(res);
-			console.log(err);
 			if (err) {
 				callback(res, null, err);
 			} else {
-				if(bcrypt.compareSync(pin, res.rows[0].hash_pin))
-					console.log("TA FIXE!");
-				//callback(res, result.rows[0], null);
-				else
-					console.log("NAO DEU!");
+				if(result.rows.length == 0)
+					callback(res, null, "no user found");
+				else {
+					if(bcrypt.compareSync(pin, result.rows[0].hash_pin))
+						callbackGetUser(res, result.rows[0], callback);
+					else
+						callback(res, null, "wrong pin");
+				}
+			}
+	});
+}
+
+exports.getCreditCardByID = function getCreditCardByID(res, user, callback) {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query("SELECT * FROM creditcards WHERE creditcards.id='" + user.creditcard +"'",
+		function(err, result) {
+			client.end();
+			if (err) {
+				callback(res, null, err);
+			} else {
+				callback(res, {
+					'user': user,
+					'creditCard': result.rows[0]
+				}, null);
 			}
 	});
 }
