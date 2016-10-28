@@ -7,25 +7,19 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.newpc.qrcode.MainActivity">
+    tools:context="com.example.newpc.qrcode.ReaderActivity">
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="QR Code"
-        android:textSize="30dp"
+        android:text="QRCode Scanner"
+        android:textSize="25dp"
         android:layout_centerHorizontal="true"/>
-   <Button
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:layout_centerHorizontal="true"
-       android:text="GENERATOR"
-       android:id="@+id/gen"
-       android:layout_marginTop="50dp"/>
     <Button
-        android:id="@+id/scan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:text="SCANNER"
-        android:layout_marginTop="100dp"/>
+        android:layout_centerVertical="true"
+        android:text="SCAN"
+        android:id="@+id/scan_btn"/>
 </RelativeLayout>
