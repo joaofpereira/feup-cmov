@@ -69,13 +69,13 @@ exports.insertCreditCard= function insertCreditCard(req, res, callbackInsertUser
 	client.connect();
 	const query = client.query('INSERT INTO creditcards (cardNumber, securityCode, expMonth, expYear) VALUES ($1, $2, $3, $4) RETURNING *', [creditcard.cardNumber, creditcard.securityCode, creditcard.expMonth, creditcard.expYear],
 		function(err, result) {
+			client.end();
 			if (err) {
 				callbackInsertUser(res, null, err);
 			} else {
 				callbackInsertUser(req, res, result.rows[0], null);
 			}
 		});
-	query.on('end', () => { client.end(); });
 }
 
 exports.insertUser= function insertUser(req, res, creditCard, callback){
@@ -86,6 +86,7 @@ exports.insertUser= function insertUser(req, res, creditCard, callback){
 	client.connect();
 	const query = client.query('INSERT INTO users (name, username, email, password, creditcard, hash_pin) VALUES ($1, $2, $3, $4, $5, $6) RETURNING users.id', [user.name, user.username, user.email, encrypt(user.password), creditCard.id, 000],
 		function(err, result) {
+			client.end();
 			if (err) {
 				callback(res, null, err);
 			} else {
@@ -93,7 +94,6 @@ exports.insertUser= function insertUser(req, res, creditCard, callback){
 				updateUserHashPin(result.rows[0].id, pin, creditCard, res, callback);
 			}
 		});
-	query.on('end', () => { client.end(); });
 }
 
 exports.insertProduct = function insertProduct(product){
@@ -103,33 +103,37 @@ exports.insertProduct = function insertProduct(product){
 	client.connect();
 	const query = client.query("INSERT INTO products (name, price) VALUES ($1, $2) RETURNING *", [product.name, product.price],
 		function(err, result) {
+			client.end();
 			if (err) {
 					console.log(err);
 			} else {
 					console.log('row inserted with id: ' + result.rows[0].id);
 			}
 	});
-	query.on('end', () => { client.end(); });
 }
 
 exports.getUserByEmail = function getUserByEmail(req, res, callback) {
 	var client = initClient();
 
-	var username = req.params['email'];
-	var pin = req.params['pin'];
+	var email = req.body.email;
+	var pin = req.body.pin;
 
 	client.connect();
-	const query = client.query("SELECT * FROM users WHERE users.username='" + username +"' AND users.hash_pin='" + encrypt(pin) + "' RETURNING *",
+	const query = client.query("SELECT * FROM users WHERE users.username='" + email +"' RETURNING *",
 		function(err, result) {
+			client.end();
+			console.log(res);
+			console.log(err);
 			if (err) {
-					callback(res, null, err);
+				callback(res, null, err);
 			} else {
-					callback(res, result.rows[0], null);
+				if(bcrypt.compareSync(pin, res.rows[0].hash_pin))
+					console.log("TA FIXE!");
+				//callback(res, result.rows[0], null);
+				else
+					console.log("NAO DEU!");
 			}
 	});
-	query.on('end', () => { client.end(); });
-
-	return query;
 }
 
 exports.getProductByName = function getProductByName(req, res, callback) {
@@ -140,6 +144,7 @@ exports.getProductByName = function getProductByName(req, res, callback) {
 	client.connect();
 	const query = client.query("SELECT * FROM products WHERE products.name='" + name +"'",
 		function(err, result) {
+			client.end();
 			if (err) {
 				console.log(err);
 			} else if(result.rows.length == 0){
@@ -148,9 +153,6 @@ exports.getProductByName = function getProductByName(req, res, callback) {
 				callback(res, result.rows[0], null);
 			}
 	});
-	query.on('end', () => { client.end(); });
-
-	return query;
 }
 
 exports.getProducts = function getProducts(res, callback) {
@@ -159,13 +161,13 @@ exports.getProducts = function getProducts(res, callback) {
 	client.connect();
 	const query = client.query('SELECT * FROM products',
 		function(err, result) {
+			client.end();
 			if (err) {
 					console.log(err);
 			} else {
 					callback(res, result.rows, null);
 			}
 	});
-	query.on('end', () => { client.end(); });
 }
 
 function updateUserHashPin(userID, pin, creditCard, res, callback) {
@@ -174,6 +176,7 @@ function updateUserHashPin(userID, pin, creditCard, res, callback) {
 	client.connect();
 	const query = client.query("UPDATE users SET hash_pin='" + encrypt(pin) + "' WHERE id='" + userID + "' RETURNING *",
 		function(err, result) {
+			client.end();
 			if (err) {
 				console.log(err);
 			} else {
@@ -184,7 +187,6 @@ function updateUserHashPin(userID, pin, creditCard, res, callback) {
 				}, null);
 			}
 	});
-	query.on('end', () => { client.end(); });
 }
 
 exports.startDB = function startDB() {
