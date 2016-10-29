@@ -1,6 +1,10 @@
 package com.example.joao.cafeteriaterminal;
 
 import android.content.Intent;
+
+import android.util.Log;
+
+import org.json.*;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +19,15 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
+import com.google.gson.*;
+
+
 public class GeneratorActivity extends AppCompatActivity {
     EditText text;
     Button gen_btn;
     ImageView image;
     String text2Qr;
+    JsonObject jsonObject = new JsonObject();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,10 +35,21 @@ public class GeneratorActivity extends AppCompatActivity {
         text = (EditText) findViewById(R.id.text);
         gen_btn = (Button) findViewById(R.id.gen_btn);
         image = (ImageView) findViewById(R.id.image);
+
+
+        JsonObject innerObject = new JsonObject();
+        innerObject.addProperty("name", "john");
+        jsonObject.add("publisher", innerObject);
+
+
+
+
+
         gen_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                text2Qr = text.getText().toString().trim();
+                text2Qr = jsonObject.toString();
+                Log.i("",jsonObject.toString());
                 MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                 try{
                     BitMatrix bitMatrix = multiFormatWriter.encode(text2Qr, BarcodeFormat.QR_CODE,200,200);
