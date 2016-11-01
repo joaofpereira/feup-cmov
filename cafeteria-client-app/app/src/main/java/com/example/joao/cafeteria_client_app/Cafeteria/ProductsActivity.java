@@ -6,7 +6,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -14,8 +16,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.joao.cafeteria_client_app.API.CafeteriaRestClientUsage;
 import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
@@ -31,7 +36,10 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
     List<Product> productsList = new ArrayList<Product>();
     ProductsAdapter productsAdapter;
 
+    TextView user_name, user_email;
+
     RecyclerView recyclerView;
+    NavigationView navigationView;
 
     ProductsActivity productsActivity;
     SharedPreferences sharedPreferences;
@@ -56,8 +64,17 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        // Start Nav View
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View header = navigationView.getHeaderView(0);
+
+        user_name = (TextView) header.findViewById(R.id.nav_user_name);
+        user_email = (TextView) header.findViewById(R.id.nav_user_email);
+        user_name.setText(User.getInstance().getName());
+        user_email.setText(User.getInstance().getEmail());
 
         try {
             CafeteriaRestClientUsage.getProducts(productsActivity);
@@ -103,6 +120,26 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.products_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.products_bar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.products_bar_cart) {
+            recyclerView.
+        } else if (id == R.id.products_bar_refresh) {
+
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

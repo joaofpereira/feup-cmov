@@ -49,7 +49,9 @@ public class LoginActivity extends AppCompatActivity implements CallbackLogin {
 
         input_email = (EditText) findViewById(R.id.input_email);
         input_pin = (EditText) findViewById(R.id.input_pin);
+
         login_button = (Button) findViewById(R.id.btn_login);
+
         _signupLink = (TextView) findViewById(R.id.link_signup);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -145,6 +147,8 @@ public class LoginActivity extends AppCompatActivity implements CallbackLogin {
 
             Toast.makeText(getBaseContext(), "Login Successful", Toast.LENGTH_LONG).show();
 
+            User.createInstance(storageUser);
+
             startProductsActivity();
         } else {
             RequestParams params = new RequestParams();
@@ -177,6 +181,8 @@ public class LoginActivity extends AppCompatActivity implements CallbackLogin {
         progressDialog.dismiss();
 
         saveSharedPreferences();
+
+        User.createInstance(user);
 
         startProductsActivity();
     }

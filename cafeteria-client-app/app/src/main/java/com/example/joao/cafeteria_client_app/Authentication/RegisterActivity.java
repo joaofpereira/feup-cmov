@@ -114,6 +114,8 @@ public class RegisterActivity extends AppCompatActivity implements CallbackRegis
 
         saveSharedPreferences();
 
+        User.createInstance(user);
+
         Intent intent = new Intent(registerActivity, ShowPinActivity.class);
         intent.putExtra("pin", this.pin);
 

@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class User implements Serializable {
+    private static User instance = null;
+
     private UUID uuid;
     private String name;
     private String username;
@@ -68,5 +70,13 @@ public class User implements Serializable {
         public String toString() {
             return "ID: " + this.id + "\nNumber: " + this.cardNumber + "\nExpiration Date: " + this.expMonth + "/" + this.expMonth + "\n";
         }
+    }
+
+    public static void createInstance(User user) {
+        instance = user;
+    }
+
+    public static User getInstance() {
+        return instance;
     }
 }
