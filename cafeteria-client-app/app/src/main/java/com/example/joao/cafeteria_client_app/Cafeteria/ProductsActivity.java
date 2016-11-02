@@ -6,9 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -20,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.joao.cafeteria_client_app.API.CafeteriaRestClientUsage;
 import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
@@ -102,7 +99,8 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
         if (id == R.id.nav_products) {
             // Handle the camera action
         } else if (id == R.id.nav_cart) {
-
+            Intent intent = new Intent(productsActivity, CartActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_vouchers) {
 
         } else if (id == R.id.nav_past_transactions) {
@@ -134,7 +132,8 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
         int id = item.getItemId();
 
         if (id == R.id.products_bar_cart) {
-            recyclerView.
+            Intent intent = new Intent(productsActivity, CartActivity.class);
+            startActivity(intent);
         } else if (id == R.id.products_bar_refresh) {
 
         }

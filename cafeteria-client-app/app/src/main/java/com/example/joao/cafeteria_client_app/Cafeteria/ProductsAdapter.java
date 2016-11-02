@@ -19,7 +19,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         public ImageButton plusButton, minusButton;
 
         public int product_amount;
-        public int product_id;
+        public Product product;
 
         public MyViewHolder(View view) {
             super(view);
@@ -36,15 +36,22 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
                 public void onClick(View view) {
                     product_amount++;
                     amount.setText(Integer.toString(product_amount));
+                    Cart.getInstance().add(product, product_amount);
                 }
             });
 
             minusButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(product_amount > 0)
+                    if (product_amount > 0) {
                         product_amount--;
-                    amount.setText(Integer.toString(product_amount));
+                        amount.setText(Integer.toString(product_amount));
+                        if (product_amount > 1) {
+                            Cart.getInstance().add(product, product_amount);
+                        } else {
+                            Cart.getInstance().remove(product.getID());
+                        }
+                    }
                 }
             });
         }
@@ -66,7 +73,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Product product = productsList.get(position);
 
-        holder.product_id = product.getID();
+        holder.product = product;
 
         holder.name.setText(product.getName());
         holder.price.setText(Float.toString(product.getPrice()) + " €");
