@@ -42,7 +42,7 @@ public class CartProductsAdapter extends RecyclerView.Adapter<CartProductsAdapte
         CartProduct cartProduct = cart.get(position);
 
         holder.name.setText(cartProduct.getName());
-        holder.price.setText(Float.toString(cartProduct.getPrice()) + " €");
+        holder.price.setText(Float.toString(cartProduct.getPrice() * cartProduct.getAmount()) + " €");
         holder.amount.setText(Integer.toString(cartProduct.getAmount()));
     }
 
