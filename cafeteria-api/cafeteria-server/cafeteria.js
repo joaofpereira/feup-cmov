@@ -126,6 +126,28 @@ exports.insertUser= function insertUser(req, res, creditCard, callback){
 		});
 }
 
+/**
+exports.insertTransaction= function insertTransaction(req, res, transaction, callback){
+
+	var user = req.body;
+	var client = initClient();
+
+	client.connect();
+	const query = client.query('INSERT INTO transactions (userID) VALUES ($1) RETURNING users.id', [user.id],
+		function(err, result) {
+
+		//db.insertTransactionRow()
+
+		client.end();
+			if (err) {
+				callback(res, null, err);
+			} else {
+				var pin = generatePin();
+				updateUserHashPin(result.rows[0].id, pin, creditCard, res, callback);
+			}
+		});
+}
+*/
 exports.insertProduct = function insertProduct(product){
 
 	var client = initClient();
