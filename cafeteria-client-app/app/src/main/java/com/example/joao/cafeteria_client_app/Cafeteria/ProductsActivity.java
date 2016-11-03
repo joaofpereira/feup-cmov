@@ -1,6 +1,7 @@
 package com.example.joao.cafeteria_client_app.Cafeteria;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -37,6 +38,7 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
 
     RecyclerView recyclerView;
     NavigationView navigationView;
+    ProgressDialog progressDialog;
 
     ProductsActivity productsActivity;
     SharedPreferences sharedPreferences;
@@ -72,6 +74,11 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
         user_email = (TextView) header.findViewById(R.id.nav_user_email);
         user_name.setText(User.getInstance().getName());
         user_email.setText(User.getInstance().getEmail());
+
+        progressDialog = new ProgressDialog(ProductsActivity.this, R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading Products");
+        progressDialog.show();
 
         try {
             CafeteriaRestClientUsage.getProducts(productsActivity);
@@ -135,7 +142,13 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
             Intent intent = new Intent(productsActivity, CartActivity.class);
             startActivity(intent);
         } else if (id == R.id.products_bar_refresh) {
-
+            progressDialog.setMessage("Updating Products");
+            progressDialog.show();
+            try {
+                CafeteriaRestClientUsage.getProducts(productsActivity);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -143,8 +156,6 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
 
     @Override
     public void onGetProductsCompleted(List<Product> products) {
-        Log.i("", "Entrei no onGet\n");
-
         this.productsList = products;
 
         productsAdapter = new ProductsAdapter(productsList);
@@ -152,5 +163,7 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
         recyclerView.setLayoutManager(productsManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(productsAdapter);
+
+        progressDialog.dismiss();
     }
 }
