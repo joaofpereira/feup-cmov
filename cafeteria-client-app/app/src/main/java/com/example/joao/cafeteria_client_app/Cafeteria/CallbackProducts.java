@@ -4,4 +4,6 @@ import java.util.List;
 
 public interface CallbackProducts {
     public void onGetProductsCompleted(List<Product> products);
+
+    public void onGetProductsError(Throwable throwable);
 }

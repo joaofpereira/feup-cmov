@@ -11,6 +11,7 @@ import com.example.joao.cafeteria_client_app.Cafeteria.User;
 import com.example.joao.cafeteria_client_app.Cafeteria.ProductsActivity;
 import com.loopj.android.http.*;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -123,13 +124,16 @@ public class CafeteriaRestClientUsage {
                         products.add(p);
                     }
 
-                    Log.i("Products: ", productsJSON.toString());
-
                     productsActivity.onGetProductsCompleted(products);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
+                productsActivity.onGetProductsError(throwable);
             }
         });
     }

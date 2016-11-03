@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -19,17 +20,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.joao.cafeteria_client_app.API.CafeteriaRestClientUsage;
 import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
 import com.example.joao.cafeteria_client_app.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONException;
 
+import java.lang.reflect.Type;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductsActivity extends AppCompatActivity implements CallbackProducts, NavigationView.OnNavigationItemSelectedListener {
+public class ProductsActivity extends AppCompatActivity implements CallbackProducts, NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
 
     List<Product> productsList = new ArrayList<Product>();
     ProductsAdapter productsAdapter;
@@ -39,6 +45,7 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
     RecyclerView recyclerView;
     NavigationView navigationView;
     ProgressDialog progressDialog;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     ProductsActivity productsActivity;
     SharedPreferences sharedPreferences;
@@ -56,6 +63,9 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
         setSupportActionBar(toolbar);
 
         recyclerView = (RecyclerView) findViewById(R.id.products_list_id);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh_layout);
+
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.products_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -80,10 +90,19 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
         progressDialog.setMessage("Loading Products");
         progressDialog.show();
 
-        try {
-            CafeteriaRestClientUsage.getProducts(productsActivity);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if(hasSharedPreferences()) {
+            String json = sharedPreferences.getString("products", "");
+
+            Type listType = new TypeToken<ArrayList<Product>>(){}.getType();
+            List<Product> productsList = new Gson().fromJson(json, listType);
+
+            onGetProductsCompleted(productsList);
+        } else {
+            try {
+                CafeteriaRestClientUsage.getProducts(productsActivity);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -142,6 +161,10 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
             Intent intent = new Intent(productsActivity, CartActivity.class);
             startActivity(intent);
         } else if (id == R.id.products_bar_refresh) {
+            // empty cart
+            Cart.getInstance().cart.clear();
+
+            // start updating process
             progressDialog.setMessage("Updating Products");
             progressDialog.show();
             try {
@@ -158,12 +181,54 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
     public void onGetProductsCompleted(List<Product> products) {
         this.productsList = products;
 
+        saveProductsList(products);
+
         productsAdapter = new ProductsAdapter(productsList);
         RecyclerView.LayoutManager productsManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(productsManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(productsAdapter);
 
+        if(swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
+
         progressDialog.dismiss();
+    }
+
+    @Override
+    public void onGetProductsError(Throwable throwable) {
+        // TODO handling exceptions later
+
+        if(swipeRefreshLayout.isRefreshing())
+            swipeRefreshLayout.setRefreshing(false);
+
+        progressDialog.dismiss();
+
+        Toast.makeText(getBaseContext(), "No internet connection", Toast.LENGTH_LONG).show();
+    }
+
+    private void saveProductsList(List<Product> products) {
+        Gson gson = new Gson();
+        String products_list = gson.toJson(products);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("products", products_list);
+        editor.apply();
+    }
+
+    private boolean hasSharedPreferences() {
+        return sharedPreferences.contains("products");
+    }
+
+    @Override
+    public void onRefresh() {
+        // empty cart
+        Cart.getInstance().cart.clear();
+
+        try {
+            CafeteriaRestClientUsage.getProducts(productsActivity);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }
