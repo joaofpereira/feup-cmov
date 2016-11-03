@@ -13,6 +13,36 @@ function initClient() {
 	return client;
 }
 
+function createTableTransactions() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'DROP TABLE transactions;' +
+		'CREATE TABLE transactions (' +
+		'id SERIAL PRIMARY KEY not null,'+
+		'userID INTEGER references users(id) not null)');
+
+	query.on('end', () => { client.end(); });
+}
+
+function createTableTransactionsRow() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'DROP TABLE transactionsrow;' +
+		'CREATE TABLE transactions (' +
+		'id SERIAL PRIMARY KEY not null,'+
+		'productID INTEGER not null,' +
+		'transactionID INTEGER references transactions(id) not null,'+
+		'amount INTEGER not null)');
+
+	query.on('end', () => { client.end(); });
+}
+
+
+
 function createTableCreditCards() {
 	var client = initClient();
 
@@ -96,6 +126,28 @@ exports.insertUser= function insertUser(req, res, creditCard, callback){
 		});
 }
 
+/**
+exports.insertTransaction= function insertTransaction(req, res, transaction, callback){
+
+	var user = req.body;
+	var client = initClient();
+
+	client.connect();
+	const query = client.query('INSERT INTO transactions (userID) VALUES ($1) RETURNING users.id', [user.id],
+		function(err, result) {
+
+		//db.insertTransactionRow()
+
+		client.end();
+			if (err) {
+				callback(res, null, err);
+			} else {
+				var pin = generatePin();
+				updateUserHashPin(result.rows[0].id, pin, creditCard, res, callback);
+			}
+		});
+}
+*/
 exports.insertProduct = function insertProduct(product){
 
 	var client = initClient();

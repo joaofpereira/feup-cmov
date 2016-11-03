@@ -118,6 +118,11 @@ app.get('/api/products', function (req, res) {
 });
 
 /**
+app.get('/api/transactions', function (req, res) {
+	db.getTransaction(res, callback);
+});*/
+
+/**
 *   HTTP POST functions
 */
 
@@ -133,5 +138,10 @@ app.post('/api/creditcard', function(req, res) {
 	db.insertCreditCard(req, res, callback);
 });
 
+/**
+app.post('/api/transaction', function(req, res) {
+	db.insertTransaction(req, res, callback);
+});
+*/
 app.listen(process.env.PORT || 5000);
 console.log('Server running in port ' + (process.env.PORT || 5000));
