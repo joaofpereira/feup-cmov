@@ -13,6 +13,36 @@ function initClient() {
 	return client;
 }
 
+function createTableTransactions() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'DROP TABLE transactions;' +
+		'CREATE TABLE transactions (' +
+		'id SERIAL PRIMARY KEY not null,'+
+		'userID INTEGER references users(id) not null)');
+
+	query.on('end', () => { client.end(); });
+}
+
+function createTableTransactionsRow() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'DROP TABLE transactionsrow;' +
+		'CREATE TABLE transactions (' +
+		'id SERIAL PRIMARY KEY not null,'+
+		'productID INTEGER not null,' +
+		'transactionID INTEGER references transactions(id) not null,'+
+		'amount INTEGER not null)');
+
+	query.on('end', () => { client.end(); });
+}
+
+
+
 function createTableCreditCards() {
 	var client = initClient();
 
