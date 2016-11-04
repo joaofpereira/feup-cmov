@@ -19,25 +19,25 @@
 
         <TextView
             android:id="@+id/product_name"
-            android:layout_width="129dp"
+            android:layout_width="122dp"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:textSize="16dp"
             android:textStyle="bold"
-            android:layout_weight="0.07" />
+            android:layout_weight="0.24" />
 
         <TextView
             android:id="@+id/product_price"
             android:layout_width="32dp"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:textSize="13dp"
+            android:textSize="16dp"
             android:textStyle="bold"
             android:layout_gravity="center|center_vertical"
             android:textAlignment="center"
             android:paddingTop="8dp"
             android:text="price"
-            android:layout_weight="0.94" />
+            android:layout_weight="0.47" />
 
         <TextView
             android:id="@+id/product_amount"
@@ -49,6 +49,7 @@
             android:layout_gravity="center|center_vertical"
             android:textAlignment="center"
             android:paddingTop="6dp"
-            android:text="N" />
+            android:text="N"
+            android:layout_weight="0.19" />
     </LinearLayout>
 </RelativeLayout>

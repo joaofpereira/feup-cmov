@@ -162,7 +162,7 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
             startActivity(intent);
         } else if (id == R.id.products_bar_refresh) {
             // empty cart
-            Cart.getInstance().cart.clear();
+            Cart.getInstance().clearCart();
 
             // start updating process
             progressDialog.setMessage("Updating Products");
@@ -223,7 +223,7 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
     @Override
     public void onRefresh() {
         // empty cart
-        Cart.getInstance().cart.clear();
+        Cart.getInstance().clearCart();
 
         try {
             CafeteriaRestClientUsage.getProducts(productsActivity);

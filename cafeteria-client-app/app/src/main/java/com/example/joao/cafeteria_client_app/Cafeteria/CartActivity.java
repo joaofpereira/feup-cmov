@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
 import com.example.joao.cafeteria_client_app.R;
@@ -22,6 +23,8 @@ import com.example.joao.cafeteria_client_app.R;
 public class CartActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     CartProductsAdapter cartProductsAdapter;
+
+    TextView total_cart_price;
 
     RecyclerView recyclerView;
     NavigationView navigationView;
@@ -54,7 +57,10 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        cartProductsAdapter = new CartProductsAdapter();
+        total_cart_price = (TextView) findViewById(R.id.total_cart_price);
+        total_cart_price.setText("Total Price: " + String.format("%.2f", Cart.getInstance().getTotalValue()) + " €");
+
+        cartProductsAdapter = new CartProductsAdapter(getBaseContext());
         RecyclerView.LayoutManager productsManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(productsManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

@@ -7,9 +7,11 @@ public class Cart {
     private static Cart instance = null;
 
     List<CartProduct> cart;
+    float totalValue;
 
     public Cart() {
         this.cart = new ArrayList<CartProduct>();
+        this.totalValue = 0;
     }
 
     public List<CartProduct> getCart() {
@@ -24,12 +26,16 @@ public class Cart {
         } else {
             getCartProductByID(product.getID()).setAmount(amount);
         }
+
+        updateCartTotalValue(product.getPrice());
     }
 
     public void remove(int id) {
         for (int i = 0; i < cart.size(); i++) {
-            if(cart.get(i).getID() == id)
+            if(cart.get(i).getID() == id) {
+                updateCartTotalValue(-cart.get(i).getPrice());
                 cart.remove(i);
+            }
         }
     }
 
@@ -48,6 +54,19 @@ public class Cart {
                     return true;
 
         return false;
+    }
+
+    public float getTotalValue() {
+        return this.totalValue;
+    }
+
+    public void updateCartTotalValue(float value) {
+        this.totalValue += value;
+    }
+
+    public void clearCart() {
+        this.cart.clear();
+        this.totalValue = 0;
     }
 
     public static Cart getInstance() {
