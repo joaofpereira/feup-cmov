@@ -1,6 +1,8 @@
 package com.example.joao.cafeteria_client_app.Cafeteria;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ public class CartProductsAdapter extends RecyclerView.Adapter<CartProductsAdapte
 
     List<CartProduct> cart;
     Context context;
+    Activity activity;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView name, price, amount;
@@ -32,9 +35,10 @@ public class CartProductsAdapter extends RecyclerView.Adapter<CartProductsAdapte
         }
     }
 
-    public CartProductsAdapter(Context context) {
+    public CartProductsAdapter(Context context, Activity activity) {
         this.cart = Cart.getInstance().getCart();
         this.context = context;
+        this.activity = activity;
     }
 
     @Override
@@ -44,7 +48,7 @@ public class CartProductsAdapter extends RecyclerView.Adapter<CartProductsAdapte
         if(viewType == R.layout.cart_products_list_row) {
             itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_products_list_row, parent, false);
         } else {
-            itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.checkout_btn, parent, false);
+                itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.checkout_btn, parent, false);
         }
 
         return new MyViewHolder(itemView);
@@ -53,18 +57,20 @@ public class CartProductsAdapter extends RecyclerView.Adapter<CartProductsAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         if(position == cart.size()) {
+            if(cart.isEmpty())
+                holder.checkout_btn.setVisibility(View.INVISIBLE);
+            else
+                holder.checkout_btn.setVisibility(View.VISIBLE);
+
             holder.checkout_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(cart.isEmpty())
-                        Toast.makeText(context, "Cart is empty", Toast.LENGTH_LONG).show();
-                    else
-                        Toast.makeText(context, "Button Clicked", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(activity, CheckoutActivity.class);
+                    activity.startActivity(intent);
                 }
             });
         }
         else {
-
             CartProduct cartProduct = cart.get(position);
 
             holder.name.setText(cartProduct.getName());

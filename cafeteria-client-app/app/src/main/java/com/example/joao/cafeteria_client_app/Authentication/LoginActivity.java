@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joao.cafeteria_client_app.API.CafeteriaRestClientUsage;
+import com.example.joao.cafeteria_client_app.Cafeteria.Cart;
 import com.example.joao.cafeteria_client_app.Cafeteria.ProductsActivity;
 import com.example.joao.cafeteria_client_app.Cafeteria.User;
 import com.example.joao.cafeteria_client_app.R;
@@ -127,6 +128,9 @@ public class LoginActivity extends AppCompatActivity implements CallbackLogin {
     }
 
     private void login(String email, String pin) {
+        if(!Cart.getInstance().getCart().isEmpty())
+            Cart.getInstance().clearCart();
+
         if (hasSharedPreferences()) {
             String json = sharedPreferences.getString("user", "");
 

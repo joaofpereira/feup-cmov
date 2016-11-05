@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -15,8 +16,7 @@
         <activity
             android:name=".Authentication.RegisterActivity"
             android:label="@string/register"
-            android:theme="@style/AppTheme.NoActionBar" >
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Authentication.ShowPinActivity" />
         <activity
             android:name=".Authentication.LoginActivity"
@@ -31,11 +31,18 @@
         <activity
             android:name=".Cafeteria.ProductsActivity"
             android:label="@string/products_list"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Cafeteria.CartActivity"
             android:label="@string/cart"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Cafeteria.CheckoutActivity"
+            android:label="@string/checkout"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".Cafeteria.QRCodeActivity"
+            android:label="@string/qrcode"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
     </application>

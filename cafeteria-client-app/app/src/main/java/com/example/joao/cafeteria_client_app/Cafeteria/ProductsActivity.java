@@ -31,7 +31,6 @@ import com.google.gson.reflect.TypeToken;
 import org.json.JSONException;
 
 import java.lang.reflect.Type;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 

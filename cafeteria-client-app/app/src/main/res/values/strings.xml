@@ -16,4 +16,6 @@
     <string name="register">Register</string>
 
     <string name="refresh">Refresh</string>
+    <string name="checkout">Checkout</string>
+    <string name="qrcode">QR Code</string>
 </resources>
