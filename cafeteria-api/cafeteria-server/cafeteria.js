@@ -22,7 +22,7 @@ function createTableTransactions() {
 		'DROP TABLE transactions;' +
 		'CREATE TABLE transactions (' +
 		'id SERIAL PRIMARY KEY not null,'+
-		'date DATE not null'
+		'date timestamp not null'+
 		'userID INTEGER references users(id) not null)');
 
 	query.on('end', () => { client.end(); });
@@ -137,7 +137,7 @@ exports.insertTransaction= function insertTransaction(req, res, callback){
 	var client = initClient();
 
 	client.connect();
-	const query = client.query('INSERT INTO transactions (userID) VALUES ($1) RETURNING users.id', [transaction.userID],
+	const query = client.query('INSERT INTO transactions (userID, date) VALUES ($1) RETURNING users.id', [transaction.userID , transaction.date],
 		function(err, result) {
 
 
@@ -146,7 +146,6 @@ exports.insertTransaction= function insertTransaction(req, res, callback){
 				callback(res, null, err);
 			} else {
 				for (var i = 0 ; i < transaction.productAmount.size(); i++){
-
 						db.insertTransactionRow(transaction.id, transaction.productAmount[i][0], transaction.productAmount[i][1]);
 				}
 
