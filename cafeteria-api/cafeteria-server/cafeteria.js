@@ -22,6 +22,7 @@ function createTableTransactions() {
 		'DROP TABLE transactions;' +
 		'CREATE TABLE transactions (' +
 		'id SERIAL PRIMARY KEY not null,'+
+		'date DATE not null'
 		'userID INTEGER references users(id) not null)');
 
 	query.on('end', () => { client.end(); });
@@ -286,7 +287,7 @@ exports.getAllTransaction = function getAllTransaction(res, callback) {
 exports.getTransactionRowByTransactionID = function getTransactionRowByTransactionID(req, res, callback) {
 	var client = initClient();
 	var transactionID = req.params['transactionID'];
-	
+
 	client.connect();
 	const query = client.query("SELECT * FROM transactiorow WHERE transactionow.transactionID ='" + transactionID + "'",
 		function(err, result) {
@@ -321,7 +322,8 @@ function updateUserHashPin(userID, pin, creditCard, res, callback) {
 exports.startDB = function startDB() {
 	//createTableCreditCards();
 	//createTableUsers();
-	createTableProducts();
+//	createTableProducts();
+	createTableTransactions();
 }
 
 function generatePin () {

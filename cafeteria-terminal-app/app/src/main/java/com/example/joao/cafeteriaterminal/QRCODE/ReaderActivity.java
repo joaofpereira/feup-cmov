@@ -17,6 +17,7 @@ import com.example.joao.cafeteriaterminal.R;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 
@@ -61,8 +62,21 @@ public class ReaderActivity extends AppCompatActivity {
                         //following two lines are equivalent... whichever is easier for you...
                         Toast.makeText(this,"products: " + pair.first + " : " + pair.second,Toast.LENGTH_LONG).show();
                     }
-
                     Toast.makeText(this,"date: " + transaction.getDate().toString(),Toast.LENGTH_LONG).show();
+
+                    RequestParams params = new RequestParams();
+
+                    params.put("userID", transaction.getUserID());
+                    params.put("date", transaction.getDate());
+                    params.put("productAmount", transaction.getProductIDList());
+
+
+                    try {
+
+                        CafeteriaRestTerminalUsage.confirmTransaction(params);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -75,4 +89,5 @@ public class ReaderActivity extends AppCompatActivity {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
+
 }
