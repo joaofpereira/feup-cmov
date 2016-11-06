@@ -14,6 +14,7 @@ function initClient() {
 }
 
 function createTableTransactions() {
+
 	var client = initClient();
 
 	client.connect();
@@ -27,6 +28,7 @@ function createTableTransactions() {
 }
 
 function createTableTransactionsRow() {
+
 	var client = initClient();
 
 	client.connect();
@@ -34,9 +36,10 @@ function createTableTransactionsRow() {
 		'DROP TABLE transactionsrow;' +
 		'CREATE TABLE transactions (' +
 		'id SERIAL PRIMARY KEY not null,'+
-		'productID INTEGER not null,' +
 		'transactionID INTEGER references transactions(id) not null,'+
-		'amount INTEGER not null)');
+		'productID INTEGER not null,' +
+		'amount INTEGER not null)'
+	);
 
 	query.on('end', () => { client.end(); });
 }
@@ -126,28 +129,51 @@ exports.insertUser= function insertUser(req, res, creditCard, callback){
 		});
 }
 
-/**
-exports.insertTransaction= function insertTransaction(req, res, transaction, callback){
 
-	var user = req.body;
+exports.insertTransaction= function insertTransaction(req, res, callback){
+
+	var transaction = req.body;
 	var client = initClient();
 
 	client.connect();
-	const query = client.query('INSERT INTO transactions (userID) VALUES ($1) RETURNING users.id', [user.id],
+	const query = client.query('INSERT INTO transactions (userID) VALUES ($1) RETURNING users.id', [transaction.userID],
 		function(err, result) {
 
-		//db.insertTransactionRow()
 
 		client.end();
 			if (err) {
 				callback(res, null, err);
 			} else {
-				var pin = generatePin();
-				updateUserHashPin(result.rows[0].id, pin, creditCard, res, callback);
+				for (var i = 0 ; i < transaction.productAmount.size(); i++){
+
+						db.insertTransactionRow(transaction.id, transaction.productAmount[i][0], transaction.productAmount[i][1]);
+				}
+
+					console.log('row inserted with id: ' + result.rows[0].id);
 			}
 		});
 }
-*/
+
+exports.insertTransactionRow= function insertTransactionRow(transactionID, product, amount){
+
+	var user = req.body;
+	var client = initClient();
+
+	client.connect();
+
+	const query = client.query('INSERT INTO transactionsrow (transactionID, productID, amount) VALUES ($1, $2 ,$3) RETURNING transactionsrow.id', [transactionID, productID, amount],
+		function(err, result) {
+		client.end();
+			if (err) {
+				callback(res, null, err);
+			} else {
+
+					console.log('row inserted with id: ' + result.rows[0].id);
+
+			}
+		});
+}
+
 exports.insertProduct = function insertProduct(product){
 
 	var client = initClient();
@@ -238,6 +264,37 @@ exports.getProducts = function getProducts(res, callback) {
 					callback(res, null, err);
 			} else {
 					callback(res, {'products': result.rows}, null);
+			}
+	});
+}
+
+exports.getAllTransaction = function getAllTransaction(res, callback) {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query('SELECT * FROM transaction',
+		function(err, result) {
+			client.end();
+			if (err) {
+					callback(res, null, err);
+			} else {
+					callback(res, {'transaction': result.rows}, null);
+			}
+	});
+}
+
+exports.getTransactionRowByTransactionID = function getTransactionRowByTransactionID(req, res, callback) {
+	var client = initClient();
+	var transactionID = req.params['transactionID'];
+	
+	client.connect();
+	const query = client.query("SELECT * FROM transactiorow WHERE transactionow.transactionID ='" + transactionID + "'",
+		function(err, result) {
+			client.end();
+			if (err) {
+					callback(res, null, err);
+			} else {
+					callback(res, {'transactiorow': result.rows}, null);
 			}
 	});
 }

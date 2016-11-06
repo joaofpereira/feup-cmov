@@ -5,6 +5,7 @@ var dotenv = require('dotenv');
 dotenv.load();
 
 var db = require('./cafeteria.js');
+var Transaction = require('./transaction.js');
 var Product = require('./product.js')
 
 var app = express();
@@ -18,10 +19,6 @@ var p6 = new Product('Rebuçado', 0.1);
 var p7 = new Product('Pipocas', 1.5);
 var p8 = new Product('Rissol', 0.8);
 var p9 = new Product('Baguete Mista', 1.0);
-var p10 = new Product('Baguete Mista', 1.0);
-var p11 = new Product('Kinder Bueno', 1.0);
-var p12 = new Product('Choc. Dove', 1.0);
-var p13 = new Product('Panike Misto', 1.1);
 
 //db.startDB();
 /*db.insertProduct(p);
@@ -32,11 +29,7 @@ db.insertProduct(p5);
 db.insertProduct(p6);
 db.insertProduct(p7);
 db.insertProduct(p8);
-db.insertProduct(p9);
-db.insertProduct(p10);
-db.insertProduct(p11);
-db.insertProduct(p12);
-db.insertProduct(p13);*/
+db.insertProduct(p9);*/
 
 /** bodyParser.urlencoded(options)
  * Parses the text as URL encoded data (which is how browsers tend to send form data from regular forms set to POST)
@@ -125,10 +118,10 @@ app.get('/api/products', function (req, res) {
 	db.getProducts(res, callback);
 });
 
-/**
+
 app.get('/api/transactions', function (req, res) {
 	db.getTransaction(res, callback);
-});*/
+});
 
 /**
 *   HTTP POST functions
@@ -146,10 +139,10 @@ app.post('/api/creditcard', function(req, res) {
 	db.insertCreditCard(req, res, callback);
 });
 
-/**
+
 app.post('/api/transaction', function(req, res) {
 	db.insertTransaction(req, res, callback);
 });
-*/
+
 app.listen(process.env.PORT || 5000);
 console.log('Server running in port ' + (process.env.PORT || 5000));
