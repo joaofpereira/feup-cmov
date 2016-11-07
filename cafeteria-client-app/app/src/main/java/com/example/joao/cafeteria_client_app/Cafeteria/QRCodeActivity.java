@@ -105,8 +105,6 @@ public class QRCodeActivity extends AppCompatActivity implements NavigationView.
                                     bitmap = encodeAsBitmap(code);
                                     qrCode.setImageBitmap(bitmap);
 
-                                    progressDialog.dismiss();
-
                                 } catch (WriterException e) {
                                     e.printStackTrace();
                                 } // end of catch block
@@ -117,10 +115,11 @@ public class QRCodeActivity extends AppCompatActivity implements NavigationView.
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+                progressDialog.dismiss();
             }
         });
         t.start();
-
     }
 
     Bitmap encodeAsBitmap(String str) throws WriterException {
