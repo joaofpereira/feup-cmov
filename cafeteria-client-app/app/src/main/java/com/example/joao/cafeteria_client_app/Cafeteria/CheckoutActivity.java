@@ -85,7 +85,6 @@ public class CheckoutActivity extends AppCompatActivity implements NavigationVie
 
                 if (start == 3 && charSequence.length() == 4)
                     if (charSequence.toString().equals(sharedPreferences.getString("pin", ""))) {
-                        checkout_pin.setFocusable(false);
 
                         InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),InputMethodManager.HIDE_NOT_ALWAYS);
