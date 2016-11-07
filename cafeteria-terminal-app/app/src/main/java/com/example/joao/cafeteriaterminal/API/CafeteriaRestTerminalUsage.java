@@ -46,27 +46,22 @@ public class CafeteriaRestTerminalUsage {
         });
     }
 
-
-
-
     public static Transaction createTransaction(String data) throws JSONException {
-
-
         String lines[] = data.split("\\r?\\n");
 
-        List<Pair<Integer,Integer>> products_amount = new ArrayList<Pair<Integer,Integer>>();
+        JSONArray products = new JSONArray();
 
         for (int i = 1 ; i < lines.length ; i++){
-
             String temp[] = lines[i].split(":");
 
-            products_amount.add(new Pair(Integer.parseInt(temp[0]), Integer.parseInt(temp[1])));
+            JSONObject obj = new JSONObject();
+            obj.put("product-id", Integer.parseInt(temp[0]));
+            obj.put("product-amount", Integer.parseInt(temp[1]));
+
+            products.put(obj);
         }
 
-
-
-
-        Transaction transaction = new Transaction(UUID.fromString(lines[0]),products_amount);
+        Transaction transaction = new Transaction(UUID.fromString(lines[0]), products);
 
         return transaction;
     }

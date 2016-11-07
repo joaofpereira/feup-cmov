@@ -1,7 +1,5 @@
 package com.example.joao.cafeteriaterminal.QRCODE;
 
-
-
 import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +20,7 @@ import com.google.zxing.integration.android.IntentResult;
 import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import com.google.gson.*;
 
@@ -66,9 +65,9 @@ public class ReaderActivity extends AppCompatActivity {
 
                     Toast.makeText(this,"UUID " + transaction.getUserID().toString(),Toast.LENGTH_LONG).show();
 
-                    for(Pair<Integer, Integer> pair : transaction.getProductIDList()) {
+                    for(int i = 0; i < transaction.getProducts().length(); i++) {
                         //following two lines are equivalent... whichever is easier for you...
-                        Toast.makeText(this,"products: " + pair.first + " : " + pair.second,Toast.LENGTH_LONG).show();
+                        Log.i("products:", transaction.getProducts().get(i).toString());
                     }
                     Toast.makeText(this,"date: " + transaction.getDate().toString(),Toast.LENGTH_LONG).show();
 
@@ -77,7 +76,7 @@ public class ReaderActivity extends AppCompatActivity {
                     params.put("userID", transaction.getUserID());
                     params.put("date", transaction.getDate());
 
-                    Gson gson = new Gson();
+                    /*Gson gson = new Gson();
                     JsonElement element = gson.toJsonTree(transaction.getProductIDList(), new TypeToken<List<Pair<Integer,Integer>>>() {}.getType());
 
                     if (! element.isJsonArray()) {
@@ -86,8 +85,8 @@ public class ReaderActivity extends AppCompatActivity {
                     }
 
                     JsonArray jsonArray = element.getAsJsonArray();
-                    Log.i("testing json array",jsonArray.toString());
-                    params.put("products", jsonArray);
+                    Log.i("testing json array",jsonArray.toString());*/
+                    params.put("products", transaction.getProducts());
 
 
                     try {

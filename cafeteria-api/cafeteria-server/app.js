@@ -100,6 +100,14 @@ function callbackGetUser(res, user, pin, callback) {
 	db.getCreditCardByID(res, user, pin, callback);
 }
 
+function callbackTransactionRows(res, callback, transactionID, transaction, index) {
+	if(Object.keys(transaction.productAmount).length >= index + 1) {
+			console.log("ENTREI AQUI");
+			console.log(transaction.productAmount[1]['product-id']);
+			db.insertTransactionRows(res, callback, callbackTransactionRows, transactionID, transaction, index);
+		}
+}
+
 /**
 *   HTTP GET functions
 */
@@ -145,7 +153,7 @@ app.post('/api/creditcard', function(req, res) {
 
 
 app.post('/api/transaction', function(req, res) {
-	db.insertTransaction(req, res, callback);
+	db.insertTransaction(req, res, callback, callbackTransactionRows);
 });
 
 app.listen(process.env.PORT || 5000);
