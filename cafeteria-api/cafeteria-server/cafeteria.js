@@ -13,37 +13,7 @@ function initClient() {
 	return client;
 }
 
-function createTableTransactions() {
 
-	var client = initClient();
-
-	client.connect();
-	const query = client.query(
-		'DROP TABLE transactions;' +
-		'CREATE TABLE transactions (' +
-		'id SERIAL PRIMARY KEY not null,'+
-		'date timestamp not null'+
-		'userID INTEGER references users(id) not null)');
-
-	query.on('end', () => { client.end(); });
-}
-
-function createTableTransactionsRow() {
-
-	var client = initClient();
-
-	client.connect();
-	const query = client.query(
-		'DROP TABLE transactionsrow;' +
-		'CREATE TABLE transactions (' +
-		'id SERIAL PRIMARY KEY not null,'+
-		'transactionID INTEGER references transactions(id) not null,'+
-		'productID INTEGER not null,' +
-		'amount INTEGER not null)'
-	);
-
-	query.on('end', () => { client.end(); });
-}
 
 
 
@@ -95,6 +65,37 @@ function createTableProducts() {
 	query.on('end', () => { client.end(); });
 }
 
+function createTableTransactions() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'DROP TABLE transactions;' +
+		'CREATE TABLE transactions (' +
+		'id SERIAL PRIMARY KEY not null,'+
+		'date timestamp not null'+
+		'userID UUID references users(id) not null)');
+
+	query.on('end', () => { client.end(); });
+}
+
+function createTableTransactionsRow() {
+
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'DROP TABLE transactionsrow;' +
+		'CREATE TABLE transactions (' +
+		'id SERIAL PRIMARY KEY not null,'+
+		'transactionID INTEGER references transactions(id) not null,'+
+		'productID INTEGER not null,' +
+		'amount INTEGER not null)'
+	);
+
+	query.on('end', () => { client.end(); });
+}
+
 exports.insertCreditCard= function insertCreditCard(req, res, callbackInsertUser){
 
 	var creditcard = req.body;
@@ -137,7 +138,7 @@ exports.insertTransaction= function insertTransaction(req, res, callback){
 	var client = initClient();
 
 	client.connect();
-	const query = client.query('INSERT INTO transactions (userID, date) VALUES ($1) RETURNING users.id', [transaction.userID , transaction.date],
+	const query = client.query('INSERT INTO transactions (userID, date) VALUES ($1,$2) RETURNING users.id', [transaction.userID , transaction.date],
 		function(err, result) {
 
 
@@ -319,10 +320,11 @@ function updateUserHashPin(userID, pin, creditCard, res, callback) {
 }
 
 exports.startDB = function startDB() {
-	//createTableCreditCards();
-	//createTableUsers();
-//	createTableProducts();
+	createTableCreditCards();
+	createTableUsers();
+	createTableProducts();
 	createTableTransactions();
+	createTableTransactionsRow();
 }
 
 function generatePin () {
