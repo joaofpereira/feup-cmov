@@ -178,17 +178,17 @@ exports.insertTransaction= function insertTransaction(req, res, callback){
 	var transaction = req.body;
 	var client = initClient();
 
-	client.connect();
-	const query = client.query('INSERT INTO transactions (userID, date) VALUES ($1,$2) RETURNING users.id', [transaction.userID , transaction.date],
-		function(err, result) {
 
+	client.connect();
+	const query = client.query('INSERT INTO transactions (userID, date) VALUES ($1, CURRENT_TIMESTAMP) RETURNING transactions.id', [transaction.userID],
+		function(err, result) {
 
 		client.end();
 			if (err) {
 				callback(res, null, err);
 			} else {
 				for (var i = 0 ; i < transaction.productAmount.size(); i++){
-						db.insertTransactionRow(transaction.id, transaction.productAmount[i][0], transaction.productAmount[i][1]);
+						insertTransactionRows(transaction.id, transaction.productAmount[i][0], transaction.productAmount[i][1]);
 				}
 
 					console.log('row inserted with id: ' + result.rows[0].id);
@@ -196,14 +196,14 @@ exports.insertTransaction= function insertTransaction(req, res, callback){
 		});
 }
 
-exports.insertTransactionRow= function insertTransactionRow(transactionID, product, amount){
+exports.insertTransactionRows= function insertTransactionRows(transactionID, product, amount){
 
 	var user = req.body;
 	var client = initClient();
 
 	client.connect();
 
-	const query = client.query('INSERT INTO transactionsrow (transactionID, productID, amount) VALUES ($1, $2 ,$3) RETURNING transactionsrow.id', [transactionID, productID, amount],
+	const query = client.query('INSERT INTO transactionrows (transactionID, productID, amount) VALUES ($1, $2 ,$3) RETURNING transactionrows.id', [transactionID, productID, amount],
 		function(err, result) {
 		client.end();
 			if (err) {
@@ -324,7 +324,7 @@ exports.getTransactions = function getTransactions(res, callback) {
 			}
 	});
 }
-
+/*
 exports.getTransactionRowByTransactionID = function getTransactionRowByTransactionID(req, res, callback) {
 	var client = initClient();
 	var transactionID = req.params['transactionID'];
@@ -339,7 +339,7 @@ exports.getTransactionRowByTransactionID = function getTransactionRowByTransacti
 					callback(res, {'transactiorow': result.rows}, null);
 			}
 	});
-}
+}*/
 
 function updateUserHashPin(userID, pin, creditCard, res, callback) {
 	var client = initClient();
