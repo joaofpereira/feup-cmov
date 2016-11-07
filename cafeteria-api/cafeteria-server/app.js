@@ -123,6 +123,9 @@ app.get('/api/products', function (req, res) {
 app.get('/api/transactions', function (req, res) {
 	db.getTransactions(res, callback);
 });
+app.get('/api/transaction/:id', function (req, res) {
+	db.getTransactionRowByTransactionID(req,res, callback);
+});
 
 /**
 *   HTTP POST functions
