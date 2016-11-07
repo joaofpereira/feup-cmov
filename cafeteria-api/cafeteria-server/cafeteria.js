@@ -13,46 +13,11 @@ function initClient() {
 	return client;
 }
 
-function createTableTransactions() {
-
-	var client = initClient();
-
-	client.connect();
-	const query = client.query(
-		'DROP TABLE transactions;' +
-		'CREATE TABLE transactions (' +
-		'id SERIAL PRIMARY KEY not null,'+
-		'date timestamp not null'+
-		'userID INTEGER references users(id) not null)');
-
-	query.on('end', () => { client.end(); });
-}
-
-function createTableTransactionsRow() {
-
-	var client = initClient();
-
-	client.connect();
-	const query = client.query(
-		'DROP TABLE transactionsrow;' +
-		'CREATE TABLE transactions (' +
-		'id SERIAL PRIMARY KEY not null,'+
-		'transactionID INTEGER references transactions(id) not null,'+
-		'productID INTEGER not null,' +
-		'amount INTEGER not null)'
-	);
-
-	query.on('end', () => { client.end(); });
-}
-
-
-
 function createTableCreditCards() {
 	var client = initClient();
 
 	client.connect();
 	const query = client.query(
-		'DROP TABLE creditcards CASCADE;' +
 		'CREATE TABLE creditcards (' +
 		'id SERIAL PRIMARY KEY not null,'+
 		'cardNumber VARCHAR(16) not null,' +
@@ -63,12 +28,21 @@ function createTableCreditCards() {
 	query.on('end', () => { client.end(); });
 }
 
+function dropTableCreditCards() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'DROP TABLE creditcards;');
+
+	query.on('end', () => { client.end(); });
+}
+
 function createTableUsers() {
 	var client = initClient();
 
 	client.connect();
 	const query = client.query(
-		'DROP TABLE IF EXISTS users;' +
 		'CREATE TABLE users (' +
 		'id UUID PRIMARY KEY DEFAULT gen_random_uuid(),'+
 		'name VARCHAR(120) not null, '+
@@ -81,16 +55,84 @@ function createTableUsers() {
 	query.on('end', () => { client.end(); });
 }
 
+function dropTableUsers() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'DROP TABLE users;');
+
+	query.on('end', () => { client.end(); });
+}
+
 function createTableProducts() {
 	var client = initClient();
 
 	client.connect();
 	const query = client.query(
-		'DROP TABLE IF EXISTS products;' +
 		'CREATE TABLE products (' +
 		'id SERIAL PRIMARY KEY not null,' +
 		'name VARCHAR(120) not null,' +
 		'price FLOAT not null)');
+
+	query.on('end', () => { client.end(); });
+}
+
+function dropTableProducts() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'DROP TABLE products;');
+
+	query.on('end', () => { client.end(); });
+}
+
+function createTableTransactions() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'CREATE TABLE transactions (' +
+		'id SERIAL PRIMARY KEY not null,'+
+		'date timestamp not null,'+
+		'userID UUID references users(id) not null)');
+
+	query.on('end', () => { client.end(); });
+}
+
+function dropTableTransactions() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'DROP TABLE transactions;');
+
+	query.on('end', () => { client.end(); });
+}
+
+function createTableTransactionRows() {
+
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'CREATE TABLE transactionrows (' +
+		'id SERIAL PRIMARY KEY not null,'+
+		'transactionID INTEGER references transactions(id) not null,'+
+		'productID INTEGER references products(id) not null,' +
+		'amount INTEGER not null)'
+	);
+
+	query.on('end', () => { client.end(); });
+}
+
+function dropTableTransactionRows() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'DROP TABLE transactionrows;');
 
 	query.on('end', () => { client.end(); });
 }
@@ -137,7 +179,7 @@ exports.insertTransaction= function insertTransaction(req, res, callback){
 	var client = initClient();
 
 	client.connect();
-	const query = client.query('INSERT INTO transactions (userID, date) VALUES ($1) RETURNING users.id', [transaction.userID , transaction.date],
+	const query = client.query('INSERT INTO transactions (userID, date) VALUES ($1,$2) RETURNING users.id', [transaction.userID , transaction.date],
 		function(err, result) {
 
 
@@ -268,11 +310,11 @@ exports.getProducts = function getProducts(res, callback) {
 	});
 }
 
-exports.getAllTransaction = function getAllTransaction(res, callback) {
+exports.getTransactions = function getTransactions(res, callback) {
 	var client = initClient();
 
 	client.connect();
-	const query = client.query('SELECT * FROM transaction',
+	const query = client.query('SELECT * FROM transactions',
 		function(err, result) {
 			client.end();
 			if (err) {
@@ -288,7 +330,7 @@ exports.getTransactionRowByTransactionID = function getTransactionRowByTransacti
 	var transactionID = req.params['transactionID'];
 
 	client.connect();
-	const query = client.query("SELECT * FROM transactiorow WHERE transactionow.transactionID ='" + transactionID + "'",
+	const query = client.query("SELECT * FROM transactiorow WHERE transactionrow.transactionID ='" + transactionID + "'",
 		function(err, result) {
 			client.end();
 			if (err) {
@@ -320,9 +362,18 @@ function updateUserHashPin(userID, pin, creditCard, res, callback) {
 
 exports.startDB = function startDB() {
 	//createTableCreditCards();
+	//createTableProducts();
 	//createTableUsers();
-//	createTableProducts();
-	createTableTransactions();
+	//createTableTransactions();
+	//createTableTransactionRows();
+}
+
+exports.dropTables = function dropTables() {
+	dropTableCreditCards();
+	dropTableUsers();
+	dropTableTransactionRows();
+	dropTableProducts();
+	dropTableTransactions();
 }
 
 function generatePin () {

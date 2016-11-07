@@ -20,6 +20,7 @@ var p7 = new Product('Pipocas', 1.5);
 var p8 = new Product('Rissol', 0.8);
 var p9 = new Product('Baguete Mista', 1.0);
 
+//db.dropTables();
 //db.startDB();
 /*db.insertProduct(p);
 db.insertProduct(p2);
@@ -120,7 +121,7 @@ app.get('/api/products', function (req, res) {
 
 
 app.get('/api/transactions', function (req, res) {
-	db.getTransaction(res, callback);
+	db.getTransactions(res, callback);
 });
 
 /**
