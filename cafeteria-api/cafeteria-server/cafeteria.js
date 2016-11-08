@@ -325,25 +325,32 @@ exports.getAllTransactionsByUserID = function getAllTransactionsByUserID(req, re
 			if (err) {
 					callback(res, null, err);
 			} else {
-					console.log("transactionID:" + result.rows[0].id);
-					callbackGetTransactionRows(res, result.rows[0].id, callback);
+					console.log("transactionID:" + result.rows);
+					callbackGetTransactionRows(res, result.rows, 0, callback);
 			}
 	});
 }
 
-exports.getTransactionRowsByTransactionID = function getTransactionRowsByTransactionID(res, transactionID, callback) {
+exports.getTransactionRowsByTransactionID = function getTransactionRowsByTransactionID(res, transactions, index, callback,callbackGetTransactionRows) {
 	var client = initClient();
 
-	console.log("Entrei no transactionRowsByTransactionID with ID:" + transactionID);
+	console.log("Entrei no transactionRowsByTransactionID with ID:" + transactions[index].id);
 
 	client.connect();
-	const query = client.query("SELECT * FROM transactionrows WHERE transactionrows.transactionID = '"+ transactionID +"'",
+	const query = client.query("SELECT transactionrows.productID,transactionrows.amount FROM transactionrows WHERE transactionrows.transactionID = '"+ transactions[index].id +"'",
 		function(err, result) {
 			client.end();
 			if (err) {
+				console.log("DEI PEIDO")
 					callback(res, null, err);
 			} else {
-					callback(res, result.rows, callback);
+					console.log(result.rows);
+
+					callback(res,{
+						'transactionID': transactions[index].id,
+						'timestamp': transactions[index].date,
+						'produtcs': result.rows,
+					}, null);
 			}
 	});
 }

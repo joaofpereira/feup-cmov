@@ -109,10 +109,12 @@ function callbackGetUser(res, user, pin, callback) {
 }
 
 
-function callbackGetTransactionRows(res,transactionID , callback) {
-	console.log("transactionID CALLBACK: " + transactionID);
+function callbackGetTransactionRows(res,transactions, index, callback) {
+if(Object.keys(transactions).length >= index + 1) {
+	console.log("transactionID CALLBACK: " + transactions[index].id);
+	console.log("index: " + index);
 	console.log("ENTREI AQUI no callback");
-	db.getTransactionRowsByTransactionID(res, transactionID, callback);
+	db.getTransactionRowsByTransactionID(res, transactions, index, callback, callbackGetTransactionRows);}
 }
 
 function callbackTransactionRows(res, callback, transactionID, transaction, index) {
