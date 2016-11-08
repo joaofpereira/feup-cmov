@@ -28,7 +28,6 @@ public class CafeteriaRestTerminalUsage {
                     if (code == 200) {
                         JSONObject data = response.getJSONObject("data");
 
-
                         Log.i("","Success");
 
                     } else

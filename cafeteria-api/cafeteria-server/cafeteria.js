@@ -176,6 +176,10 @@ exports.insertTransaction = function insertTransaction(req, res, callback, callb
 
 	var transaction = req.body;
 
+	transaction.products = JSON.parse(transaction.products);
+
+	console.log(transaction.products);
+
 	var client = initClient();
 	client.connect();
 

@@ -102,8 +102,9 @@ function callbackGetUser(res, user, pin, callback) {
 
 function callbackTransactionRows(res, callback, transactionID, transaction, index) {
 	if(Object.keys(transaction.products).length >= index + 1) {
+			console.log("SIZE: " + Object.keys(transaction.products).length);
+			console.log("Index: " + index);
 			console.log("ENTREI AQUI");
-			console.log(transaction.products[1]['product-id']);
 			db.insertTransactionRows(res, callback, callbackTransactionRows, transactionID, transaction, index);
 		}
 }
