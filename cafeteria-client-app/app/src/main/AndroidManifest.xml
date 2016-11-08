@@ -39,13 +39,17 @@
         <activity
             android:name=".Cafeteria.CheckoutActivity"
             android:label="@string/checkout"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
-        <activity android:name=".Cafeteria.QRCodeActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Cafeteria.QRCodeActivity"
             android:label="@string/qrcode"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Cafeteria.PastTransactionsActivity"
+            android:label="@string/past_transactions"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Cafeteria.TransactionActivity"></activity>
     </application>
 
 </manifest>

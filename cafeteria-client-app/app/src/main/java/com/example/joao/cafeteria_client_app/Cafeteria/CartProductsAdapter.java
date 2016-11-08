@@ -34,8 +34,8 @@ public class CartProductsAdapter extends RecyclerView.Adapter<CartProductsAdapte
         }
     }
 
-    public CartProductsAdapter(Context context, Activity activity) {
-        this.cart = Cart.getInstance().getCart();
+    public CartProductsAdapter(Context context, Activity activity, List<CartProduct> cart) {
+        this.cart = cart;
         this.context = context;
         this.activity = activity;
     }

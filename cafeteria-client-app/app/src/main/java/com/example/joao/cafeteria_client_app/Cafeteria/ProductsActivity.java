@@ -36,7 +36,6 @@ import java.util.List;
 
 public class ProductsActivity extends AppCompatActivity implements CallbackProducts, NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
 
-    List<Product> productsList = new ArrayList<Product>();
     ProductsAdapter productsAdapter;
 
     TextView user_name, user_email;
@@ -129,7 +128,8 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
         } else if (id == R.id.nav_vouchers) {
 
         } else if (id == R.id.nav_past_transactions) {
-
+            Intent intent = new Intent(getApplicationContext(), PastTransactionsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
@@ -178,11 +178,11 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
 
     @Override
     public void onGetProductsCompleted(List<Product> products) {
-        this.productsList = products;
+        ProductsList.getInstance().setProducts(products);
 
         saveProductsList(products);
 
-        productsAdapter = new ProductsAdapter(productsList);
+        productsAdapter = new ProductsAdapter(ProductsList.getInstance().getProducts());
         RecyclerView.LayoutManager productsManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(productsManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());

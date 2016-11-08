@@ -68,7 +68,7 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
         total_cart_price = (TextView) findViewById(R.id.total_cart_price);
         total_cart_price.setText("Total Price: " + String.format("%.2f", Cart.getInstance().getTotalValue()) + " €");
 
-        cartProductsAdapter = new CartProductsAdapter(getBaseContext(), this);
+        cartProductsAdapter = new CartProductsAdapter(getBaseContext(), this, Cart.getInstance().getCart());
         RecyclerView.LayoutManager productsManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(productsManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
