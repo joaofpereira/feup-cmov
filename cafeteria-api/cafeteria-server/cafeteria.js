@@ -197,7 +197,7 @@ exports.insertTransactionRows = function insertTransactionRows(res, callback, ca
 
 		client.connect();
 
-	const query = client.query('INSERT INTO transactionrows (transactionID, productID, amount) VALUES ($1, $2 ,$3) RETURNING transactionrows.id', [transactionID, transaction.productAmount[index]['product-id'], transaction.productAmount[index]['product-amount']],
+	const query = client.query('INSERT INTO transactionrows (transactionID, productID, amount) VALUES ($1, $2 ,$3) RETURNING transactionrows.id', [transactionID, transaction.products[index]['product-id'], transaction.products[index]['product-amount']],
 		function(err, result) {
 		client.end();
 
