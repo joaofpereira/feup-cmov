@@ -366,15 +366,16 @@ exports.startDB = function startDB() {
 	//createTableProducts();
 	//createTableUsers();
 	//createTableTransactions();
-	//createTableTransactionRows();
+	createTableTransactionRows();
 }
 
 exports.dropTables = function dropTables() {
-	dropTableCreditCards();
-	dropTableUsers();
-	dropTableTransactionRows();
-	dropTableProducts();
-	dropTableTransactions();
+	//dropTableTransactions();
+	//dropTableUsers();
+	//dropTableCreditCards();
+	//dropTableTransactionRows();
+	//dropTableProducts();
+
 }
 
 function generatePin () {
