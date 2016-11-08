@@ -109,12 +109,15 @@ function callbackGetUser(res, user, pin, callback) {
 }
 
 
-function callbackGetTransactionRows(res,transactions, index, callback) {
+function callbackGetTransactionRows(res, transactions, index, callback) {
 if(Object.keys(transactions).length >= index + 1) {
 	console.log("transactionID CALLBACK: " + transactions[index].id);
 	console.log("index: " + index);
 	console.log("ENTREI AQUI no callback");
-	db.getTransactionRowsByTransactionID(res, transactions, index, callback, callbackGetTransactionRows);}
+	db.getTransactionRowsByTransactionID(res, transactions, index, callback, callbackGetTransactionRows);
+} else {
+		callback(res, transactions, null);
+	}
 }
 
 function callbackTransactionRows(res, callback, transactionID, transaction, index) {
@@ -150,7 +153,7 @@ app.get('/api/transactions', function (req, res) {
 	db.getTransactions(res, callback);
 });
 
-app.get('/api/transaction/:userID', function (req, res) {
+app.get('/api/transactions/:userID', function (req, res) {
 	db.getAllTransactionsByUserID(req, res, callback, callbackGetTransactionRows);
 });
 

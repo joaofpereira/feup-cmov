@@ -331,13 +331,13 @@ exports.getAllTransactionsByUserID = function getAllTransactionsByUserID(req, re
 	});
 }
 
-exports.getTransactionRowsByTransactionID = function getTransactionRowsByTransactionID(res, transactions, index, callback,callbackGetTransactionRows) {
+exports.getTransactionRowsByTransactionID = function getTransactionRowsByTransactionID(res, transactions, index, callback, callbackGetTransactionRows) {
 	var client = initClient();
 
 	console.log("Entrei no transactionRowsByTransactionID with ID:" + transactions[index].id);
 
 	client.connect();
-	const query = client.query("SELECT transactionrows.productID,transactionrows.amount FROM transactionrows WHERE transactionrows.transactionID = '"+ transactions[index].id +"'",
+	const query = client.query("SELECT transactionrows.productID, transactionrows.amount FROM transactionrows WHERE transactionrows.transactionID = '"+ transactions[index].id +"'",
 		function(err, result) {
 			client.end();
 			if (err) {
@@ -345,12 +345,8 @@ exports.getTransactionRowsByTransactionID = function getTransactionRowsByTransac
 					callback(res, null, err);
 			} else {
 					console.log(result.rows);
-
-					callback(res,{
-						'transactionID': transactions[index].id,
-						'timestamp': transactions[index].date,
-						'produtcs': result.rows,
-					}, null);
+					transactions[index]['products'] = result.rows;
+					callbackGetTransactionRows(res, transactions, index + 1, callback);
 			}
 	});
 }
