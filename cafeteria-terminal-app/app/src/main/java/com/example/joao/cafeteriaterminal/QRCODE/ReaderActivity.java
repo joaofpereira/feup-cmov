@@ -86,6 +86,7 @@ public class ReaderActivity extends AppCompatActivity {
 
                     JsonArray jsonArray = element.getAsJsonArray();
                     Log.i("testing json array",jsonArray.toString());*/
+                    Log.i("Products content:", transaction.getProducts().toString() );
                     params.put("products", transaction.getProducts());
 
 
