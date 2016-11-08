@@ -205,9 +205,13 @@ exports.insertTransactionRows = function insertTransactionRows(res, callback, ca
 		function(err, result) {
 		client.end();
 
+			console.log("ENTREI LA");
+
 			if (err) {
+					console.log(err);
 					callback(res, null, err);
 			} else {
+					console.log("ENTREI LA MAIS");
 					callbackTransactionRows(res, callback, transactionID, transaction, index + 1);
 			}
 		});

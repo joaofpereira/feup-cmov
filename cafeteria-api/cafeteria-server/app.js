@@ -19,6 +19,10 @@ var p6 = new Product('Rebuçado', 0.1);
 var p7 = new Product('Pipocas', 1.5);
 var p8 = new Product('Rissol', 0.8);
 var p9 = new Product('Baguete Mista', 1.0);
+var p10 = new Product('Compal', 1.0);
+var p11 = new Product('Kinder Bueno', 1.0);
+var p12 = new Product('Choc. Dove', 1.0);
+var p13 = new Product('Panike Misto', 1.1);
 
 //db.dropTables();
 //db.startDB();
@@ -30,7 +34,11 @@ db.insertProduct(p5);
 db.insertProduct(p6);
 db.insertProduct(p7);
 db.insertProduct(p8);
-db.insertProduct(p9);*/
+db.insertProduct(p9)
+db.insertProduct(p10)
+db.insertProduct(p11)
+db.insertProduct(p12)
+db.insertProduct(p13);*/
 
 /** bodyParser.urlencoded(options)
  * Parses the text as URL encoded data (which is how browsers tend to send form data from regular forms set to POST)
