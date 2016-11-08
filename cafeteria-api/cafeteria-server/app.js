@@ -108,6 +108,13 @@ function callbackGetUser(res, user, pin, callback) {
 	db.getCreditCardByID(res, user, pin, callback);
 }
 
+
+function callbackGetTransactionRows(res,transactionID , callback) {
+	console.log("transactionID CALLBACK: " + transactionID);
+	console.log("ENTREI AQUI no callback");
+	db.getTransactionRowsByTransactionID(res, transactionID, callback);
+}
+
 function callbackTransactionRows(res, callback, transactionID, transaction, index) {
 	if(Object.keys(transaction.products).length >= index + 1) {
 			console.log("SIZE: " + Object.keys(transaction.products).length);
@@ -140,8 +147,9 @@ app.get('/api/products', function (req, res) {
 app.get('/api/transactions', function (req, res) {
 	db.getTransactions(res, callback);
 });
-app.get('/api/transaction/:id', function (req, res) {
-	db.getTransactionRowByTransactionID(req,res, callback);
+
+app.get('/api/transaction/:userID', function (req, res) {
+	db.getAllTransactionsByUserID(req, res, callback, callbackGetTransactionRows);
 });
 
 /**

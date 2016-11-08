@@ -277,6 +277,8 @@ exports.getCreditCardByID = function getCreditCardByID(res, user, pin, callback)
 	});
 }
 
+
+
 exports.getProductByName = function getProductByName(req, res, callback) {
 	var client = initClient();
 
@@ -311,36 +313,42 @@ exports.getProducts = function getProducts(res, callback) {
 	});
 }
 
-exports.getAllTransaction = function getAllTransaction(res, callback) {
+exports.getAllTransactionsByUserID = function getAllTransactionsByUserID(req, res, callback, callbackGetTransactionRows) {
 	var client = initClient();
 
+	var userID = req.params['userID'];
+
 	client.connect();
-	const query = client.query('SELECT * FROM transaction',
+	const query = client.query("SELECT * FROM transactions WHERE transactions.userID = '"+ userID +"'",
 		function(err, result) {
 			client.end();
 			if (err) {
 					callback(res, null, err);
 			} else {
-					callback(res, {'transaction': result.rows}, null);
+					console.log("transactionID:" + result.rows[0].id);
+					callbackGetTransactionRows(res, result.rows[0].id, callback);
 			}
 	});
 }
 
-exports.getTransactionRowByTransactionID = function getTransactionRowByTransactionID(req, res, callback) {
+exports.getTransactionRowsByTransactionID = function getTransactionRowsByTransactionID(res, transactionID, callback) {
 	var client = initClient();
-	var transactionID = req.params['transactionID'];
+
+	console.log("Entrei no transactionRowsByTransactionID with ID:" + transactionID);
 
 	client.connect();
-	const query = client.query("SELECT * FROM transactiorow WHERE transactionow.transactionID ='" + transactionID + "'",
+	const query = client.query("SELECT * FROM transactionrows WHERE transactionrows.transactionID = '"+ transactionID +"'",
 		function(err, result) {
 			client.end();
 			if (err) {
 					callback(res, null, err);
 			} else {
-					callback(res, {'transactiorow': result.rows}, null);
+					callback(res, result.rows, callback);
 			}
 	});
 }
+
+
 
 function updateUserHashPin(userID, pin, creditCard, res, callback) {
 	var client = initClient();
