@@ -38,6 +38,7 @@ function dropTableCreditCards() {
 	query.on('end', () => { client.end(); });
 }
 
+
 function createTableUsers() {
 	var client = initClient();
 
@@ -64,6 +65,34 @@ function dropTableUsers() {
 
 	query.on('end', () => { client.end(); });
 }
+
+function createTableVouchers() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'CREATE TABLE vouchers (' +
+		'id SERIAL PRIMARY KEY not null,'+
+		'type CHAR(1) not null,' +
+		'serialNumber INTEGER not null,' +
+		'signature CHAR(46) not null,'+
+		'userID UUID references users(id) not null)');
+
+	query.on('end', () => { client.end(); });
+}
+
+function dropTableVouchers() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'DROP TABLE vouchers;');
+
+	query.on('end', () => { client.end(); });
+}
+
+
+
 
 function createTableProducts() {
 	var client = initClient();
@@ -356,6 +385,24 @@ exports.getProducts = function getProducts(res, callback) {
 	});
 }
 
+exports.getVouchersByUserID = function getVouchersByUserID(req,res,callback){
+
+	var client = initClient();
+	var userID = req.params['userID'];
+
+	client.connect();
+	const query = client.query("SELECT * FROM vouchers WHERE vouchers.userID= '"+ userID +"'",
+		function(err, result) {
+			client.end();
+			if (err) {
+					callback(res, null, err);
+			} else {
+					callback(res, {'vouchers': result.rows}, null);
+			}
+	});
+
+}
+
 exports.getAllTransactionsByUserID = function getAllTransactionsByUserID(req, res, callback, callbackGetTransactionRows) {
 	var client = initClient();
 
@@ -420,7 +467,8 @@ exports.startDB = function startDB() {
 	//createTableProducts();
 	//createTableUsers();
 	//createTableTransactions();
-	createTableTransactionRows();
+	//createTableTransactionRows();
+	createTableVouchers();
 }
 
 exports.dropTables = function dropTables() {
@@ -429,6 +477,7 @@ exports.dropTables = function dropTables() {
 	//dropTableCreditCards();
 	//dropTableTransactionRows();
 	//dropTableProducts();
+	//dropTableVouchers();
 
 }
 
