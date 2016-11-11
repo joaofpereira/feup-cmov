@@ -5,7 +5,7 @@ import com.loopj.android.http.*;
 
 public class CafeteriaRestTerminal{
 
-    private static final String BASE_URL = "https://feup-cmov.herokuapp.com/api/";
+    private static final String BASE_URL = "http://192.168.1.77:5000/api/";
 
     private static AsyncHttpClient client = new AsyncHttpClient();
 
@@ -14,6 +14,8 @@ public class CafeteriaRestTerminal{
     }
 
     public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client.setTimeout(60 * 1000);
+
         client.post(getAbsoluteUrl(url), params, responseHandler);
     }
 

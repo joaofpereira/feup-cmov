@@ -110,7 +110,7 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+                moveTaskToBack(true);
         }
     }
 

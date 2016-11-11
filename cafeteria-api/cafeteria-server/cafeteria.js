@@ -172,6 +172,49 @@ exports.insertUser= function insertUser(req, res, creditCard, callback){
 		});
 }
 
+exports.insertAllTransactions = function insertAllTransactions(client, req, res, indexT, callback, callBackAllTransactions, callbackAllTransactionRows){
+
+	var transactions = JSON.parse(req.body.transactions);
+	//var products = JSON.parse(transactions[0].products);
+	console.log("\nIndexT: " + indexT);
+	console.log(transactions[indexT].userID);
+
+	//console.log(products);
+
+	if(client == null) {
+		client = initClient();
+		client.connect();
+	}
+
+	console.log("Client: " + client);
+
+	const query = client.query('INSERT INTO transactions (userID, date) VALUES ($1, current_timestamp) RETURNING transactions.id', [transactions[indexT].userID],
+		function(err, result) {
+			console.log("Result: " + result);
+
+			if (err) {
+				callback(res, null, err);
+			} else {
+				console.log("DENTRO DA CHAMADA " + transactions[0].products);
+				callbackAllTransactionRows(client, req, res, transactions, indexT, callback, callBackAllTransactions, callbackAllTransactionRows, result.rows[0].id, transactions[indexT], 0);
+			}
+		});
+}
+
+exports.insertAllTransactionRows = function insertTransactionRows(client, req, res, transactions, indexT, callback, callBackAllTransactions, callbackAllTransactionRows, transactionID, transaction, indexR) {
+
+		const query = client.query('INSERT INTO transactionrows (transactionID, productID, amount) VALUES ($1, $2 ,$3) RETURNING transactionrows.id', [transactionID, transaction.products[indexR]['product-id'], transaction.products[indexR]['product-amount']],
+		function(err, result) {
+
+			if (err) {
+					console.log(err);
+					callback(res, null, err);
+			} else {
+					callbackAllTransactionRows(client, req,  res, transactions, indexT, callback, callBackAllTransactions, callbackAllTransactionRows, transactionID, transaction, indexR + 1);
+			}
+		});
+}
+
 exports.insertTransaction = function insertTransaction(req, res, callback, callbackTransactionRows){
 
 	var transaction = req.body;

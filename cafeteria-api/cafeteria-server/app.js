@@ -108,12 +108,8 @@ function callbackGetUser(res, user, pin, callback) {
 	db.getCreditCardByID(res, user, pin, callback);
 }
 
-
 function callbackGetTransactionRows(res, transactions, index, callback) {
 if(Object.keys(transactions).length >= index + 1) {
-	console.log("transactionID CALLBACK: " + transactions[index].id);
-	console.log("index: " + index);
-	console.log("ENTREI AQUI no callback");
 	db.getTransactionRowsByTransactionID(res, transactions, index, callback, callbackGetTransactionRows);
 } else {
 		callback(res, transactions, null);
@@ -122,10 +118,31 @@ if(Object.keys(transactions).length >= index + 1) {
 
 function callbackTransactionRows(res, callback, transactionID, transaction, index) {
 	if(Object.keys(transaction.products).length >= index + 1) {
-			console.log("SIZE: " + Object.keys(transaction.products).length);
-			console.log("Index: " + index);
-			console.log("ENTREI AQUI");
 			db.insertTransactionRows(res, callback, callbackTransactionRows, transactionID, transaction, index);
+		} else {
+			//TODO generate vouchers here
+		}
+}
+
+function callBackAllTransactions(client, req, res, callback, callBackAllTransactions, callbackAllTransactionRows, indexT) {
+		if(JSON.parse(req.body.transactions).length >= indexT + 1) {
+			db.insertAllTransactions(client, req, res, indexT, callback, callBackAllTransactions, callbackAllTransactionRows);
+		} else {
+			client.end();
+
+			console.log("CHEGUEI AO CALLBACK");
+
+			callback(res, {
+				'mensagem': 'deu certo'
+			}, null);
+		}
+}
+
+function callbackAllTransactionRows(client, req, res, transactions, indexT, callback, callBackAllTransactions, callbackAllTransactionRows, transactionID, transaction, indexR) {
+	if(Object.keys(transaction.products).length >= indexR + 1) {
+			db.insertAllTransactionRows(client, req, res, transactions, indexT, callback, callBackAllTransactions, callbackAllTransactionRows, transactionID, transaction, indexR);
+		} else {
+			callBackAllTransactions(client, req, res, callback, callBackAllTransactions, callbackAllTransactionRows, indexT + 1);
 		}
 }
 
@@ -173,6 +190,9 @@ app.post('/api/creditcard', function(req, res) {
 	db.insertCreditCard(req, res, callback);
 });
 
+app.post('/api/updateTransactions', function(req, res) {
+	db.insertAllTransactions(null, req, res, 0, callback, callBackAllTransactions, callbackAllTransactionRows);
+});
 
 app.post('/api/transaction', function(req, res) {
 	db.insertTransaction(req, res, callback, callbackTransactionRows);
