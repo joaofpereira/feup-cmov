@@ -60,6 +60,16 @@ public class LoginActivity extends AppCompatActivity implements CallbackLogin {
 
         loginActivity = this;
 
+        if (sharedPreferences.contains("user")) {
+            String json = sharedPreferences.getString("user", "");
+
+            Gson gson = new Gson();
+            User.createInstance(gson.fromJson(json, User.class));
+
+            startProductsActivity();
+
+        }
+
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

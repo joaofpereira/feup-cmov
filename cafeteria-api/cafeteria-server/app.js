@@ -1,6 +1,9 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var dotenv = require('dotenv');
+var crypto = require('crypto');
+var assert = require('assert');
+var fs = require('fs');
 
 dotenv.load();
 
@@ -120,7 +123,7 @@ function callbackTransactionRows(res, callback, transactionID, transaction, inde
 	if(Object.keys(transaction.products).length >= index + 1) {
 			db.insertTransactionRows(res, callback, callbackTransactionRows, transactionID, transaction, index);
 		} else {
-			//TODO generate vouchers here
+				const sign = crypto.createSign('sha1WithRSAEncryption');
 		}
 }
 
@@ -146,11 +149,37 @@ function callbackAllTransactionRows(client, req, res, transactions, indexT, call
 		}
 }
 
+function testVouchers() {
+	var voucher = generateVoucherSerialNumber();
+
+	const sign = crypto.createSign('sha1WithRSAEncryption');
+
+	sign.update(voucher);
+
+	var privateKey = fs.readFileSync('privkey.pem');
+	console.log(sign.sign(privateKey, 'hex'));
+	console.log(voucher);
+}
+
+function generateVoucherSerialNumber () {
+    min = 1, max = 1000, sumMin = 100, sumMax = 500;
+    var first = Math.floor(Math.random() * (max - min + 1)) + min;
+		var second = Math.floor(Math.random() * (sumMax - sumMin + 1)) + sumMin;
+
+		var result = ("0" + (first + second)).substr(-4);
+
+		return result;
+}
+
 /**
 *   HTTP GET functions
 */
 app.get('/', function (req, res) {
 	res.send('Hello World!');
+});
+
+app.get('/vouchers', function (req, res) {
+	testVouchers();
 });
 
 app.get('/api/user/:email', function (req, res) {
