@@ -113,7 +113,7 @@ public class Cart {
         String result = new String();
 
         result += User.getInstance().getID() + "\n" + getTotalValue();
-        result += "\nNumber of Vouchers:" +cartVouchers.size();
+        result += "\n"+cartVouchers.size();
 
         for(int i = 0; i < cartVouchers.size(); i++)
             result += "\n" + cartVouchers.get(i).getSerial() +":"+cartVouchers.get(i).getSignature();
