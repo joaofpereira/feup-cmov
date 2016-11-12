@@ -441,6 +441,25 @@ exports.getTransactionRowsByTransactionID = function getTransactionRowsByTransac
 	});
 }
 
+exports.getVouchersByUserID = function getVouchersByUserID(req,res,callback){
+
+	var client = initClient();
+	var userID = req.params['userID'];
+
+	client.connect();
+	const query = client.query("SELECT * FROM vouchers WHERE vouchers.userID= '"+ userID +"'",
+		function(err, result) {
+			client.end();
+			if (err) {
+					callback(res, null, err);
+			} else {
+					callback(res, {'vouchers': result.rows}, null);
+			}
+	});
+
+}
+
+
 exports.getTotalValueOfTransactions = function getTotalValueOfTransactions(res, callback, createVouchersCoffeePopCorn, transaction) {
 	var client = initClient();
 

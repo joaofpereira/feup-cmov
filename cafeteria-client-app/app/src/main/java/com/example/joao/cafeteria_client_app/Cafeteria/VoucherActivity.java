@@ -143,7 +143,7 @@ public class VoucherActivity extends AppCompatActivity implements CallbackVouche
             voucherActivity.finish();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.products_layout);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.voucher_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

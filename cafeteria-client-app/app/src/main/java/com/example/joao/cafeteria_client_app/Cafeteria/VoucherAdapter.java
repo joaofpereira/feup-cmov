@@ -67,7 +67,7 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.MyViewHo
         holder.voucher = voucher;
 
         holder.type.setText(voucher.getType());
-        holder.serial.setText(voucher.getSerial());
+        holder.serial.setText(String.valueOf(voucher.getSerial()));
     }
 
     @Override
