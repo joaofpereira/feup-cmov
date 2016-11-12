@@ -14,6 +14,8 @@ import com.example.joao.cafeteria_client_app.Cafeteria.ProductsList;
 import com.example.joao.cafeteria_client_app.Cafeteria.Transaction;
 import com.example.joao.cafeteria_client_app.Cafeteria.User;
 import com.example.joao.cafeteria_client_app.Cafeteria.ProductsActivity;
+import com.example.joao.cafeteria_client_app.Cafeteria.Voucher;
+import com.example.joao.cafeteria_client_app.Cafeteria.VoucherActivity;
 import com.loopj.android.http.*;
 
 import java.net.UnknownHostException;
@@ -207,6 +209,67 @@ public class CafeteriaRestClientUsage {
                 Log.i("RESPONSE STRING: ", responseString);
             }
         });
+    }
+
+    public static void getVouchers(final VoucherActivity voucherActivity) throws JSONException {
+
+        CafeteriaRestClient.get("vouchers/" + User.getInstance().getID().toString(), null, new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        try {
+                            List<Voucher> vouchers = new ArrayList<>();
+
+                            int code = response.getInt("code");
+
+                            if (code == 200) {
+                                JSONArray data = response.getJSONArray("data");
+
+                                for (int i = 0; i < data.length(); i++) {
+                                    JSONObject voucher = data.getJSONObject(i);
+
+                                    // get voucher id
+                                    int voucher_id = voucher.getInt("id");
+
+                                    // get voucher type
+                                    String voucher_type;
+                                    if (voucher.getString("type") == "a") {
+                                        voucher_type = "popcorn";
+                                    } else if (voucher.getString("type") == "b") {
+                                        voucher_type = "coffee";
+                                    } else {
+                                        voucher_type = "discount";
+                                    }
+
+                                    // get voucher serial
+                                    int voucher_serial = voucher.getInt("serialnumber");
+
+                                    // get voucher signature
+                                    String voucher_signature = voucher.getString("signature");
+
+
+                                    vouchers.add(new Voucher(voucher_id, voucher_type, voucher_serial, voucher_signature));
+                                }
+                            } else {
+
+                            }
+
+                            voucherActivity.onGetVouchersCompleted(vouchers);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable
+                            throwable) {
+                        Log.i("HEADERS: ", headers.toString());
+                        Log.i("RESPONSE STRING: ", responseString);
+                    }
+                }
+
+        );
     }
 
     public static User createUser(JSONObject data) throws JSONException {
