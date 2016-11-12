@@ -19,7 +19,6 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.MyViewHo
         public TextView type, serial;
         public ImageButton plusButton, minusButton;
 
-        public int product_amount;
         public Voucher voucher;
 
         public MyViewHolder(View view) {

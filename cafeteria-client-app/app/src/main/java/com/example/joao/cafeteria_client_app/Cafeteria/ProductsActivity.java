@@ -126,6 +126,8 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
             Intent intent = new Intent(productsActivity, CartActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_vouchers) {
+            Intent intent = new Intent(getApplicationContext(), VoucherActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_past_transactions) {
             Intent intent = new Intent(getApplicationContext(), PastTransactionsActivity.class);

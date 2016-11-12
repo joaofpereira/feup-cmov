@@ -46,10 +46,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
-            android:name=".Cafeteria.PastTransactionsActivity"
-            android:label="@string/past_transactions"
+        android:name=".Cafeteria.PastTransactionsActivity"
+        android:label="@string/past_transactions"
+        android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Cafeteria.VoucherActivity"
+            android:label="@string/vouchers"
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".Cafeteria.TransactionActivity"></activity>
+
     </application>
 
 </manifest>

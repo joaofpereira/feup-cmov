@@ -222,13 +222,16 @@ public class CafeteriaRestClientUsage {
                             int code = response.getInt("code");
 
                             if (code == 200) {
-                                JSONArray data = response.getJSONArray("data");
 
-                                for (int i = 0; i < data.length(); i++) {
-                                    JSONObject voucher = data.getJSONObject(i);
+                                JSONObject data = response.getJSONObject("data");
+                                JSONArray vouchersArray = data.getJSONArray("vouchers");
+
+                                for (int i = 0; i < vouchersArray.length(); i++) {
+                                    JSONObject voucher = vouchersArray.getJSONObject(i);
 
                                     // get voucher id
                                     int voucher_id = voucher.getInt("id");
+                                    Log.i("",String.valueOf(voucher_id));
 
                                     // get voucher type
                                     String voucher_type;
@@ -239,13 +242,13 @@ public class CafeteriaRestClientUsage {
                                     } else {
                                         voucher_type = "discount";
                                     }
-
+                                    Log.i("",voucher_type);
                                     // get voucher serial
                                     int voucher_serial = voucher.getInt("serialnumber");
-
+                                    Log.i("", String.valueOf(voucher_serial));
                                     // get voucher signature
                                     String voucher_signature = voucher.getString("signature");
-
+                                    Log.i("",voucher_signature);
 
                                     vouchers.add(new Voucher(voucher_id, voucher_type, voucher_serial, voucher_signature));
                                 }
