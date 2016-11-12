@@ -13,19 +13,21 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
 import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
 import com.example.joao.cafeteria_client_app.R;
 
-
 public class CartActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     CartProductsAdapter cartProductsAdapter;
 
-    TextView total_cart_price, user_name, user_email;
+    TextView total_cart_price, user_name, user_email, cart_vouchers;
 
     RecyclerView recyclerView;
     NavigationView navigationView;
@@ -68,8 +70,13 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
         total_cart_price = (TextView) findViewById(R.id.total_cart_price);
         total_cart_price.setText("Total Price: " + String.format("%.2f", Cart.getInstance().getTotalValue()) + " €");
 
+        cart_vouchers = (TextView) findViewById(R.id.cart_vouchers);
+        cart_vouchers.setText(Html.fromHtml("<font color='#3F51B5'>Vouchers: </font>" + Cart.getInstance().getStringOfVouchers()), TextView.BufferType.SPANNABLE);
+
         cartProductsAdapter = new CartProductsAdapter(getBaseContext(), this, Cart.getInstance().getCart());
+
         RecyclerView.LayoutManager productsManager = new LinearLayoutManager(getApplicationContext());
+
         recyclerView.setLayoutManager(productsManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(cartProductsAdapter);

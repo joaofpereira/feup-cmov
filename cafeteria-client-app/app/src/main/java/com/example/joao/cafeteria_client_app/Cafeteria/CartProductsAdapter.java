@@ -87,4 +87,6 @@ public class CartProductsAdapter extends RecyclerView.Adapter<CartProductsAdapte
     public int getItemViewType(int position) {
         return (position == cart.size()) ? R.layout.checkout_btn : R.layout.cart_products_list_row;
     }
+
+
 }

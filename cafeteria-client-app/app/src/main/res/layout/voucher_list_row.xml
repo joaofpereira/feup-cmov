@@ -47,17 +47,7 @@
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_plus" />
 
-        <TextView
-            android:id="@+id/product_amount"
-            android:layout_width="32dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:textSize="16dp"
-            android:textStyle="bold"
-            android:layout_gravity="center|center_vertical"
-            android:textAlignment="center"
-            android:paddingTop="6dp"
-            android:text="N" />
+
 
         <ImageButton
             android:id="@+id/minusButton"

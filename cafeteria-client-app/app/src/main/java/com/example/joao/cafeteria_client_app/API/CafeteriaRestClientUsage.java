@@ -235,9 +235,9 @@ public class CafeteriaRestClientUsage {
 
                                     // get voucher type
                                     String voucher_type;
-                                    if (voucher.getString("type") == "1") {
+                                    if (voucher.getInt("type") == 1) {
                                         voucher_type = "popcorn";
-                                    } else if (voucher.getString("type") == "2") {
+                                    } else if (voucher.getInt("type") == 2) {
                                         voucher_type = "coffee";
                                     } else {
                                         voucher_type = "discount";

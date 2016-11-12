@@ -74,8 +74,7 @@ public class VoucherActivity extends AppCompatActivity implements CallbackVouche
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        // Start Nav View
-
+        // Start Nav 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -185,7 +184,7 @@ public class VoucherActivity extends AppCompatActivity implements CallbackVouche
 
         saveVoucherList(vouchers);
 
-        vouchersAdapter = new VoucherAdapter(VoucherList.getInstance().getVouchers());
+        vouchersAdapter = new VoucherAdapter(VoucherList.getInstance().getVouchers(), getBaseContext());
         RecyclerView.LayoutManager voucherManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(voucherManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -225,7 +224,7 @@ public class VoucherActivity extends AppCompatActivity implements CallbackVouche
     @Override
     public void onRefresh() {
         // empty cart
-        Cart.getInstance().clearCart();
+        Cart.getInstance().clearVouchers();
 
         try {
             CafeteriaRestClientUsage.getVouchers(voucherActivity);

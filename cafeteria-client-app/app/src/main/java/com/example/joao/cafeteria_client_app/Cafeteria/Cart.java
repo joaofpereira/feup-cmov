@@ -1,5 +1,7 @@
 package com.example.joao.cafeteria_client_app.Cafeteria;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,15 +9,23 @@ public class Cart {
     private static Cart instance = null;
 
     List<CartProduct> cart;
+    List<Voucher> cartVouchers;
     float totalValue;
 
     public Cart() {
         this.cart = new ArrayList<CartProduct>();
+        this.cartVouchers = new ArrayList<Voucher>();
         this.totalValue = 0;
     }
 
     public List<CartProduct> getCart() {
         return this.cart;
+    }
+
+    public List<Voucher> getCartVouchers() {return this.cartVouchers;}
+
+    public void addVoucherToCart(Voucher voucher){
+        this.cartVouchers.add(voucher);
     }
 
     public void add(Product product, int amount) {
@@ -39,6 +49,12 @@ public class Cart {
         }
     }
 
+    public void removeVoucher(int id) {
+        for (int i = 0; i < cartVouchers.size(); i++)
+            if(cartVouchers.get(i).getId() == id)
+                cartVouchers.remove(i);
+    }
+
     private CartProduct getCartProductByID(int id) {
         for (int i = 0; i < cart.size(); i++)
             if (cart.get(i).getID() == id)
@@ -56,6 +72,17 @@ public class Cart {
         return false;
     }
 
+    public boolean sameTypeOfVoucherInCart(Voucher voucher) {
+        for (int i = 0; i < cartVouchers.size(); i++)
+            if (cartVouchers.get(i).getType() == voucher.getType()) {
+                Log.i("RESULTADO: ", Boolean.toString(cartVouchers.get(i).getType() == voucher.getType()));
+
+                return true;
+            }
+
+        return false;
+    }
+
     public float getTotalValue() {
         return this.totalValue;
     }
@@ -67,6 +94,11 @@ public class Cart {
     public void clearCart() {
         this.cart.clear();
         this.totalValue = 0;
+        this.cartVouchers.clear();
+    }
+
+    public void clearVouchers() {
+        this.cartVouchers.clear();
     }
 
     public String getQRCodeData() {
@@ -85,5 +117,24 @@ public class Cart {
             instance = new Cart();
         }
         return instance;
+    }
+
+    public String getStringOfVouchers(){
+
+        Log.i("TESTE: ", "Entrei");
+        Log.i("NumVouchers: ", "" + cartVouchers.size());
+
+        String temp = new String();
+
+        if(!cartVouchers.isEmpty())
+            temp += cartVouchers.get(0).getType();
+
+        for (int i = 1 ; i < cartVouchers.size(); i++)
+            temp += ", " + cartVouchers.get(i).getType();
+
+        Log.i("STRING TEMP: ", temp);
+        Log.i("STRING: ", "ksnjnfsm");
+
+        return temp;
     }
 }
