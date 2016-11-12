@@ -76,7 +76,7 @@ public class QRCodeActivity extends AppCompatActivity implements NavigationView.
             @Override
             public void onClick(View view) {
                 Cart.getInstance().clearCart();
-
+                Cart.getInstance().clearVouchers();
                 Intent intent = new Intent(getApplicationContext(), ProductsActivity.class);
                 startActivity(intent);
             }
