@@ -195,12 +195,12 @@ app.get('/api/products', function (req, res) {
 });
 
 
-app.get('/api/transactions', function (req, res) {
-	db.getTransactions(res, callback);
-});
-
 app.get('/api/transactions/:userID', function (req, res) {
 	db.getAllTransactionsByUserID(req, res, callback, callbackGetTransactionRows);
+});
+
+app.get('/api/vouchers/:userID', function(req,res){
+		db.getVouchersByUserID(req, res, callback);
 });
 
 /**
