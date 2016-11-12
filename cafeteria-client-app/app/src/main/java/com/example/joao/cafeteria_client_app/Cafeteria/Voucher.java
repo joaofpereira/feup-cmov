@@ -43,6 +43,7 @@ public class Voucher {
         return signature;
     }
 
+
     public void setSignature(String signature) {
         this.signature = signature;
     }

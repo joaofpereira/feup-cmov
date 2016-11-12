@@ -53,6 +53,7 @@ public class Cart {
         for (int i = 0; i < cartVouchers.size(); i++)
             if(cartVouchers.get(i).getId() == id)
                 cartVouchers.remove(i);
+
     }
 
     private CartProduct getCartProductByID(int id) {
@@ -116,7 +117,7 @@ public class Cart {
         result += "\n"+cartVouchers.size();
 
         for(int i = 0; i < cartVouchers.size(); i++)
-            result += "\n" + cartVouchers.get(i).getSerial() +"\n"+cartVouchers.get(i).getSignature();
+            result += "\n"+cartVouchers.get(i).getType()+"\n" + cartVouchers.get(i).getSerial() +"\n"+cartVouchers.get(i).getSignature();
 
         for(int i = 0; i < cart.size(); i++)
             result += "\n" + cart.get(i).getID() + ":" + cart.get(i).getAmount();
