@@ -2,9 +2,6 @@ package com.example.joao.cafeteriaterminal.Cafeteria;
 
 import android.util.Pair;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
@@ -12,16 +9,21 @@ import java.util.UUID;
 public class Transaction implements Serializable {
 
     private UUID userID;
+    private float totalValue;
     private List<Pair<Integer, Integer>> products;
-    //private JSONArray products;
 
-    public Transaction(UUID userID, /*JSONArray products*/ List<Pair<Integer, Integer>> products) {
+    public Transaction(UUID userID, float totalValue, List<Pair<Integer, Integer>> products) {
         this.userID = userID;
+        this.totalValue = totalValue;
         this.products = products;
     }
 
     public UUID getUserID() {
         return userID;
+    }
+
+    public float getTotalValue() {
+        return totalValue;
     }
 
     public List<Pair<Integer, Integer>> getProducts() {
@@ -34,7 +36,7 @@ public class Transaction implements Serializable {
         for (int i = 0; i < products.size(); i++)
             result += products.get(i).first + ":" + products.get(i).second + "\n";
 
-        return "UserID: " + userID.toString() + "\nProducts: \n" + result;
+        return "UserID: " + userID.toString() + "\nTotalValue: " + this.totalValue + "\nProducts: \n" + result;
     }
 }
 

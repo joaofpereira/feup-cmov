@@ -72,7 +72,7 @@ public class Cart {
     public String getQRCodeData() {
         String result = new String();
 
-        result += User.getInstance().getID();
+        result += User.getInstance().getID() + "\n" + getTotalValue();
 
         for(int i = 0; i < cart.size(); i++)
             result += "\n" + cart.get(i).getID() + ":" + cart.get(i).getAmount();

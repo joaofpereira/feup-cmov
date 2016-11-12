@@ -57,6 +57,10 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 function callback(res, obj, err) {
+	console.log("ENTREI");
+	console.log(err);
+	console.log(obj);
+
 	if(err != null) {
 		if(err.constraint == 'users_username_key') {
 			res.json({
@@ -123,7 +127,7 @@ function callbackTransactionRows(res, callback, transactionID, transaction, inde
 	if(Object.keys(transaction.products).length >= index + 1) {
 			db.insertTransactionRows(res, callback, callbackTransactionRows, transactionID, transaction, index);
 		} else {
-				const sign = crypto.createSign('sha1WithRSAEncryption');
+			db.getTotalValueOfTransactions(res, callback, createVouchersCoffeePopCorn, transaction);
 		}
 }
 
@@ -149,16 +153,53 @@ function callbackAllTransactionRows(client, req, res, transactions, indexT, call
 		}
 }
 
-function testVouchers() {
-	var voucher = generateVoucherSerialNumber();
+function createVouchersCoffeePopCorn(res, callback, transaction, totalValue) {
+	var serialNumber = generateVoucherSerialNumber();
 
-	const sign = crypto.createSign('sha1WithRSAEncryption');
+	if(transaction.totalValue >= 20) {
+		var privateKey = fs.readFileSync('privkey.pem');
 
-	sign.update(voucher);
+    var signer = crypto.createSign('sha1');
+    signer.update(serialNumber);
+    var sign = signer.sign(privateKey,'base64');
 
-	var privateKey = fs.readFileSync('privkey.pem');
-	console.log(sign.sign(privateKey, 'hex'));
-	console.log(voucher);
+		var voucherType = getRandomVoucherType();
+
+		db.insertVoucher(res, callback, createDiscountVoucher, totalValue, transaction, serialNumber, sign, voucherType);
+	} else {
+			createDiscountVoucher(res, callback, transaction, totalValue, null);
+		}
+}
+
+function createDiscountVoucher(res, callback, transaction, totalValue, result) {
+	var serialNumber = generateVoucherSerialNumber();
+
+	diff = totalValue - transaction.totalValue;
+	qT = Math.floor(totalValue / 100);
+	qD = Math.floor(diff / 100);
+
+	if(qT != qD) {
+		var privateKey = fs.readFileSync('privkey.pem');
+
+    var signer = crypto.createSign('sha1');
+    signer.update(serialNumber);
+    var sign = signer.sign(privateKey,'base64');
+
+		var voucherType = getRandomVoucherType();
+
+		db.insertVoucherDiscount(res, callback, result, transaction, serialNumber, sign);
+	} else {
+			if(result != null)
+				callback(res, {
+					'simple-voucher': result,
+					'discount-voucher': 'null'
+				}, null);
+			else
+				callback(res, {
+					'simple-voucher': 'null',
+					'discount-voucher': 'null'
+				}, null);
+	}
 }
 
 function generateVoucherSerialNumber () {
@@ -171,6 +212,47 @@ function generateVoucherSerialNumber () {
 		return result;
 }
 
+function getRandomVoucherType () {
+		return Math.floor(Math.random() * 2) + 1;
+}
+
+function testVouchers() {
+		var serial_number = generateVoucherSerialNumber();
+
+		console.log(serial_number);
+
+		var privateKey = fs.readFileSync('privkey.pem');
+		var publicKey = fs.readFileSync('pubkey.pem');
+
+    var crypto = require('crypto');
+
+    var signer = crypto.createSign('sha1');
+    signer.update(serial_number);
+    var sign = signer.sign(privateKey);
+
+    var verifier = crypto.createVerify('sha1');
+    verifier.update(serial_number);
+    var ver = verifier.verify(publicKey, sign,'base64');
+    console.log(ver);//<--- always false!
+
+    console.log(sign);
+}
+
+function testVouchersType() {
+	console.log(getRandomVoucherType());
+}
+
+function testAlg(totalValue, lastTrans) {
+	diff = totalValue - lastTrans;
+	qT = Math.floor(totalValue / 100);
+	qD = Math.floor(diff / 100);
+
+	console.log("qT " + qT);
+	console.log("qD " + qD);
+
+	console.log(qT != qD);
+}
+
 /**
 *   HTTP GET functions
 */
@@ -180,6 +262,14 @@ app.get('/', function (req, res) {
 
 app.get('/vouchers', function (req, res) {
 	testVouchers();
+});
+
+app.get('/type', function (req, res) {
+	testVouchersType();
+});
+
+app.get('/alg', function (req, res) {
+	testAlg(100, 10);
 });
 
 app.get('/api/user/:email', function (req, res) {

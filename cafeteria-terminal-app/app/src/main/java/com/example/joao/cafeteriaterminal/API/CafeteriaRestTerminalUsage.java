@@ -82,7 +82,7 @@ public class CafeteriaRestTerminalUsage {
         //JSONArray products = new JSONArray();
         List<Pair<Integer, Integer>> products = new ArrayList<>();
 
-        for (int i = 1 ; i < lines.length ; i++){
+        for (int i = 2 ; i < lines.length ; i++){
             String temp[] = lines[i].split(":");
 
             Pair<Integer, Integer> pair = new Pair<>(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
@@ -95,7 +95,7 @@ public class CafeteriaRestTerminalUsage {
             products.put(obj);*/
         }
 
-        Transaction transaction = new Transaction(UUID.fromString(lines[0]), products);
+        Transaction transaction = new Transaction(UUID.fromString(lines[0]), Float.parseFloat(lines[1]), products);
 
         return transaction;
     }

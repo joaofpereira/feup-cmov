@@ -93,6 +93,7 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
                     RequestParams params = new RequestParams();
 
                     params.put("userID", transaction.getUserID());
+                    params.put("totalValue", transaction.getTotalValue());
 
                     JSONArray products = new JSONArray();
 
@@ -166,6 +167,7 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
 
                 try {
                     transaction.put("userID", t.getUserID());
+                    transaction.put("totalValue", t.getTotalValue());
 
                     JSONArray products = new JSONArray();
 

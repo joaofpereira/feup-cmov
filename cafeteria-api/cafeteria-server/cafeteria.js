@@ -38,7 +38,6 @@ function dropTableCreditCards() {
 	query.on('end', () => { client.end(); });
 }
 
-
 function createTableUsers() {
 	var client = initClient();
 
@@ -75,7 +74,7 @@ function createTableVouchers() {
 		'id SERIAL PRIMARY KEY not null,'+
 		'type CHAR(1) not null,' +
 		'serialNumber INTEGER not null,' +
-		'signature CHAR(46) not null,'+
+		'signature VARCHAR(64) not null,'+
 		'userID UUID references users(id) not null)');
 
 	query.on('end', () => { client.end(); });
@@ -90,9 +89,6 @@ function dropTableVouchers() {
 
 	query.on('end', () => { client.end(); });
 }
-
-
-
 
 function createTableProducts() {
 	var client = initClient();
@@ -124,6 +120,7 @@ function createTableTransactions() {
 	const query = client.query(
 		'CREATE TABLE transactions (' +
 		'id SERIAL PRIMARY KEY not null,'+
+		'totalValue FLOAT not null,' +
 		'date timestamp not null,'+
 		'userID UUID references users(id) not null)');
 
@@ -204,22 +201,14 @@ exports.insertUser= function insertUser(req, res, creditCard, callback){
 exports.insertAllTransactions = function insertAllTransactions(client, req, res, indexT, callback, callBackAllTransactions, callbackAllTransactionRows){
 
 	var transactions = JSON.parse(req.body.transactions);
-	//var products = JSON.parse(transactions[0].products);
-	console.log("\nIndexT: " + indexT);
-	console.log(transactions[indexT].userID);
-
-	//console.log(products);
 
 	if(client == null) {
 		client = initClient();
 		client.connect();
 	}
 
-	console.log("Client: " + client);
-
 	const query = client.query('INSERT INTO transactions (userID, date) VALUES ($1, current_timestamp) RETURNING transactions.id', [transactions[indexT].userID],
 		function(err, result) {
-			console.log("Result: " + result);
 
 			if (err) {
 				callback(res, null, err);
@@ -255,12 +244,13 @@ exports.insertTransaction = function insertTransaction(req, res, callback, callb
 	var client = initClient();
 	client.connect();
 
-	const query = client.query('INSERT INTO transactions (userID, date) VALUES ($1, current_timestamp) RETURNING transactions.id', [transaction.userID],
+	const query = client.query('INSERT INTO transactions (totalValue, userID, date) VALUES ($1, $2, current_timestamp) RETURNING transactions.id', [transaction.totalValue, transaction.userID],
 		function(err, result) {
 		client.end();
 
 			if (err) {
-				callback(res, null, err);
+				//callback(res, null, err);
+				console.log(err);
 			} else {
 				callbackTransactionRows(res, callback, result.rows[0].id, transaction, 0);
 			}
@@ -277,13 +267,10 @@ exports.insertTransactionRows = function insertTransactionRows(res, callback, ca
 		function(err, result) {
 		client.end();
 
-			console.log("ENTREI LA");
-
 			if (err) {
 					console.log(err);
-					callback(res, null, err);
+					//callback(res, null, err);
 			} else {
-					console.log("ENTREI LA MAIS");
 					callbackTransactionRows(res, callback, transactionID, transaction, index + 1);
 			}
 		});
@@ -304,6 +291,42 @@ exports.insertProduct = function insertProduct(product){
 			}
 	});
 }
+
+exports.insertVoucher = function insertVoucher(res, callback, createDiscountVoucher, totalValue, transaction, serialNumber, signature, voucherType) {
+
+	var client = initClient();
+
+	client.connect();
+	const query = client.query("INSERT INTO vouchers (serialnumber, type, signature, userid) VALUES ($1, $2, $3, $4) RETURNING *", [serialNumber, voucherType, signature, transaction.userID],
+		function(err, result) {
+			client.end();
+			if (err) {
+					console.log(err);
+			} else {
+					createDiscountVoucher(res, callback, transaction, totalValue, result.rows[0]);
+			}
+	});
+}
+
+exports.insertVoucherDiscount = function insertVoucherDiscount(res, callback, pastResult, transaction, serialNumber, signature) {
+
+	var client = initClient();
+
+	client.connect();
+	const query = client.query("INSERT INTO vouchers (serialnumber, type, signature, userid) VALUES ($1, $2, $3, $4) RETURNING *", [serialNumber, 3, signature, transaction.userID],
+		function(err, result) {
+			client.end();
+			if (err) {
+					console.log(err);
+			} else {
+				callback(res, {
+					'simple-voucher': pastResult,
+					'discount-voucher': result.rows[0]
+				}, null);
+			}
+	});
+}
+
 
 exports.getUserByEmail = function getUserByEmail(req, res, callback, callbackGetUser) {
 	var client = initClient();
@@ -385,24 +408,6 @@ exports.getProducts = function getProducts(res, callback) {
 	});
 }
 
-exports.getVouchersByUserID = function getVouchersByUserID(req,res,callback){
-
-	var client = initClient();
-	var userID = req.params['userID'];
-
-	client.connect();
-	const query = client.query("SELECT * FROM vouchers WHERE vouchers.userID= '"+ userID +"'",
-		function(err, result) {
-			client.end();
-			if (err) {
-					callback(res, null, err);
-			} else {
-					callback(res, {'vouchers': result.rows}, null);
-			}
-	});
-
-}
-
 exports.getAllTransactionsByUserID = function getAllTransactionsByUserID(req, res, callback, callbackGetTransactionRows) {
 	var client = initClient();
 
@@ -415,7 +420,6 @@ exports.getAllTransactionsByUserID = function getAllTransactionsByUserID(req, re
 			if (err) {
 					callback(res, null, err);
 			} else {
-					console.log("transactionID:" + result.rows);
 					callbackGetTransactionRows(res, result.rows, 0, callback);
 			}
 	});
@@ -424,24 +428,34 @@ exports.getAllTransactionsByUserID = function getAllTransactionsByUserID(req, re
 exports.getTransactionRowsByTransactionID = function getTransactionRowsByTransactionID(res, transactions, index, callback, callbackGetTransactionRows) {
 	var client = initClient();
 
-	console.log("Entrei no transactionRowsByTransactionID with ID:" + transactions[index].id);
-
 	client.connect();
 	const query = client.query("SELECT transactionrows.productID, transactionrows.amount FROM transactionrows WHERE transactionrows.transactionID = '"+ transactions[index].id +"'",
 		function(err, result) {
 			client.end();
 			if (err) {
-				console.log("DEI PEIDO")
 					callback(res, null, err);
 			} else {
-					console.log(result.rows);
 					transactions[index]['products'] = result.rows;
 					callbackGetTransactionRows(res, transactions, index + 1, callback);
 			}
 	});
 }
 
+exports.getTotalValueOfTransactions = function getTotalValueOfTransactions(res, callback, createVouchersCoffeePopCorn, transaction) {
+	var client = initClient();
 
+	client.connect();
+	const query = client.query("SELECT sum(transactions.totalvalue) as totalValue FROM transactions WHERE transactions.userid='"+ transaction.userID +"'",
+		function(err, result) {
+			client.end();
+			if (err) {
+				//callback(res, null, err);
+				console.log(err);
+			} else {
+				createVouchersCoffeePopCorn(res, callback, transaction, result.rows[0].totalvalue);
+			}
+	});
+}
 
 function updateUserHashPin(userID, pin, creditCard, res, callback) {
 	var client = initClient();
@@ -466,18 +480,18 @@ exports.startDB = function startDB() {
 	//createTableCreditCards();
 	//createTableProducts();
 	//createTableUsers();
-	//createTableTransactions();
-	//createTableTransactionRows();
+	createTableTransactions();
+	createTableTransactionRows();
 	createTableVouchers();
 }
 
 exports.dropTables = function dropTables() {
-	//dropTableTransactions();
+	dropTableTransactionRows();
+	dropTableTransactions();
 	//dropTableUsers();
 	//dropTableCreditCards();
-	//dropTableTransactionRows();
 	//dropTableProducts();
-	//dropTableVouchers();
+	dropTableVouchers();
 
 }
 
