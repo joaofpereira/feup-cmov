@@ -154,6 +154,8 @@ function callbackAllTransactionRows(client, req, res, transactions, indexT, call
 }
 
 function createVouchersCoffeePopCorn(res, callback, transaction, totalValue) {
+console.log("ola mundo");
+
 	var serialNumber = generateVoucherSerialNumber();
 
 	if(transaction.totalValue >= 20) {
@@ -192,12 +194,12 @@ function createDiscountVoucher(res, callback, transaction, totalValue, result) {
 			if(result != null)
 				callback(res, {
 					'simple-voucher': result,
-					'discount-voucher': 'null'
+					'discount-voucher': null
 				}, null);
 			else
 				callback(res, {
-					'simple-voucher': 'null',
-					'discount-voucher': 'null'
+					'simple-voucher': null,
+					'discount-voucher': null
 				}, null);
 	}
 }

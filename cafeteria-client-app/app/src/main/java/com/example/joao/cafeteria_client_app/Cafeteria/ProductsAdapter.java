@@ -18,7 +18,6 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
         public TextView name, price, amount;
         public ImageButton plusButton, minusButton;
 
-        public int product_amount;
         public Product product;
 
         public MyViewHolder(View view) {
@@ -29,28 +28,27 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
             plusButton = (ImageButton) view.findViewById(R.id.plusButton);
             minusButton = (ImageButton) view.findViewById(R.id.minusButton);
 
-            product_amount = 0;
-
             plusButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    product_amount++;
-                    amount.setText(Integer.toString(product_amount));
+                    int product_amount = Cart.getInstance().getProductAmountOfProduct(product) + 1;
                     Cart.getInstance().add(product, product_amount);
+                    amount.setText(Integer.toString(product_amount));
                 }
             });
 
             minusButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    int product_amount = Cart.getInstance().getProductAmountOfProduct(product);
                     if (product_amount > 0) {
-                        product_amount--;
-                        amount.setText(Integer.toString(product_amount));
+                        product_amount -= 1;
                         if (product_amount > 1) {
                             Cart.getInstance().add(product, product_amount);
                         } else {
                             Cart.getInstance().remove(product.getID());
                         }
+                        amount.setText(Integer.toString(product_amount));
                     }
                 }
             });
@@ -77,7 +75,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
 
         holder.name.setText(product.getName());
         holder.price.setText(Float.toString(product.getPrice()) + " €");
-        holder.amount.setText(Integer.toString(holder.product_amount));
+        holder.amount.setText(Integer.toString(Cart.getInstance().getProductAmountOfProduct(product)));
     }
 
     @Override

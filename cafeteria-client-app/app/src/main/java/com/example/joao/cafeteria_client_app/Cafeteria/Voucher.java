@@ -1,11 +1,6 @@
 package com.example.joao.cafeteria_client_app.Cafeteria;
 
-/**
- * Created by josec on 11/11/2016.
- */
-
 public class Voucher {
-
 
     private int id;
     private String type;

@@ -64,7 +64,6 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.MyViewHo
         this.context = context;
     }
 
-
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
@@ -72,7 +71,6 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.MyViewHo
 
         return new MyViewHolder(itemView, context);
     }
-
 
     @Override
     public void onBindViewHolder(VoucherAdapter.MyViewHolder holder, int position) {

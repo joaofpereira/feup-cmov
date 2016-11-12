@@ -207,7 +207,7 @@ exports.insertAllTransactions = function insertAllTransactions(client, req, res,
 		client.connect();
 	}
 
-	const query = client.query('INSERT INTO transactions (userID, date) VALUES ($1, current_timestamp) RETURNING transactions.id', [transactions[indexT].userID],
+	const query = client.query('INSERT INTO transactions (userID, totalvalue, date) VALUES ($1, $2, current_timestamp) RETURNING transactions.id', [transactions[indexT].userID, transactions[indexT].totalValue.toFixed(2)],
 		function(err, result) {
 
 			if (err) {

@@ -74,12 +74,8 @@ public class Cart {
 
     public boolean sameTypeOfVoucherInCart(Voucher voucher) {
         for (int i = 0; i < cartVouchers.size(); i++)
-            if (cartVouchers.get(i).getType() == voucher.getType()) {
-                Log.i("RESULTADO: ", Boolean.toString(cartVouchers.get(i).getType() == voucher.getType()));
-
+            if (cartVouchers.get(i).getType().equals(voucher.getType()))
                 return true;
-            }
-
         return false;
     }
 
@@ -95,6 +91,18 @@ public class Cart {
         this.cart.clear();
         this.totalValue = 0;
         this.cartVouchers.clear();
+    }
+
+    public int getProductAmountOfProduct(Product product) {
+        if(cart.isEmpty())
+            return 0;
+
+        for(int i = 0; i < cart.size(); i++) {
+            if(cart.get(i).getID() == product.getID())
+                return cart.get(i).getAmount();
+        }
+
+        return 0;
     }
 
     public void clearVouchers() {

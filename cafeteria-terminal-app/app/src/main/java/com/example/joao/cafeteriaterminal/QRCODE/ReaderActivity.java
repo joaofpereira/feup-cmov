@@ -6,13 +6,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.telecom.Call;
 import android.util.Log;
-import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -20,6 +16,8 @@ import android.widget.Toast;
 import com.example.joao.cafeteriaterminal.API.CafeteriaRestTerminalUsage;
 import com.example.joao.cafeteriaterminal.Cafeteria.Transaction;
 import com.example.joao.cafeteriaterminal.Cafeteria.TransactionsList;
+import com.example.joao.cafeteriaterminal.Cafeteria.Voucher;
+import com.example.joao.cafeteriaterminal.Cafeteria.VouchersList;
 import com.example.joao.cafeteriaterminal.R;
 
 import com.google.gson.reflect.TypeToken;
@@ -34,10 +32,11 @@ import org.json.JSONObject;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Signature;
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 public class ReaderActivity extends AppCompatActivity implements CallbackTransaction {
 
@@ -46,7 +45,6 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
     ReaderActivity readerActivity;
 
     SharedPreferences sharedPreferences;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,10 +70,13 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
         sharedPreferences = getSharedPreferences("com.example.joao.cafeteria_terminal_app", Activity.MODE_PRIVATE);
 
         try {
+            loadVouchers();
             loadLocallyTransactions();
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        Log.i("Vouchers: ", VouchersList.getInstance().toString());
     }
 
     @Override
@@ -97,7 +98,7 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
 
                     JSONArray products = new JSONArray();
 
-                    for(int i = 0; i < transaction.getProducts().size(); i++) {
+                    for (int i = 0; i < transaction.getProducts().size(); i++) {
                         JSONObject obj = new JSONObject();
                         obj.put("product-id", transaction.getProducts().get(i).first);
                         obj.put("product-amount", transaction.getProducts().get(i).second);
@@ -105,15 +106,15 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
                         products.put(obj);
                     }
 
-                    Log.i("Products content:", transaction.getProducts().toString());
                     params.put("products", products);
 
                     if (isOnline())
-                        try {
-                            CafeteriaRestTerminalUsage.confirmTransaction(readerActivity, params);
-                        } catch (JSONException e) {
+                       // try {
+                            verifyTransactionVouchers(transaction);
+                                //CafeteriaRestTerminalUsage.confirmTransaction(readerActivity, params);
+                        /*} catch (JSONException e) {
                             e.printStackTrace();
-                        }
+                        }*/
                     else {
                         TransactionsList.getInstance().add(transaction);
 
@@ -129,11 +130,26 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
 
                 } catch (JSONException e) {
                     e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                } catch (NoSuchProviderException e) {
+                    e.printStackTrace();
                 }
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private boolean verifyTransactionVouchers(Transaction transaction) throws NoSuchProviderException, NoSuchAlgorithmException {
+        Signature signature = Signature.getInstance("SHA1withRSA");
+
+        signature.initVerify(public_key);
+        signature.update(pair.getKey().toString().getBytes());
+
+        boolean verify_result = signature.verify(sig); //sign é a signature do voucher em bytes
+
+        return false;
     }
 
     public boolean isOnline() {
@@ -143,14 +159,25 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
+    private void loadVouchers() {
+        if (sharedPreferences.contains("vouchers")) {
+            String json = sharedPreferences.getString("vouchers", "");
+
+            Type listType = new TypeToken<ArrayList<Voucher>>() {
+            }.getType();
+            VouchersList.getInstance().setVouchers((List<Voucher>) new Gson().fromJson(json, listType));
+        }
+    }
+
     private void loadLocallyTransactions() throws JSONException {
         if (sharedPreferences.contains("transactions")) {
             String json = sharedPreferences.getString("transactions", "");
 
-            Type listType = new TypeToken<ArrayList<Transaction>>() {}.getType();
+            Type listType = new TypeToken<ArrayList<Transaction>>() {
+            }.getType();
             TransactionsList.getInstance().setTransactions((List<Transaction>) new Gson().fromJson(json, listType));
 
-            Log.i("Transaction AFTER: " , TransactionsList.getInstance().toString());
+            Log.i("Transaction AFTER: ", TransactionsList.getInstance().toString());
 
             updateTransactionsOnServer();
         }
@@ -171,7 +198,7 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
 
                     JSONArray products = new JSONArray();
 
-                    for(int j = 0; j < t.getProducts().size(); j++) {
+                    for (int j = 0; j < t.getProducts().size(); j++) {
                         JSONObject obj = new JSONObject();
                         obj.put("product-id", t.getProducts().get(j).first.toString());
                         obj.put("product-amount", t.getProducts().get(j).second.toString());
@@ -201,15 +228,22 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
     }
 
     @Override
-    public void onTransactionRegisterComplete(JSONObject response) {
+    public void onTransactionRegisterComplete() {
+        // save vouchers
+        Gson gson = new Gson();
+        String vouchers_list = gson.toJson(VouchersList.getInstance().getVouchers());
 
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("vouchers", vouchers_list);
+        editor.apply();
     }
 
     @Override
-    public void onUpdateTransactionsComplete(){
-        sharedPreferences.edit().clear().commit();
+    public void onUpdateTransactionsComplete() {
+        TransactionsList.getInstance().getTransactions().clear();
+        sharedPreferences.edit().remove("transactions").commit();
 
-        if(sharedPreferences.contains("transaction"))
+        if (sharedPreferences.contains("transaction"))
             Log.i("SHAREDPREFERENCES: ", "TEM TRANSACTIONS");
         else
             Log.i("SHAREDPREFERENCES: ", "NAO TEM TRANSACTIONS");

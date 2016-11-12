@@ -7,6 +7,8 @@ import android.util.Pair;
 import org.json.*;
 
 import com.example.joao.cafeteriaterminal.Cafeteria.Transaction;
+import com.example.joao.cafeteriaterminal.Cafeteria.Voucher;
+import com.example.joao.cafeteriaterminal.Cafeteria.VouchersList;
 import com.example.joao.cafeteriaterminal.QRCODE.ReaderActivity;
 import com.loopj.android.http.*;
 
@@ -29,7 +31,32 @@ public class CafeteriaRestTerminalUsage {
                     if (code == 200) {
                         JSONObject data = response.getJSONObject("data");
 
-                        readerActivity.onTransactionRegisterComplete(response);
+                        Log.i("DATA: ", data.toString());
+
+                        try {
+                            JSONObject simple_voucher = data.getJSONObject("simple-voucher");
+
+                            int id = simple_voucher.getInt("id"), type = simple_voucher.getInt("type"), serialNumber = simple_voucher.getInt("serialnumber");
+                            String signature = simple_voucher.getString("signature");
+
+                            VouchersList.getInstance().add(new Voucher(id, type, serialNumber, signature));
+                        } catch (JSONException e) {
+                             e.printStackTrace();
+                            Log.i("RESULTADO SVoucher: ", "nulo");
+                        }
+
+                        try {
+                            JSONObject discount_voucher = data.getJSONObject("discount-voucher");
+
+                            int id = discount_voucher.getInt("id"), type = discount_voucher.getInt("type"), serialNumber = discount_voucher.getInt("serialnumber");
+                            String signature = discount_voucher.getString("signature");
+
+                            VouchersList.getInstance().add(new Voucher(id, type, serialNumber, signature));
+                        } catch (JSONException e) {
+                            Log.i("RESULTADO DVoucher: ", "nulo");
+                        }
+
+                        readerActivity.onTransactionRegisterComplete();
 
                     } else
                         Log.i("","failed");

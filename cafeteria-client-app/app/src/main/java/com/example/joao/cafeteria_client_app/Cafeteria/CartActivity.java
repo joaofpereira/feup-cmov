@@ -89,13 +89,15 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_products) {
-            finish();
+            Intent intent = new Intent(getApplicationContext(), ProductsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_cart) {
-
         } else if (id == R.id.nav_vouchers) {
-
+            Intent intent = new Intent(getApplicationContext(), VoucherActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_past_transactions) {
-
+            Intent intent = new Intent(getApplicationContext(), PastTransactionsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
