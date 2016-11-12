@@ -110,15 +110,36 @@ public class Cart {
         this.cartVouchers.clear();
     }
 
+    public boolean voucherInUse(Voucher v){
+
+        for (int i = 0 ; i < cartVouchers.size(); i++){
+            if(cartVouchers.get(i).getSerial() == v.getSerial())
+                return true;
+        }
+
+        return false;
+
+    }
+
     public String getQRCodeData() {
         String result = new String();
 
         result += User.getInstance().getID() + "\n" + getTotalValue();
         result += "\n"+cartVouchers.size();
 
-        for(int i = 0; i < cartVouchers.size(); i++)
-            result += "\n"+cartVouchers.get(i).getType()+"\n" + cartVouchers.get(i).getSerial() +"\n"+cartVouchers.get(i).getSignature();
 
+        for(int i = 0; i < cartVouchers.size(); i++) {
+            int type = 0;
+
+            if (cartVouchers.get(i).getType().equals("popcorn"))
+                type=1;
+            else if(cartVouchers.get(i).getType().equals("coffee"))
+                type=2;
+            else if (cartVouchers.get(i).getType().equals("discount"))
+                type=3;
+
+            result += "\n" + type + "\n" + cartVouchers.get(i).getSerial() + "\n" + cartVouchers.get(i).getSignature();
+        }
         for(int i = 0; i < cart.size(); i++)
             result += "\n" + cart.get(i).getID() + ":" + cart.get(i).getAmount();
 

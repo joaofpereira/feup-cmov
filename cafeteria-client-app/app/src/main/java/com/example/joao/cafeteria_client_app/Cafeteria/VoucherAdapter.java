@@ -78,6 +78,17 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.MyViewHo
 
         holder.voucher = voucher;
 
+        if (Cart.getInstance().voucherInUse(holder.voucher))
+        {
+            holder.plusButton.setVisibility(View.GONE);
+            holder.minusButton.setVisibility(View.VISIBLE);
+        }
+        else{
+
+            holder.plusButton.setVisibility(View.VISIBLE);
+            holder.minusButton.setVisibility(View.GONE);
+        }
+
         holder.type.setText(voucher.getType());
         holder.serial.setText(String.valueOf(voucher.getSerial()));
     }
