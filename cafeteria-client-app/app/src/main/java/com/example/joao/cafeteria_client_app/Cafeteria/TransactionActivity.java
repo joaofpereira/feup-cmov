@@ -45,7 +45,7 @@ public class TransactionActivity extends AppCompatActivity {
             transaction_date.setText(Html.fromHtml("<font color='#3F51B5'>Date: </font>" + new SimpleDateFormat("EEE', 'dd' 'MMM' 'yyyy', at 'hh:mm:ss").format(transaction.getDate())), TextView.BufferType.SPANNABLE);
             transaction_type_products.setText(Html.fromHtml("<font color='#3F51B5'>Type of Products: </font>" + transaction.getProducts().size()), TextView.BufferType.SPANNABLE);
             transaction_total_products.setText(Html.fromHtml("<font color='#3F51B5'>Total Products: </font>" + transaction.getTotalProducts()), TextView.BufferType.SPANNABLE);
-            transaction_value.setText(Html.fromHtml("<font color='#3F51B5'>Total Value: </font>" + transaction.getTotalPrice() + " €"), TextView.BufferType.SPANNABLE);
+            transaction_value.setText(Html.fromHtml("<font color='#3F51B5'>Total Value: </font>" + String.format(java.util.Locale.US,"%.2f", transaction.getTotalPrice()) + " €"), TextView.BufferType.SPANNABLE);
 
             this.transaction = transaction;
 

@@ -203,7 +203,7 @@ exports.insertCreditCard = function insertCreditCard(req, res, callbackInsertUse
 		});
 }
 
-exports.updateCreditCard = function updateCreditCard(req, res, callbackUpdateUser){
+exports.updateCreditCard = function updateCreditCard(req, res, callbackUpdateUserCreditCard, callback){
 
 	var creditcard = req.body;
 	var client = initClient();
@@ -213,10 +213,46 @@ exports.updateCreditCard = function updateCreditCard(req, res, callbackUpdateUse
 		function(err, result) {
 			client.end();
 			if (err) {
-				callbackUpdateUser(res, null, err);
+				console.log(err);
 			} else {
+				callbackUpdateUserCreditCard(req, res, result.rows[0], callback);
+			}
+		});
+}
 
-				callbackUpdateUser(req, res, result.rows[0], null);
+exports.updateUserCreditCard = function updateUserCreditCard(req, res, callbackDeleteUserFromBlackList, creditCard, callback){
+
+	var user = req.body;
+	var client = initClient();
+	console.log("Entrei no update user");
+	console.log(user);
+	console.log("creditCard " + creditCard.id);
+
+	client.connect();
+	const query = client.query("UPDATE users SET creditcard ='"+ creditCard.id + "' WHERE users.id ='"+ user.userID +"'",
+		function(err, result) {
+			client.end();
+			if (err) {
+				console.log(err);
+			} else {
+				callbackDeleteUserFromBlackList(res, callback, {'userID': user.userID, 'creditCardID': creditCard.id})
+			}
+		});
+}
+
+exports.deleteUserFromBlackList = function deleteUserFromBlackList(res, callback, obj) {
+	var client = initClient();
+	client.connect();
+
+	const query = client.query("DELETE FROM blacklist WHERE blacklist.userid='" + obj.userID + "' AND blacklist.motive='Invalid Credit Card'",
+		function(err, result) {
+			client.end();
+			if (err) {
+				callback(res, null, err);
+			} else {
+				console.log(callback);
+				console.log("credit card: " + obj.creditCardID);
+				callback(res, {'creditCardID': obj.creditCardID}, null)
 			}
 		});
 }
@@ -235,29 +271,6 @@ exports.insertUser= function insertUser(req, res, creditCard, callback){
 			} else {
 				var pin = generatePin();
 				updateUserHashPin(result.rows[0].id, pin, creditCard, res, callback);
-			}
-		});
-}
-
-exports.updateUser= function insertUser(req, res ,creditCard, callback){
-
-	var user = req.body;
-	var client = initClient();
-	console.log("Entrei no update user");
-	console.log(user);
-	console.log("creditCard " + creditCard.id);
-
-	client.connect();
-	const query = client.query("UPDATE users SET creditcard ='"+ creditCard.id + "' WHERE users.id ='"+ user.userID +"'",
-		function(err, result) {
-			client.end();
-			if (err) {
-				callback(res, null, err);
-			} else {
-				console.log("fiz update ao user" + user.userID);
-				callback(res,{
-					'creditCardID': creditCard.id
-				},null)
 			}
 		});
 }

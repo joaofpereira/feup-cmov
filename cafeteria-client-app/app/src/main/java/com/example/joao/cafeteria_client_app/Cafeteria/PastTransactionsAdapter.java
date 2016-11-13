@@ -35,7 +35,7 @@ public class PastTransactionsAdapter extends RecyclerView.Adapter<PastTransactio
         public void bind(final Transaction transaction, final OnItemClickListener listener) {
             transaction_id.setText("Transaction nº. " + transaction.getId());
             transaction_date.setText("at " + new SimpleDateFormat("HH:mm:ss MM-dd-yyyy").format(transaction.getDate()));
-            transaction_total_price.setText("Value: " + Float.toString(transaction.getTotalPrice()) + " €");
+            transaction_total_price.setText("Value: " + String.format(java.util.Locale.US,"%.2f", transaction.getTotalPrice()) + " €");
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
