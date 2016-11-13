@@ -67,7 +67,7 @@ public class SettingsActivity extends AppCompatActivity implements CallbackSetti
                 }
 
                 RequestParams params = new RequestParams();
-                params.put("userID",userID);
+                params.put("userID",User.getInstance().getID());
                 params.put("cardNumber", creditCardForm.getCreditCard().getCardNumber().replaceAll("\\s+", ""));
                 params.put("securityCode", creditCardForm.getCreditCard().getSecurityCode());
                 params.put("expMonth", creditCardForm.getCreditCard().getExpMonth().toString());
@@ -90,9 +90,9 @@ public class SettingsActivity extends AppCompatActivity implements CallbackSetti
     }
 
     @Override
-    public void onCreditCardChangeCompleted() {
-
+    public void onCreditCardChangeCompleted(int creditCardID) {
         progressDialog.dismiss();
+        User.getInstance().createCreditCard(creditCardID,creditCardForm.getCreditCard().getCardNumber().replaceAll("\\s+", ""),creditCardForm.getCreditCard().getExpMonth().toString(),creditCardForm.getCreditCard().getExpYear().toString());
 
         Intent intent = new Intent(getApplicationContext(), ProductsActivity.class);
         startActivity(intent);

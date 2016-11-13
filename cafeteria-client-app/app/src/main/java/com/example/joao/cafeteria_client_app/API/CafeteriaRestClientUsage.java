@@ -105,10 +105,13 @@ public class CafeteriaRestClientUsage {
                     int code = response.getInt("code");
 
                     if (code == 200) {
-                        settings.onCreditCardChangeCompleted();
+                        JSONObject data = response.getJSONObject("data");
+                        Log.i("resultJSON",data.toString());
+                        settings.onCreditCardChangeCompleted(data.getInt("creditCardID"));
 
-                    } else
+                    } else {
                         settings.onCreditCardChangeFailed(code, response.getString("message"));
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -311,8 +314,5 @@ public class CafeteriaRestClientUsage {
         return user;
     }
 
-    public static void updateCreditCard(CreditCard creditCard){
 
-        //user.createCreditCard(CreditCard);
-    }
 }
