@@ -15,7 +15,6 @@ public class Cart {
     public Cart() {
         this.cart = new ArrayList<CartProduct>();
         this.cartVouchers = new ArrayList<Voucher>();
-        this.totalValue = 0;
     }
 
     public List<CartProduct> getCart() {
@@ -29,21 +28,17 @@ public class Cart {
     }
 
     public void add(Product product, int amount) {
-
         if (!existsInCart(product.getID())) {
             CartProduct cartProduct = new CartProduct(product, amount);
             this.cart.add(cartProduct);
         } else {
             getCartProductByID(product.getID()).setAmount(amount);
         }
-
-        updateCartTotalValue(product.getPrice());
     }
 
     public void remove(int id) {
         for (int i = 0; i < cart.size(); i++) {
             if(cart.get(i).getID() == id) {
-                updateCartTotalValue(-cart.get(i).getPrice());
                 cart.remove(i);
             }
         }
@@ -81,16 +76,16 @@ public class Cart {
     }
 
     public float getTotalValue() {
-        return this.totalValue;
-    }
+        float totalValue = 0;
 
-    public void updateCartTotalValue(float value) {
-        this.totalValue += value;
+        for(int i = 0; i < cart.size(); i++)
+            totalValue += cart.get(i).getPrice() * cart.get(i).getAmount();
+
+        return totalValue;
     }
 
     public void clearCart() {
         this.cart.clear();
-        this.totalValue = 0;
     }
 
     public int getProductAmountOfProduct(Product product) {
@@ -117,7 +112,6 @@ public class Cart {
         }
 
         return false;
-
     }
 
     public String getQRCodeData() {
