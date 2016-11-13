@@ -6,6 +6,7 @@ import org.json.*;
 
 import com.devmarvel.creditcardentry.library.CreditCard;
 import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
+import com.example.joao.cafeteria_client_app.Authentication.PastTransactionAuthActivity;
 import com.example.joao.cafeteria_client_app.Authentication.RegisterActivity;
 import com.example.joao.cafeteria_client_app.Cafeteria.CartProduct;
 import com.example.joao.cafeteria_client_app.Cafeteria.PastTransactionsActivity;
@@ -95,6 +96,36 @@ public class CafeteriaRestClientUsage {
             }
         });
     }
+
+    public static void pastTransactionAUTH (final PastTransactionAuthActivity pastTransactionsAuthActivity, RequestParams params) throws JSONException {
+
+        CafeteriaRestClient.post("pastTransactionAUTH/", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    int code = response.getInt("code");
+
+                    if (code == 200) {
+                        JSONObject data = response.getJSONObject("data");
+
+                        pastTransactionsAuthActivity.onPastTransactionsAuthCompleted();
+
+                    } else {
+                        pastTransactionsAuthActivity.onPastTransactionAuthFailed(response.getString("message"));
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("ERROR: ", responseString + "\nStatusCode: " + statusCode + "\n");
+            }
+        });
+    }
+
 
     public static void updateCard(final SettingsActivity settings, RequestParams params) throws JSONException {
 

@@ -452,6 +452,36 @@ exports.getUserByEmail = function getUserByEmail(req, res, callback, callbackGet
 	});
 }
 
+exports.getUserByUsernamePassword = function getUserByEmail(req, res, callback, callbackGetUser) {
+	var client = initClient();
+
+	var username = req.body.username;
+	var password = req.body.password;
+
+	client.connect();
+	const query = client.query("SELECT * FROM users WHERE users.username='" + username +"'",
+		function(err, result) {
+			client.end();
+			if (err) {
+				callback(res, null, err);
+			} else {
+				if(result.rows.length == 0)
+					callback(res, null, "no user found");
+				else {
+					console.log("vou validar o user");
+					if(bcrypt.compareSync(password, result.rows[0].password)){
+						console.log("Ta valido");
+						callback(res,{
+							'alreadyLogged':'ok'
+						},null);
+					}
+					else
+						callback(res, null, "wrong pin");
+				}
+			}
+	});
+}
+
 exports.getCreditCardByID = function getCreditCardByID(res, user, pin, callback) {
 	var client = initClient();
 

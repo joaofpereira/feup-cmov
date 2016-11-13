@@ -395,6 +395,10 @@ app.post('/api/login', function(req, res) {
 	db.getUserByEmail(req, res, callback, callbackGetUser);
 });
 
+app.post('/api/pastTransactionAUTH', function(req, res) {
+	db.getUserByUsernamePassword(req, res, callback, callbackGetUser);
+});
+
 app.post('/api/register', function(req, res) {
 	db.insertCreditCard(req, res, callbackInsertUser);
 });
