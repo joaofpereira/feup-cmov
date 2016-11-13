@@ -16,6 +16,7 @@ import com.example.joao.cafeteriaterminal.API.CafeteriaRestTerminalUsage;
 import com.example.joao.cafeteriaterminal.API.PublicKeyReader;
 import com.example.joao.cafeteriaterminal.Cafeteria.Callback;
 import com.example.joao.cafeteriaterminal.Cafeteria.Product;
+import com.example.joao.cafeteriaterminal.Cafeteria.ProductComplete;
 import com.example.joao.cafeteriaterminal.Cafeteria.ProductsList;
 import com.example.joao.cafeteriaterminal.Cafeteria.Transaction;
 import com.example.joao.cafeteriaterminal.Cafeteria.TransactionResumeActivity;
@@ -90,8 +91,6 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
             if (result.getContents() == null) {
                 Toast.makeText(this, "You cancelled the scanning", Toast.LENGTH_LONG).show();
             } else {
-                Toast.makeText(this, result.getContents(), Toast.LENGTH_LONG).show();
-
                 try {
                     Transaction transaction = CafeteriaRestTerminalUsage.createTransaction(result.getContents());
 
@@ -133,7 +132,6 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
                             e.printStackTrace();
                         }
                     else {
-
                         if (verifyTransactionVouchers(transaction)) {
                             TransactionsList.getInstance().add(transaction);
 
@@ -143,6 +141,40 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putString("transactions", transactions_list);
                             editor.apply();
+
+                            // start presentation to the user
+
+                            int id = 0;
+
+                            List<ProductComplete> products_trans = new ArrayList<>();
+
+                            for (int i = 0; i < transaction.getProducts().size(); i++) {
+                                Product p = ProductsList.getInstance().getProductByID(transaction.getProducts().get(i).first);
+                                int amount = transaction.getProducts().get(i).second;
+
+                                products_trans.add(new ProductComplete(p.getName(), amount, p.getPrice() * amount));
+                            }
+
+                            boolean coffee = false, popcorn = false, discount = false;
+
+                            for (int i = 0; i < transaction.getVouchers().size(); i++) {
+                                if (transaction.getVouchers().get(i).getType() == 1)
+                                    popcorn = true;
+                                else if (transaction.getVouchers().get(i).getType() == 2)
+                                    coffee = true;
+                                else
+                                    discount = true;
+                            }
+
+                            float transactionTotalPrice;
+
+                            if (discount)
+                                transactionTotalPrice = (float) ((double) transaction.getTotalValue() * 0.95);
+                            else
+                                transactionTotalPrice = transaction.getTotalValue();
+
+                            onTransactionRegisterComplete(new TransactionTransmitted(popcorn, coffee, discount, products_trans, transactionTotalPrice, id));
+
                         } else {
                             // TODO users black list
                         }
@@ -179,7 +211,7 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
 
             boolean verify_result = signature.verify(Base64.decode(transaction.getVouchers().get(i).getSignature(), Base64.DEFAULT));
 
-            if(!verify_result)
+            if (!verify_result)
                 return false;
         }
 
@@ -203,7 +235,8 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
 
             Log.i("Transaction AFTER: ", TransactionsList.getInstance().toString());
 
-            updateTransactionsOnServer();
+            //updateTransactionsOnServer();
+            updateTransactionsOnServer2();
         }
     }
 
@@ -215,6 +248,78 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
         integrator.setBeepEnabled(false);
         integrator.setBarcodeImageEnabled(false);
         integrator.initiateScan();
+    }
+
+    public void updateTransactionsOnServer2() {
+        Log.i("Entrei no update2", "ok");
+
+        if (isOnline()) {
+            Log.i("Entrei no isOnline", "ok");
+            RequestParams params = new RequestParams();
+
+            Transaction t = TransactionsList.getInstance().get(0);
+
+            try {
+                params.put("userID", t.getUserID());
+                params.put("totalValue", t.getTotalValue());
+
+                JSONArray vouchers = new JSONArray();
+
+                for (int i = 0; i < t.getVouchers().size(); i++) {
+                    JSONObject obj = new JSONObject();
+                    obj.put("id", t.getVouchers().get(i).getID());
+                    obj.put("type", t.getVouchers().get(i).getType());
+                    obj.put("serial", t.getVouchers().get(i).getSerial());
+                    obj.put("signature", t.getVouchers().get(i).getSignature());
+
+                    vouchers.put(obj);
+                }
+
+                params.put("vouchers", vouchers);
+
+                JSONArray products = new JSONArray();
+
+                for (int j = 0; j < t.getProducts().size(); j++) {
+                    JSONObject obj = new JSONObject();
+                    obj.put("product-id", t.getProducts().get(j).first.toString());
+                    obj.put("product-amount", t.getProducts().get(j).second.toString());
+
+                    products.put(obj);
+                }
+
+                params.put("products", products);
+
+                try {
+                    CafeteriaRestTerminalUsage.postTransactions2(readerActivity, params);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.i("Entrei no else do isOn", "ok");
+        }
+    }
+
+    @Override
+    public void onUpdateTransactionsComplete2() {
+        Log.i("Entrei no onComplete", "ok");
+        TransactionsList.getInstance().getTransactions().remove(0);
+
+        if(TransactionsList.getInstance().getSize() > 0)
+            updateTransactionsOnServer2();
+        else {
+            TransactionsList.getInstance().getTransactions().clear();
+            sharedPreferences.edit().remove("transactions").commit();
+
+            if (sharedPreferences.contains("transactions"))
+                Log.i("SHAREDPREFERENCES: ", "TEM TRANSACTIONS");
+            else
+                Log.i("SHAREDPREFERENCES: ", "NAO TEM TRANSACTIONS");
+        }
+
     }
 
     public void updateTransactionsOnServer() {
@@ -291,7 +396,7 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
         TransactionsList.getInstance().getTransactions().clear();
         sharedPreferences.edit().remove("transactions").commit();
 
-        if (sharedPreferences.contains("transaction"))
+        if (sharedPreferences.contains("transactions"))
             Log.i("SHAREDPREFERENCES: ", "TEM TRANSACTIONS");
         else
             Log.i("SHAREDPREFERENCES: ", "NAO TEM TRANSACTIONS");

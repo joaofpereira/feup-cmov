@@ -82,6 +82,12 @@ function callback(res, obj, err) {
 				success: false,
 				message: "Wrong pin."
 			});
+		} else if(err == "vouchers not exists") {
+			res.json({
+				code: 405,
+				success: false,
+				message: "Vouchers does not exists."
+			});
 		} else {
 			res.json({
 				code: 404,
@@ -379,6 +385,7 @@ app.post('/api/updateTransactions', function(req, res) {
 });
 
 app.post('/api/transaction', function(req, res) {
+	console.log(req);
 	validateVouchers(req, res);
 });
 

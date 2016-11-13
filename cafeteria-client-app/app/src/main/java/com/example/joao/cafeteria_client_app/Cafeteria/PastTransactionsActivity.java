@@ -1,6 +1,7 @@
 package com.example.joao.cafeteria_client_app.Cafeteria;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.design.widget.NavigationView;
@@ -41,6 +42,8 @@ public class PastTransactionsActivity extends AppCompatActivity implements Callb
     PastTransactionsActivity pastTransactionsActivity;
     SharedPreferences sharedPreferences;
 
+    ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +75,11 @@ public class PastTransactionsActivity extends AppCompatActivity implements Callb
         user_email = (TextView) header.findViewById(R.id.nav_user_email);
         user_name.setText(User.getInstance().getName());
         user_email.setText(User.getInstance().getEmail());
+
+        progressDialog = new ProgressDialog(PastTransactionsActivity.this, R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Loading Past Transactions");
+        progressDialog.show();
 
         RequestParams transactions_params = new RequestParams();
         transactions_params.add("userID", User.getInstance().getID().toString());
@@ -141,5 +149,14 @@ public class PastTransactionsActivity extends AppCompatActivity implements Callb
         recyclerView.setLayoutManager(pastTransactionsManager );
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(pastTransactionsAdapter);
+
+        progressDialog.dismiss();
+    }
+
+    @Override
+    public void onGetPastTransactionsError(Throwable throwable) {
+        progressDialog.dismiss();
+
+        Toast.makeText(getBaseContext(), "No internet connection", Toast.LENGTH_LONG).show();
     }
 }

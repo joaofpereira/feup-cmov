@@ -6,5 +6,5 @@ import java.util.List;
 public interface CallbackPastTransactions {
     public void onGetPastTransactionsCompleted(List<Transaction> transactions);
 
-    /*public void onGetProductsError(Throwable throwable);*/
+    public void onGetPastTransactionsError(Throwable throwable);
 }

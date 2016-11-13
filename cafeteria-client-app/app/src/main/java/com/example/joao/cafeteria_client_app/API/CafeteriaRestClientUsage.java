@@ -204,9 +204,8 @@ public class CafeteriaRestClientUsage {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                Log.i("HEADERS: ", headers.toString());
-                Log.i("RESPONSE STRING: ", responseString);
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
+                pastTransactionsActivity.onGetPastTransactionsError(throwable);
             }
         });
     }
@@ -265,10 +264,8 @@ public class CafeteriaRestClientUsage {
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, String responseString, Throwable
-                            throwable) {
-                        Log.i("HEADERS: ", headers.toString());
-                        Log.i("RESPONSE STRING: ", responseString);
+                    public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
+                        voucherActivity.onGetVouchersError(throwable);
                     }
                 }
 
