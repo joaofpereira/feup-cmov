@@ -165,6 +165,8 @@ public class LoginActivity extends AppCompatActivity implements CallbackLogin {
 
             startProductsActivity();
         } else {
+            Log.i("Entrei no else", "ok");
+
             RequestParams params = new RequestParams();
 
             params.put("email", email);
@@ -176,6 +178,7 @@ public class LoginActivity extends AppCompatActivity implements CallbackLogin {
             progressDialog.show();
 
             try {
+                Log.i("Entrei no try", "ok");
                 CafeteriaRestClientUsage.login(loginActivity, params);
             } catch (JSONException e) {
                 e.printStackTrace();

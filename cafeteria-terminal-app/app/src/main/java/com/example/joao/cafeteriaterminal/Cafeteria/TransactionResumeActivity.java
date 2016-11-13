@@ -53,8 +53,8 @@ public class TransactionResumeActivity extends AppCompatActivity {
 
         transaction_number.setText(Html.fromHtml("<font color='#3F51B5'>Order Number: </font>" + transaction.getId()), TextView.BufferType.SPANNABLE);
         transaction_vouchers.setText(Html.fromHtml("<font color='#3F51B5'>Vouchers: </font>" + transaction.getVouchersUsed()), TextView.BufferType.SPANNABLE);
-        transaction_prev_value.setText(Html.fromHtml("<font color='#3F51B5'>Previously Value: </font>" + transaction.getPreviouslyTotalPrice()), TextView.BufferType.SPANNABLE);
-        transaction_curr_value.setText(Html.fromHtml("<font color='#3F51B5'>Final Value: </font>" + transaction.getTransactionTotalPrice()), TextView.BufferType.SPANNABLE);
+        transaction_prev_value.setText(Html.fromHtml("<font color='#3F51B5'>Previously Value: </font>" + String.format(java.util.Locale.US,"%.2f", transaction.getPreviouslyTotalPrice()) + " €"), TextView.BufferType.SPANNABLE);
+        transaction_curr_value.setText(Html.fromHtml("<font color='#3F51B5'>Final Value: </font>" + String.format(java.util.Locale.US,"%.2f", transaction.getTransactionTotalPrice()) + " €"), TextView.BufferType.SPANNABLE);
 
         adapter = new ProductCompleteAdapter(transaction.getProducts());
         RecyclerView.LayoutManager productsManager = new LinearLayoutManager(getApplicationContext());

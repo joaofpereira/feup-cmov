@@ -88,7 +88,13 @@ function callback(res, obj, err) {
 				success: false,
 				message: "Vouchers does not exists."
 			});
-		} else {
+		} else if(err == "invalid vouchers") {
+			res.json({
+				code: 406,
+				success: false,
+				data: obj
+			});
+		}else {
 			res.json({
 				code: 404,
 				success: false,
@@ -265,7 +271,7 @@ function validateVouchers(req, res) {
 	if(result && vouchers.length > 0)
 		db.deleteVouchers(req, res, db.insertTransaction, callback, callbackTransactionRows, vouchers, typeOfVouchers);
 	else if (!result && vouchers.length > 0) {
-		console.log("falhou"); //TODO inserir user na usersblacklist com o user id req.body.userID
+		db.insertUserOnBlackList(res, callback, req.body.userID, "Invalid Vouchers");
 	} else {
 		db.insertTransaction(req, res, callback, callbackTransactionRows, typeOfVouchers);
 	}
@@ -402,7 +408,6 @@ app.post('/api/updateTransactions', function(req, res) {
 });
 
 app.post('/api/transaction', function(req, res) {
-	console.log(req);
 	validateVouchers(req, res);
 });
 

@@ -10,6 +10,4 @@ public interface Callback {
     public void onTransactionRegisterComplete(TransactionTransmitted t);
 
     public void onUpdateTransactionsComplete();
-
-    public void onUpdateTransactionsComplete2();
 }

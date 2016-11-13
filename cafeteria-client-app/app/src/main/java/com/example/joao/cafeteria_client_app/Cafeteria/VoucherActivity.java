@@ -94,15 +94,17 @@ public class VoucherActivity extends AppCompatActivity implements CallbackVouche
         progressDialog.show();
 
 
-        if(hasSharedPreferences()) {
+        if(sharedPreferences.contains("vouchers")) {
             String json = sharedPreferences.getString("vouchers", "");
 
             Type listType = new TypeToken<ArrayList<Voucher>>(){}.getType();
             List<Voucher> voucherList = new Gson().fromJson(json, listType);
 
             onGetVouchersCompleted(voucherList);
+
+            progressDialog.dismiss();
         }
-        else if(hasSharedPreferences()) {
+        else {
             try {
                 CafeteriaRestClientUsage.getVouchers(voucherActivity);
             } catch (JSONException e) {
@@ -220,10 +222,6 @@ public class VoucherActivity extends AppCompatActivity implements CallbackVouche
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("vouchers", vouchers_list);
         editor.apply();
-    }
-
-    private boolean hasSharedPreferences() {
-        return sharedPreferences.contains("vouchers");
     }
 
     @Override

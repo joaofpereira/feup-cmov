@@ -391,6 +391,21 @@ exports.insertVoucherDiscount = function insertVoucherDiscount(res, callback, pa
 	});
 }
 
+exports.insertUserOnBlackList = function insertUserOnBlackList(res, callback, userID, message) {
+
+	var client = initClient();
+
+	client.connect();
+	const query = client.query("INSERT INTO blacklist (userid, motive) VALUES ($1, $2) RETURNING *", [userID, message],
+		function(err, result) {
+			client.end();
+			if (err) {
+					console.log(err);
+			} else {
+				callback(res, result.rows[0], "invalid vouchers");
+			}
+	});
+}
 
 exports.getUserByEmail = function getUserByEmail(req, res, callback, callbackGetUser) {
 	var client = initClient();
@@ -621,20 +636,20 @@ exports.startDB = function startDB() {
 	//createTableCreditCards();
 	//createTableProducts();
 	//createTableUsers();
-	//createTableTransactions();
-	//createTableTransactionRows();
-	//createTableVouchers();
-	createTableBlacklist();
+	createTableTransactions();
+	createTableTransactionRows();
+	createTableVouchers();
+	//createTableBlacklist();
 }
 
 exports.dropTables = function dropTables() {
 	//dropTableBlacklist();
-	//dropTableTransactionRows();
-	//dropTableTransactions();
+	dropTableTransactionRows();
+	dropTableTransactions();
 	//dropTableUsers();
 	//dropTableCreditCards();
 	//dropTableProducts();
-	//dropTableVouchers();
+	dropTableVouchers();
 
 }
 

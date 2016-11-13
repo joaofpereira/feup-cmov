@@ -61,8 +61,6 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
         sharedPreferences = getSharedPreferences("com.example.joao.cafeteria_terminal_app", Activity.MODE_PRIVATE);
 
         try {
-            loadLocallyTransactions();
-
             if (sharedPreferences.contains("publicKey")) {
                 publicKey = PublicKeyReader.getKey(sharedPreferences.getString("publicKey", ""));
             } else
@@ -78,7 +76,7 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
                 CafeteriaRestTerminalUsage.getProducts(this);
             }
 
-            startScan();
+            loadLocallyTransactions();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -235,8 +233,9 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
 
             Log.i("Transaction AFTER: ", TransactionsList.getInstance().toString());
 
-            //updateTransactionsOnServer();
-            updateTransactionsOnServer2();
+            updateTransactionsOnServer();
+        } else {
+            startScan();
         }
     }
 
@@ -250,11 +249,9 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
         integrator.initiateScan();
     }
 
-    public void updateTransactionsOnServer2() {
-        Log.i("Entrei no update2", "ok");
-
+    public void updateTransactionsOnServer() {
         if (isOnline()) {
-            Log.i("Entrei no isOnline", "ok");
+            Log.i("Entrei no isOn", "ok");
             RequestParams params = new RequestParams();
 
             Transaction t = TransactionsList.getInstance().get(0);
@@ -290,7 +287,8 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
                 params.put("products", products);
 
                 try {
-                    CafeteriaRestTerminalUsage.postTransactions2(readerActivity, params);
+                    Log.i("Entrei no try", "ok");
+                    CafeteriaRestTerminalUsage.postTransactions(readerActivity, params);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -299,18 +297,19 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
                 e.printStackTrace();
             }
         } else {
-            Log.i("Entrei no else do isOn", "ok");
+            startScan();
         }
     }
 
     @Override
-    public void onUpdateTransactionsComplete2() {
-        Log.i("Entrei no onComplete", "ok");
+    public void onUpdateTransactionsComplete() {
         TransactionsList.getInstance().getTransactions().remove(0);
 
         if(TransactionsList.getInstance().getSize() > 0)
-            updateTransactionsOnServer2();
+            updateTransactionsOnServer();
         else {
+            startScan();
+
             TransactionsList.getInstance().getTransactions().clear();
             sharedPreferences.edit().remove("transactions").commit();
 
@@ -320,50 +319,6 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
                 Log.i("SHAREDPREFERENCES: ", "NAO TEM TRANSACTIONS");
         }
 
-    }
-
-    public void updateTransactionsOnServer() {
-        if (isOnline()) {
-            JSONArray transactions = new JSONArray();
-
-            for (int i = 0; i < TransactionsList.getInstance().getSize(); i++) {
-                Transaction t = TransactionsList.getInstance().get(i);
-
-                JSONObject transaction = new JSONObject();
-
-                try {
-                    transaction.put("userID", t.getUserID());
-                    transaction.put("totalValue", t.getTotalValue());
-
-                    JSONArray products = new JSONArray();
-
-                    for (int j = 0; j < t.getProducts().size(); j++) {
-                        JSONObject obj = new JSONObject();
-                        obj.put("product-id", t.getProducts().get(j).first.toString());
-                        obj.put("product-amount", t.getProducts().get(j).second.toString());
-
-                        products.put(obj);
-                    }
-
-                    transaction.put("products", products);
-
-                    transactions.put(i, transaction);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            RequestParams parameters = new RequestParams();
-
-            parameters.put("transactions", transactions);
-
-            try {
-                CafeteriaRestTerminalUsage.postTransactions(readerActivity, parameters);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
@@ -389,17 +344,6 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
         Intent intent = new Intent(getBaseContext(), TransactionResumeActivity.class);
         intent.putExtra("transaction", transaction);
         startActivity(intent);
-    }
-
-    @Override
-    public void onUpdateTransactionsComplete() {
-        TransactionsList.getInstance().getTransactions().clear();
-        sharedPreferences.edit().remove("transactions").commit();
-
-        if (sharedPreferences.contains("transactions"))
-            Log.i("SHAREDPREFERENCES: ", "TEM TRANSACTIONS");
-        else
-            Log.i("SHAREDPREFERENCES: ", "NAO TEM TRANSACTIONS");
     }
 
     @Override

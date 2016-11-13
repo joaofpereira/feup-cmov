@@ -126,7 +126,12 @@ public class CafeteriaRestTerminalUsage {
 
                     } else if(code == 405) {
                         Log.i("VOUCHERS: ", "nao existem");
-                    } else
+                    } else if(code == 406) {
+                        JSONObject data = response.getJSONObject("data");
+
+                        Log.i("BLACKLIST: ", data.toString());
+                    }
+                    else
                         Log.i("ERRO: ", "");
 
                 } catch (JSONException e) {
@@ -143,36 +148,6 @@ public class CafeteriaRestTerminalUsage {
 
     public static void postTransactions(final ReaderActivity readerActivity, RequestParams params) throws JSONException {
 
-        CafeteriaRestTerminal.post("updateTransactions/", params, new JsonHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                try {
-                    int code = response.getInt("code");
-
-                    if (code == 200) {
-                        JSONObject data = response.getJSONObject("data");
-
-                        Log.i("MENSAGEM DE SUCESSO: ", response.toString());
-
-                        readerActivity.onUpdateTransactionsComplete();
-
-                    } else
-                        Log.i("", "failed");
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject response) {
-                Log.i("ERROR: ", "\nStatusCode: " + statusCode + "\n");
-            }
-        });
-    }
-
-    public static void postTransactions2(final ReaderActivity readerActivity, RequestParams params) throws JSONException {
-
         CafeteriaRestTerminal.post("transaction/", params, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
@@ -184,7 +159,7 @@ public class CafeteriaRestTerminalUsage {
 
                         Log.i("MENSAGEM DE SUCESSO: ", response.toString());
 
-                        readerActivity.onUpdateTransactionsComplete2();
+                        readerActivity.onUpdateTransactionsComplete();
 
                     } else
                         Log.i("", "failed");
