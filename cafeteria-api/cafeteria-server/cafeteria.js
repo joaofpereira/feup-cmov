@@ -203,7 +203,7 @@ exports.insertCreditCard = function insertCreditCard(req, res, callbackInsertUse
 		});
 }
 
-exports.updateCreditCard = function updateCreditCard(req, res, callbackInsertUser){
+exports.updateCreditCard = function updateCreditCard(req, res, callbackUpdateUser){
 
 	var creditcard = req.body;
 	var client = initClient();
@@ -215,6 +215,7 @@ exports.updateCreditCard = function updateCreditCard(req, res, callbackInsertUse
 			if (err) {
 				callbackUpdateUser(res, null, err);
 			} else {
+
 				callbackUpdateUser(req, res, result.rows[0], null);
 			}
 		});
@@ -238,19 +239,25 @@ exports.insertUser= function insertUser(req, res, creditCard, callback){
 		});
 }
 
-exports.updatetUser= function insertUser(req, res, creditCard, callback){
+exports.updateUser= function insertUser(req, res ,creditCard, callback){
 
 	var user = req.body;
 	var client = initClient();
+	console.log("Entrei no update user");
+	console.log(user);
+	console.log("creditCard " + creditCard.id);
 
 	client.connect();
-	const query = client.query("UPDATE users SET(creditcard) VALUES ($1) WHERE users.id ='"+ user.id +"'RETURNING users.id'", [creditCard.id],
+	const query = client.query("UPDATE users SET creditcard ='"+ creditCard.id + "' WHERE users.id ='"+ user.userID +"'",
 		function(err, result) {
 			client.end();
 			if (err) {
 				callback(res, null, err);
 			} else {
-				callback(res,result.rows,null)
+				console.log("fiz update ao user" + user.userID);
+				callback(res,{
+					'creditCardID': creditCard.id
+				},null)
 			}
 		});
 }

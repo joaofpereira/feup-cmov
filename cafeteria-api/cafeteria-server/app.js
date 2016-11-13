@@ -113,7 +113,7 @@ function callbackInsertUser(req, res, creditCard, err) {
 	db.insertUser(req, res, creditCard, callback);
 }
 
-function callbackUpdateUser(req, res, creditCard, err) {
+function callbackUpdateUser(req, res ,creditCard, err) {
 	db.updateUser(req, res, creditCard, callback);
 }
 
@@ -393,11 +393,13 @@ app.post('/api/creditcard', function(req, res) {
 	db.insertCreditCard(req, res, callback);
 });
 
-app.post('api/updateCreditCard', function(req,res){
-	db.updateCreditCard(req, res, callback);
+app.post('/api/updateCreditCard', function(req,res){
+	console.log("ENTREI NO UPDATE");
+	db.updateCreditCard(req, res, callbackUpdateUser);
 });
 
 app.post('/api/updateTransactions', function(req, res) {
+
 	db.insertAllTransactions(null, req, res, 0, callback, callBackAllTransactions, callbackAllTransactionRows);
 });
 
