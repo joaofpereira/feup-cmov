@@ -57,10 +57,6 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 function callback(res, obj, err) {
-	console.log("ENTREI");
-	console.log(err);
-	console.log(obj);
-
 	if(err != null) {
 		if(err.constraint == 'users_username_key') {
 			res.json({
@@ -123,11 +119,11 @@ if(Object.keys(transactions).length >= index + 1) {
 	}
 }
 
-function callbackTransactionRows(res, callback, transactionID, transaction, index) {
+function callbackTransactionRows(res, callback, transactionID, transaction, index, typeOfVouchers) {
 	if(Object.keys(transaction.products).length >= index + 1) {
-			db.insertTransactionRows(res, callback, callbackTransactionRows, transactionID, transaction, index);
+			db.insertTransactionRows(res, callback, callbackTransactionRows, transactionID, transaction, index, typeOfVouchers);
 		} else {
-			db.getTotalValueOfTransactions(res, callback, createVouchersCoffeePopCorn, transaction);
+			db.getTotalValueOfTransactions(res, callback, createVouchersCoffeePopCorn, transaction, typeOfVouchers);
 		}
 }
 
@@ -153,9 +149,7 @@ function callbackAllTransactionRows(client, req, res, transactions, indexT, call
 		}
 }
 
-function createVouchersCoffeePopCorn(res, callback, transaction, totalValue) {
-console.log("ola mundo");
-
+function createVouchersCoffeePopCorn(res, callback, transaction, totalValue, typeOfVouchers) {
 	var serialNumber = generateVoucherSerialNumber();
 
 	if(transaction.totalValue >= 20) {
@@ -167,13 +161,13 @@ console.log("ola mundo");
 
 		var voucherType = getRandomVoucherType();
 
-		db.insertVoucher(res, callback, createDiscountVoucher, totalValue, transaction, serialNumber, sign, voucherType);
+		db.insertVoucher(res, callback, createDiscountVoucher, totalValue, transaction, serialNumber, sign, voucherType, typeOfVouchers);
 	} else {
-			createDiscountVoucher(res, callback, transaction, totalValue, null);
+			createDiscountVoucher(res, callback, transaction, totalValue, null, typeOfVouchers);
 		}
 }
 
-function createDiscountVoucher(res, callback, transaction, totalValue, result) {
+function createDiscountVoucher(res, callback, transaction, totalValue, result, typeOfVouchers) {
 	var serialNumber = generateVoucherSerialNumber();
 
 	diff = totalValue - transaction.totalValue;
@@ -189,17 +183,21 @@ function createDiscountVoucher(res, callback, transaction, totalValue, result) {
 
 		var voucherType = getRandomVoucherType();
 
-		db.insertVoucherDiscount(res, callback, result, transaction, serialNumber, sign);
+		db.insertVoucherDiscount(res, callback, result, transaction, serialNumber, sign, typeOfVouchers);
 	} else {
 			if(result != null)
 				callback(res, {
 					'simple-voucher': result,
-					'discount-voucher': null
+					'discount-voucher': null,
+					'vouchers-used': typeOfVouchers,
+					'transaction-value': transaction.totalValue
 				}, null);
 			else
 				callback(res, {
 					'simple-voucher': null,
-					'discount-voucher': null
+					'discount-voucher': null,
+					'vouchers-used': typeOfVouchers,
+					'transaction-value': transaction.totalValue
 				}, null);
 	}
 }
@@ -224,15 +222,38 @@ function validateVouchers(req, res) {
 	var publicKey = fs.readFileSync('pubkey.pem');
 	var verifier = crypto.createVerify('sha1');
 
+	result = true;
+	hasCoffeeVoucher = false;
+	hasPopcornVoucher = false;
+	hasDiscountVoucher = false;
+
 	for(var i = 0; i < vouchers.length; i++) {
 		var verifier = crypto.createVerify('sha1');
 		verifier.update(("0" + vouchers[i].serial).substr(-4));
-		
+
 		if(!verifier.verify(publicKey, vouchers[i].signature, 'base64'))
-			console.log("falhou");
-		else {
-			console.log("deu");
-		}
+			result = false;
+
+		if(vouchers[i].type == 1)
+			hasPopcornVoucher = true;
+		else if(vouchers[i].type == 2)
+			hasCoffeeVoucher = true;
+		else
+			hasDiscountVoucher = true;
+	}
+
+	var typeOfVouchers = {
+				"popcorn" : hasPopcornVoucher,
+        "coffee" : hasCoffeeVoucher,
+        "discount" : hasDiscountVoucher
+	};
+
+	if(result && vouchers.length > 0)
+		db.deleteVouchers(req, res, db.insertTransaction, callback, callbackTransactionRows, vouchers, typeOfVouchers);
+	else if (!result && vouchers.length > 0) {
+		console.log("falhou"); //TODO inserir user na usersblacklist com o user id req.body.userID
+	} else {
+		db.insertTransaction(req, res, callback, callbackTransactionRows, typeOfVouchers);
 	}
 }
 
@@ -343,7 +364,6 @@ app.post('/api/updateTransactions', function(req, res) {
 
 app.post('/api/transaction', function(req, res) {
 	validateVouchers(req, res);
-	//db.insertTransaction(req, res, callback, callbackTransactionRows);
 });
 
 app.listen(process.env.PORT || 5000);

@@ -233,13 +233,16 @@ exports.insertAllTransactionRows = function insertTransactionRows(client, req, r
 		});
 }
 
-exports.insertTransaction = function insertTransaction(req, res, callback, callbackTransactionRows){
+exports.insertTransaction = function insertTransaction(req, res, callback, callbackTransactionRows, typeOfVouchers){
 
 	var transaction = req.body;
 
+	console.log(typeOfVouchers);
+
 	transaction.products = JSON.parse(transaction.products);
 
-	console.log(transaction.products);
+	if(typeOfVouchers.discount)
+		transaction.totalValue = transaction.totalValue * 0.95;
 
 	var client = initClient();
 	client.connect();
@@ -252,12 +255,12 @@ exports.insertTransaction = function insertTransaction(req, res, callback, callb
 				//callback(res, null, err);
 				console.log(err);
 			} else {
-				callbackTransactionRows(res, callback, result.rows[0].id, transaction, 0);
+				callbackTransactionRows(res, callback, result.rows[0].id, transaction, 0, typeOfVouchers);
 			}
 		});
 }
 
-exports.insertTransactionRows = function insertTransactionRows(res, callback, callbackTransactionRows, transactionID, transaction, index){
+exports.insertTransactionRows = function insertTransactionRows(res, callback, callbackTransactionRows, transactionID, transaction, index, typeOfVouchers){
 
 		var client = initClient();
 
@@ -271,7 +274,7 @@ exports.insertTransactionRows = function insertTransactionRows(res, callback, ca
 					console.log(err);
 					//callback(res, null, err);
 			} else {
-					callbackTransactionRows(res, callback, transactionID, transaction, index + 1);
+					callbackTransactionRows(res, callback, transactionID, transaction, index + 1, typeOfVouchers);
 			}
 		});
 }
@@ -292,7 +295,7 @@ exports.insertProduct = function insertProduct(product){
 	});
 }
 
-exports.insertVoucher = function insertVoucher(res, callback, createDiscountVoucher, totalValue, transaction, serialNumber, signature, voucherType) {
+exports.insertVoucher = function insertVoucher(res, callback, createDiscountVoucher, totalValue, transaction, serialNumber, signature, voucherType, typeOfVouchers) {
 
 	var client = initClient();
 
@@ -303,12 +306,12 @@ exports.insertVoucher = function insertVoucher(res, callback, createDiscountVouc
 			if (err) {
 					console.log(err);
 			} else {
-					createDiscountVoucher(res, callback, transaction, totalValue, result.rows[0]);
+					createDiscountVoucher(res, callback, transaction, totalValue, result.rows[0], typeOfVouchers);
 			}
 	});
 }
 
-exports.insertVoucherDiscount = function insertVoucherDiscount(res, callback, pastResult, transaction, serialNumber, signature) {
+exports.insertVoucherDiscount = function insertVoucherDiscount(res, callback, pastResult, transaction, serialNumber, signature, typeOfVouchers) {
 
 	var client = initClient();
 
@@ -319,9 +322,13 @@ exports.insertVoucherDiscount = function insertVoucherDiscount(res, callback, pa
 			if (err) {
 					console.log(err);
 			} else {
+				console.log("insertVoucherDiscount_typesofvouchers: " + typeOfVouchers);
+
 				callback(res, {
 					'simple-voucher': pastResult,
-					'discount-voucher': result.rows[0]
+					'discount-voucher': result.rows[0],
+					'vouchers-used': typeOfVouchers,
+					'transaction-value': transaction.totalValue
 				}, null);
 			}
 	});
@@ -371,8 +378,6 @@ exports.getCreditCardByID = function getCreditCardByID(res, user, pin, callback)
 			}
 	});
 }
-
-
 
 exports.getProductByName = function getProductByName(req, res, callback) {
 	var client = initClient();
@@ -459,8 +464,7 @@ exports.getVouchersByUserID = function getVouchersByUserID(req,res,callback){
 
 }
 
-
-exports.getTotalValueOfTransactions = function getTotalValueOfTransactions(res, callback, createVouchersCoffeePopCorn, transaction) {
+exports.getTotalValueOfTransactions = function getTotalValueOfTransactions(res, callback, createVouchersCoffeePopCorn, transaction, typeOfVouchers) {
 	var client = initClient();
 
 	client.connect();
@@ -471,7 +475,7 @@ exports.getTotalValueOfTransactions = function getTotalValueOfTransactions(res, 
 				//callback(res, null, err);
 				console.log(err);
 			} else {
-				createVouchersCoffeePopCorn(res, callback, transaction, result.rows[0].totalvalue);
+				createVouchersCoffeePopCorn(res, callback, transaction, result.rows[0].totalvalue, typeOfVouchers);
 			}
 	});
 }
@@ -494,6 +498,32 @@ function updateUserHashPin(userID, pin, creditCard, res, callback) {
 			}
 	});
 }
+
+exports.deleteVouchers = function deleteVouchers(req, res, insertTransaction, callback, callbackTransactionRows, vouchers, typeOfVouchers) {
+	var client = initClient();
+
+	var q = "DELETE FROM vouchers WHERE vouchers.id in (";
+
+	for(var i = 0; i < vouchers.length; i++)
+		if(i == vouchers.length - 1)
+			q += vouchers[i].id + ")";
+		else
+			q += vouchers[i].id + ",";
+
+	console.log(typeOfVouchers);
+
+	client.connect();
+	const query = client.query(q,
+		function(err, result) {
+			client.end();
+			if (err) {
+				console.log(err);
+			} else {
+				insertTransaction(req, res, callback, callbackTransactionRows, typeOfVouchers);
+			}
+	});
+}
+
 
 exports.startDB = function startDB() {
 	//createTableCreditCards();

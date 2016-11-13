@@ -113,9 +113,9 @@ public class CafeteriaRestTerminalUsage {
         int numberOfVouchers = Integer.parseInt(lines[2]);
 
         for (int i = 0; i < numberOfVouchers; i++) {
-            vouchers.add(new TransactionVoucher(Integer.parseInt(lines[current_line + 2]), lines[current_line + 3], Integer.parseInt(lines[current_line + 1])));
+            vouchers.add(new TransactionVoucher(Integer.parseInt(lines[current_line + 1]), Integer.parseInt(lines[current_line + 3]), lines[current_line + 4], Integer.parseInt(lines[current_line + 2])));
 
-            current_line += 3;
+            current_line += 4;
         }
 
         current_line++;

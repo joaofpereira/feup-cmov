@@ -100,6 +100,7 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
 
                     for (int i = 0; i < transaction.getVouchers().size(); i++) {
                         JSONObject obj = new JSONObject();
+                        obj.put("id", transaction.getVouchers().get(i).getID());
                         obj.put("type", transaction.getVouchers().get(i).getType());
                         obj.put("serial", transaction.getVouchers().get(i).getSerial());
                         obj.put("signature", transaction.getVouchers().get(i).getSignature());
