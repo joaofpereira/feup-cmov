@@ -4,6 +4,7 @@ import android.util.Log;
 
 import org.json.*;
 
+import com.devmarvel.creditcardentry.library.CreditCard;
 import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
 import com.example.joao.cafeteria_client_app.Authentication.RegisterActivity;
 import com.example.joao.cafeteria_client_app.Cafeteria.CartProduct;
@@ -11,6 +12,7 @@ import com.example.joao.cafeteria_client_app.Cafeteria.PastTransactionsActivity;
 import com.example.joao.cafeteria_client_app.Cafeteria.PastTransactionsAdapter;
 import com.example.joao.cafeteria_client_app.Cafeteria.Product;
 import com.example.joao.cafeteria_client_app.Cafeteria.ProductsList;
+import com.example.joao.cafeteria_client_app.Cafeteria.SettingsActivity;
 import com.example.joao.cafeteria_client_app.Cafeteria.Transaction;
 import com.example.joao.cafeteria_client_app.Cafeteria.User;
 import com.example.joao.cafeteria_client_app.Cafeteria.ProductsActivity;
@@ -81,6 +83,32 @@ public class CafeteriaRestClientUsage {
 
                     } else
                         register.onRegisterFailed(code, response.getString("message"));
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                Log.i("ERROR: ", responseString + "\nStatusCode: " + statusCode + "\n");
+            }
+        });
+    }
+
+    public static void updateCard(final SettingsActivity settings, RequestParams params) throws JSONException {
+
+        CafeteriaRestClient.post("updateCreditCard/", params, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                try {
+                    int code = response.getInt("code");
+
+                    if (code == 200) {
+                        settings.onCreditCardChangeCompleted();
+
+                    } else
+                        settings.onCreditCardChangeFailed(code, response.getString("message"));
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -284,5 +312,10 @@ public class CafeteriaRestClientUsage {
         user.createCreditCard(creditCardJSON.getInt("id"), creditCardJSON.getString("cardnumber"), creditCardJSON.getString("expmonth"), creditCardJSON.getString("expyear"));
 
         return user;
+    }
+
+    public static void updateCreditCard(CreditCard creditCard){
+
+        //user.createCreditCard(CreditCard);
     }
 }

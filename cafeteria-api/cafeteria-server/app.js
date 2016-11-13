@@ -111,6 +111,10 @@ function callbackInsertUser(req, res, creditCard, err) {
 	db.insertUser(req, res, creditCard, callback);
 }
 
+function callbackUpdateUser(req, res, creditCard, err) {
+	db.updateUser(req, res, creditCard, callback);
+}
+
 function callbackGetUser(res, user, pin, callback) {
 	db.getCreditCardByID(res, user, pin, callback);
 }
@@ -227,7 +231,7 @@ function validateVouchers(req, res) {
 	for(var i = 0; i < vouchers.length; i++) {
 		var verifier = crypto.createVerify('sha1');
 		verifier.update(("0" + vouchers[i].serial).substr(-4));
-		
+
 		if(!verifier.verify(publicKey, vouchers[i].signature, 'base64'))
 			console.log("falhou");
 		else {
@@ -321,6 +325,14 @@ app.get('/api/vouchers/:userID', function(req,res){
 		db.getVouchersByUserID(req, res, callback);
 });
 
+app.get('/api/blacklist', function(req,res){
+		db.getBlacklistedUsers(res, callback);
+});
+
+app.get('/api/blacklist/:userID', function(req,res){
+		db.getBlacklistedUserMotive(req, res, callback);
+});
+
 /**
 *   HTTP POST functions
 */
@@ -335,6 +347,10 @@ app.post('/api/register', function(req, res) {
 
 app.post('/api/creditcard', function(req, res) {
 	db.insertCreditCard(req, res, callback);
+});
+
+app.post('api/updateCreditCard', function(req,res){
+	db.updateCreditCard(req, res, callback);
 });
 
 app.post('/api/updateTransactions', function(req, res) {
