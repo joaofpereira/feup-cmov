@@ -78,13 +78,11 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.MyViewHo
 
         holder.voucher = voucher;
 
-        if (Cart.getInstance().voucherInUse(holder.voucher))
-        {
+        if (Cart.getInstance().voucherInUse(holder.voucher)) {
             holder.plusButton.setVisibility(View.GONE);
             holder.minusButton.setVisibility(View.VISIBLE);
         }
         else{
-
             holder.plusButton.setVisibility(View.VISIBLE);
             holder.minusButton.setVisibility(View.GONE);
         }
@@ -97,4 +95,5 @@ public class VoucherAdapter extends RecyclerView.Adapter<VoucherAdapter.MyViewHo
     public int getItemCount() {
         return voucherList.size();
     }
+
 }

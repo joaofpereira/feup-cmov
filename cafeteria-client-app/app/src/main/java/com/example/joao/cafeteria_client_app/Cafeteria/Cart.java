@@ -138,7 +138,7 @@ public class Cart {
             else if (cartVouchers.get(i).getType().equals("discount"))
                 type=3;
 
-            result += "\n" + type + "\n" + cartVouchers.get(i).getSerial() + "\n" + cartVouchers.get(i).getSignature();
+            result += "\n" + cartVouchers.get(i).getId() +"\n" +type + "\n" + cartVouchers.get(i).getSerial() + "\n" + cartVouchers.get(i).getSignature();
         }
         for(int i = 0; i < cart.size(); i++)
             result += "\n" + cart.get(i).getID() + ":" + cart.get(i).getAmount();
