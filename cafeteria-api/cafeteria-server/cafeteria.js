@@ -295,7 +295,7 @@ exports.insertProduct = function insertProduct(product){
 	});
 }
 
-exports.insertVoucher = function insertVoucher(res, callback, createDiscountVoucher, totalValue, transaction, serialNumber, signature, voucherType, typeOfVouchers) {
+exports.insertVoucher = function insertVoucher(res, callback, createDiscountVoucher, totalValue, transactionID, transaction, serialNumber, signature, voucherType, typeOfVouchers) {
 
 	var client = initClient();
 
@@ -306,12 +306,12 @@ exports.insertVoucher = function insertVoucher(res, callback, createDiscountVouc
 			if (err) {
 					console.log(err);
 			} else {
-					createDiscountVoucher(res, callback, transaction, totalValue, result.rows[0], typeOfVouchers);
+					createDiscountVoucher(res, callback, transactionID, transaction, totalValue, result.rows[0], typeOfVouchers);
 			}
 	});
 }
 
-exports.insertVoucherDiscount = function insertVoucherDiscount(res, callback, pastResult, transaction, serialNumber, signature, typeOfVouchers) {
+exports.insertVoucherDiscount = function insertVoucherDiscount(res, callback, pastResult, transactionID, transaction, serialNumber, signature, typeOfVouchers) {
 
 	var client = initClient();
 
@@ -322,13 +322,13 @@ exports.insertVoucherDiscount = function insertVoucherDiscount(res, callback, pa
 			if (err) {
 					console.log(err);
 			} else {
-				console.log("insertVoucherDiscount_typesofvouchers: " + typeOfVouchers);
-
 				callback(res, {
 					'simple-voucher': pastResult,
 					'discount-voucher': result.rows[0],
 					'vouchers-used': typeOfVouchers,
-					'transaction-value': transaction.totalValue
+					'transaction-products': transaction.products,
+					'transaction-totalValue': transaction.totalValue,
+					'transaction-id': transactionID
 				}, null);
 			}
 	});
@@ -464,7 +464,7 @@ exports.getVouchersByUserID = function getVouchersByUserID(req,res,callback){
 
 }
 
-exports.getTotalValueOfTransactions = function getTotalValueOfTransactions(res, callback, createVouchersCoffeePopCorn, transaction, typeOfVouchers) {
+exports.getTotalValueOfTransactions = function getTotalValueOfTransactions(res, callback, createVouchersCoffeePopCorn, transactionID, transaction, typeOfVouchers) {
 	var client = initClient();
 
 	client.connect();
@@ -475,7 +475,7 @@ exports.getTotalValueOfTransactions = function getTotalValueOfTransactions(res, 
 				//callback(res, null, err);
 				console.log(err);
 			} else {
-				createVouchersCoffeePopCorn(res, callback, transaction, result.rows[0].totalvalue, typeOfVouchers);
+				createVouchersCoffeePopCorn(res, callback, transactionID, transaction, result.rows[0].totalvalue, typeOfVouchers);
 			}
 	});
 }

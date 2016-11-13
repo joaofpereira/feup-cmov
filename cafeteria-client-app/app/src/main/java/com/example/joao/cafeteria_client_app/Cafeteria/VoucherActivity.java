@@ -2,8 +2,11 @@ package com.example.joao.cafeteria_client_app.Cafeteria;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -90,6 +93,7 @@ public class VoucherActivity extends AppCompatActivity implements CallbackVouche
         progressDialog.setMessage("Loading vouchers");
         progressDialog.show();
 
+
         if(hasSharedPreferences()) {
             String json = sharedPreferences.getString("vouchers", "");
 
@@ -97,7 +101,8 @@ public class VoucherActivity extends AppCompatActivity implements CallbackVouche
             List<Voucher> voucherList = new Gson().fromJson(json, listType);
 
             onGetVouchersCompleted(voucherList);
-        } else {
+        }
+        else if(hasSharedPreferences()) {
             try {
                 CafeteriaRestClientUsage.getVouchers(voucherActivity);
             } catch (JSONException e) {
@@ -233,4 +238,10 @@ public class VoucherActivity extends AppCompatActivity implements CallbackVouche
         }
     }
 
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
 }

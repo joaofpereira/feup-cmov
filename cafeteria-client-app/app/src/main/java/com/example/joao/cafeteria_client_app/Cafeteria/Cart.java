@@ -120,7 +120,6 @@ public class Cart {
         result += User.getInstance().getID() + "\n" + getTotalValue();
         result += "\n"+cartVouchers.size();
 
-
         for(int i = 0; i < cartVouchers.size(); i++) {
             int type = 0;
 

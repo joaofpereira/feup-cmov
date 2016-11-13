@@ -123,7 +123,7 @@ function callbackTransactionRows(res, callback, transactionID, transaction, inde
 	if(Object.keys(transaction.products).length >= index + 1) {
 			db.insertTransactionRows(res, callback, callbackTransactionRows, transactionID, transaction, index, typeOfVouchers);
 		} else {
-			db.getTotalValueOfTransactions(res, callback, createVouchersCoffeePopCorn, transaction, typeOfVouchers);
+			db.getTotalValueOfTransactions(res, callback, createVouchersCoffeePopCorn, transactionID, transaction, typeOfVouchers);
 		}
 }
 
@@ -149,7 +149,7 @@ function callbackAllTransactionRows(client, req, res, transactions, indexT, call
 		}
 }
 
-function createVouchersCoffeePopCorn(res, callback, transaction, totalValue, typeOfVouchers) {
+function createVouchersCoffeePopCorn(res, callback, transactionID, transaction, totalValue, typeOfVouchers) {
 	var serialNumber = generateVoucherSerialNumber();
 
 	if(transaction.totalValue >= 20) {
@@ -161,13 +161,13 @@ function createVouchersCoffeePopCorn(res, callback, transaction, totalValue, typ
 
 		var voucherType = getRandomVoucherType();
 
-		db.insertVoucher(res, callback, createDiscountVoucher, totalValue, transaction, serialNumber, sign, voucherType, typeOfVouchers);
+		db.insertVoucher(res, callback, createDiscountVoucher, totalValue, transactionID, transaction, serialNumber, sign, voucherType, typeOfVouchers);
 	} else {
-			createDiscountVoucher(res, callback, transaction, totalValue, null, typeOfVouchers);
+			createDiscountVoucher(res, callback, transactionID, transaction, totalValue, null, typeOfVouchers);
 		}
 }
 
-function createDiscountVoucher(res, callback, transaction, totalValue, result, typeOfVouchers) {
+function createDiscountVoucher(res, callback, transactionID, transaction, totalValue, result, typeOfVouchers) {
 	var serialNumber = generateVoucherSerialNumber();
 
 	diff = totalValue - transaction.totalValue;
@@ -183,21 +183,25 @@ function createDiscountVoucher(res, callback, transaction, totalValue, result, t
 
 		var voucherType = getRandomVoucherType();
 
-		db.insertVoucherDiscount(res, callback, result, transaction, serialNumber, sign, typeOfVouchers);
+		db.insertVoucherDiscount(res, callback, result, transactionID, transaction, serialNumber, sign, typeOfVouchers);
 	} else {
 			if(result != null)
 				callback(res, {
 					'simple-voucher': result,
 					'discount-voucher': null,
 					'vouchers-used': typeOfVouchers,
-					'transaction-value': transaction.totalValue
+					'transaction-products': transaction.products,
+					'transaction-totalValue': transaction.totalValue,
+					'transaction-id': transactionID
 				}, null);
 			else
 				callback(res, {
 					'simple-voucher': null,
 					'discount-voucher': null,
 					'vouchers-used': typeOfVouchers,
-					'transaction-value': transaction.totalValue
+					'transaction-products': transaction.products,
+					'transaction-totalValue': transaction.totalValue,
+					'transaction-id': transactionID
 				}, null);
 	}
 }
@@ -255,6 +259,14 @@ function validateVouchers(req, res) {
 	} else {
 		db.insertTransaction(req, res, callback, callbackTransactionRows, typeOfVouchers);
 	}
+}
+
+function getPublicKey(req, res, callback) {
+	var publicKey = fs.readFileSync('pubkeyonly.pem', 'utf8');
+
+	console.log(publicKey);
+
+	callback(res, publicKey, null);
 }
 
 function testVouchers() {
@@ -338,8 +350,12 @@ app.get('/api/transactions/:userID', function (req, res) {
 	db.getAllTransactionsByUserID(req, res, callback, callbackGetTransactionRows);
 });
 
-app.get('/api/vouchers/:userID', function(req,res){
+app.get('/api/vouchers/:userID', function(req, res){
 		db.getVouchersByUserID(req, res, callback);
+});
+
+app.get('/api/publickey', function(req, res){
+		getPublicKey(req, res, callback);
 });
 
 /**
