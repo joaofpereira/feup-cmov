@@ -90,6 +90,29 @@ function dropTableVouchers() {
 	query.on('end', () => { client.end(); });
 }
 
+function createTableBlacklist() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'CREATE TABLE blacklist (' +
+		'id SERIAL PRIMARY KEY not null,'+
+		'userID UUID references users(id) not null,' +
+		'motive VARCHAR(60) not null)');
+
+	query.on('end', () => { client.end(); });
+}
+
+function dropTableBlacklist() {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query(
+		'DROP TABLE blacklist;');
+
+	query.on('end', () => { client.end(); });
+}
+
 function createTableProducts() {
 	var client = initClient();
 
@@ -180,6 +203,23 @@ exports.insertCreditCard = function insertCreditCard(req, res, callbackInsertUse
 		});
 }
 
+exports.updateCreditCard = function updateCreditCard(req, res, callbackInsertUser){
+
+	var creditcard = req.body;
+	var client = initClient();
+
+	client.connect();
+	const query = client.query('INSERT INTO creditcards (cardNumber, securityCode, expMonth, expYear) VALUES ($1, $2, $3, $4) RETURNING *', [creditcard.cardNumber, creditcard.securityCode, creditcard.expMonth, creditcard.expYear],
+		function(err, result) {
+			client.end();
+			if (err) {
+				callbackUpdateUser(res, null, err);
+			} else {
+				callbackUpdateUser(req, res, result.rows[0], null);
+			}
+		});
+}
+
 exports.insertUser= function insertUser(req, res, creditCard, callback){
 
 	var user = req.body;
@@ -194,6 +234,23 @@ exports.insertUser= function insertUser(req, res, creditCard, callback){
 			} else {
 				var pin = generatePin();
 				updateUserHashPin(result.rows[0].id, pin, creditCard, res, callback);
+			}
+		});
+}
+
+exports.updatetUser= function insertUser(req, res, creditCard, callback){
+
+	var user = req.body;
+	var client = initClient();
+
+	client.connect();
+	const query = client.query("UPDATE users SET(creditcard) VALUES ($1) WHERE users.id ='"+ user.id +"'RETURNING users.id'", [creditCard.id],
+		function(err, result) {
+			client.end();
+			if (err) {
+				callback(res, null, err);
+			} else {
+				callback(res,result.rows,null)
 			}
 		});
 }
@@ -413,6 +470,38 @@ exports.getProducts = function getProducts(res, callback) {
 	});
 }
 
+exports.getBlacklistedUsers = function getProducts(res, callback) {
+	var client = initClient();
+
+	client.connect();
+	const query = client.query('SELECT * FROM blacklist',
+		function(err, result) {
+			client.end();
+			if (err) {
+					callback(res, null, err);
+			} else {
+					callback(res, {'blacklist users': result.rows}, null);
+			}
+	});
+}
+
+
+exports.getBlacklistedUserMotive = function getProducts(req, res, callback) {
+	var client = initClient();
+	var userID = req.params['userID']
+
+	client.connect();
+	const query = client.query("SELECT blacklist.motive FROM blacklist WHERE  blacklist.userID='" + userID +"'",
+		function(err, result) {
+			client.end();
+			if (err) {
+					callback(res, null, err);
+			} else {
+					callback(res, result.rows, null);
+			}
+	});
+}
+
 exports.getAllTransactionsByUserID = function getAllTransactionsByUserID(req, res, callback, callbackGetTransactionRows) {
 	var client = initClient();
 
@@ -532,18 +621,20 @@ exports.startDB = function startDB() {
 	//createTableCreditCards();
 	//createTableProducts();
 	//createTableUsers();
-	createTableTransactions();
-	createTableTransactionRows();
-	createTableVouchers();
+	//createTableTransactions();
+	//createTableTransactionRows();
+	//createTableVouchers();
+	createTableBlacklist();
 }
 
 exports.dropTables = function dropTables() {
-	dropTableTransactionRows();
-	dropTableTransactions();
+	//dropTableBlacklist();
+	//dropTableTransactionRows();
+	//dropTableTransactions();
 	//dropTableUsers();
 	//dropTableCreditCards();
 	//dropTableProducts();
-	dropTableVouchers();
+	//dropTableVouchers();
 
 }
 

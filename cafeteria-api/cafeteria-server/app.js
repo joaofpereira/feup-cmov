@@ -113,6 +113,10 @@ function callbackInsertUser(req, res, creditCard, err) {
 	db.insertUser(req, res, creditCard, callback);
 }
 
+function callbackUpdateUser(req, res, creditCard, err) {
+	db.updateUser(req, res, creditCard, callback);
+}
+
 function callbackGetUser(res, user, pin, callback) {
 	db.getCreditCardByID(res, user, pin, callback);
 }
@@ -360,8 +364,17 @@ app.get('/api/vouchers/:userID', function(req, res){
 		db.getVouchersByUserID(req, res, callback);
 });
 
+
+app.get('/api/blacklist', function(req,res){
+		db.getBlacklistedUsers(res, callback);
+});
+
+app.get('/api/blacklist/:userID', function(req,res){
+		db.getBlacklistedUserMotive(req, res, callback);
+});
 app.get('/api/publickey', function(req, res){
 		getPublicKey(req, res, callback);
+
 });
 
 /**
@@ -378,6 +391,10 @@ app.post('/api/register', function(req, res) {
 
 app.post('/api/creditcard', function(req, res) {
 	db.insertCreditCard(req, res, callback);
+});
+
+app.post('api/updateCreditCard', function(req,res){
+	db.updateCreditCard(req, res, callback);
 });
 
 app.post('/api/updateTransactions', function(req, res) {

@@ -54,6 +54,10 @@
             android:name=".Cafeteria.VoucherActivity"
             android:label="@string/vouchers"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Cafeteria.SettingsActivity"
+            android:label="@string/settings"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".Cafeteria.TransactionActivity"></activity>
 
     </application>

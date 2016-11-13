@@ -133,6 +133,8 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
             Intent intent = new Intent(getApplicationContext(), PastTransactionsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
+            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
             sharedPreferences.edit().clear().commit();
