@@ -218,6 +218,24 @@ function getRandomVoucherType () {
 		return Math.floor(Math.random() * 2) + 1;
 }
 
+function validateVouchers(req, res) {
+	vouchers = JSON.parse(req.body.vouchers);
+
+	var publicKey = fs.readFileSync('pubkey.pem');
+	var verifier = crypto.createVerify('sha1');
+
+	for(var i = 0; i < vouchers.length; i++) {
+		var verifier = crypto.createVerify('sha1');
+		verifier.update(("0" + vouchers[i].serial).substr(-4));
+		
+		if(!verifier.verify(publicKey, vouchers[i].signature, 'base64'))
+			console.log("falhou");
+		else {
+			console.log("deu");
+		}
+	}
+}
+
 function testVouchers() {
 		var serial_number = generateVoucherSerialNumber();
 
@@ -255,6 +273,10 @@ function testAlg(totalValue, lastTrans) {
 	console.log(qT != qD);
 }
 
+function testSerial() {
+	console.log(generateVoucherSerialNumber());
+}
+
 /**
 *   HTTP GET functions
 */
@@ -272,6 +294,10 @@ app.get('/type', function (req, res) {
 
 app.get('/alg', function (req, res) {
 	testAlg(100, 10);
+});
+
+app.get('/serial', function (req, res) {
+	testSerial();
 });
 
 app.get('/api/user/:email', function (req, res) {
@@ -316,7 +342,8 @@ app.post('/api/updateTransactions', function(req, res) {
 });
 
 app.post('/api/transaction', function(req, res) {
-	db.insertTransaction(req, res, callback, callbackTransactionRows);
+	validateVouchers(req, res);
+	//db.insertTransaction(req, res, callback, callbackTransactionRows);
 });
 
 app.listen(process.env.PORT || 5000);

@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 
 import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
 import com.example.joao.cafeteria_client_app.R;
+import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
@@ -77,10 +79,15 @@ public class QRCodeActivity extends AppCompatActivity implements NavigationView.
             public void onClick(View view) {
                 Cart.getInstance().clearCart();
 
-                for(int i = 0; i < Cart.getInstance().getCartVouchers().size();i++)
-                    VoucherList.getInstance().deleteVoucher(Cart.getInstance().getCartVouchers().get(i));
+                for (int i = 0; i < Cart.getInstance().getCartVouchers().size(); i++) {
+                    int id = Cart.getInstance().getCartVouchers().get(i).getId();
+                    VoucherList.getInstance().deleteVoucher(id);
+                }
 
                 Cart.getInstance().clearVouchers();
+
+                updateSharedPreferences();
+
                 Intent intent = new Intent(getApplicationContext(), ProductsActivity.class);
                 startActivity(intent);
             }
@@ -147,6 +154,17 @@ public class QRCodeActivity extends AppCompatActivity implements NavigationView.
         Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
         bitmap.setPixels(pixels, 0, 500, 0, 0, w, h);
         return bitmap;
+    }
+
+    private void updateSharedPreferences() {
+        Log.i("Vouchers", VoucherList.getInstance().toString());
+
+        Gson gson = new Gson();
+        String vouchers_list = gson.toJson(VoucherList.getInstance().getVouchers());
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("vouchers", vouchers_list);
+        editor.apply();
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

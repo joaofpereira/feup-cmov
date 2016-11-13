@@ -7,6 +7,7 @@ import android.util.Pair;
 import org.json.*;
 
 import com.example.joao.cafeteriaterminal.Cafeteria.Transaction;
+import com.example.joao.cafeteriaterminal.Cafeteria.TransactionVoucher;
 import com.example.joao.cafeteriaterminal.Cafeteria.Voucher;
 import com.example.joao.cafeteriaterminal.Cafeteria.VouchersList;
 import com.example.joao.cafeteriaterminal.QRCODE.ReaderActivity;
@@ -106,23 +107,32 @@ public class CafeteriaRestTerminalUsage {
     public static Transaction createTransaction(String data) throws JSONException {
         String lines[] = data.split("\\r?\\n");
 
-        //JSONArray products = new JSONArray();
+        List<TransactionVoucher> vouchers = new ArrayList<>();
+
+        int current_line = 2;
+        int numberOfVouchers = Integer.parseInt(lines[2]);
+
+        for (int i = 0; i < numberOfVouchers; i++) {
+            vouchers.add(new TransactionVoucher(Integer.parseInt(lines[current_line + 2]), lines[current_line + 3], Integer.parseInt(lines[current_line + 1])));
+
+            current_line += 3;
+        }
+
+        current_line++;
+
         List<Pair<Integer, Integer>> products = new ArrayList<>();
 
-        for (int i = 2 ; i < lines.length ; i++){
+        for (int i = current_line ; i < lines.length ; i++){
             String temp[] = lines[i].split(":");
 
             Pair<Integer, Integer> pair = new Pair<>(Integer.parseInt(temp[0]), Integer.parseInt(temp[1]));
 
             products.add(pair);
-            /*JSONObject obj = new JSONObject();
-            obj.put("product-id", Integer.parseInt(temp[0]));
-            obj.put("product-amount", Integer.parseInt(temp[1]));
-
-            products.put(obj);*/
         }
 
-        Transaction transaction = new Transaction(UUID.fromString(lines[0]), Float.parseFloat(lines[1]), products);
+        Transaction transaction = new Transaction(UUID.fromString(lines[0]), Float.parseFloat(lines[1]), products, vouchers);
+
+        Log.i("Transaction Readed:", transaction.toString());
 
         return transaction;
     }

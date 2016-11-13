@@ -96,6 +96,19 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
                     params.put("userID", transaction.getUserID());
                     params.put("totalValue", transaction.getTotalValue());
 
+                    JSONArray vouchers = new JSONArray();
+
+                    for (int i = 0; i < transaction.getVouchers().size(); i++) {
+                        JSONObject obj = new JSONObject();
+                        obj.put("type", transaction.getVouchers().get(i).getType());
+                        obj.put("serial", transaction.getVouchers().get(i).getSerial());
+                        obj.put("signature", transaction.getVouchers().get(i).getSignature());
+
+                        vouchers.put(obj);
+                    }
+
+                    params.put("vouchers", vouchers);
+
                     JSONArray products = new JSONArray();
 
                     for (int i = 0; i < transaction.getProducts().size(); i++) {
@@ -109,12 +122,11 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
                     params.put("products", products);
 
                     if (isOnline())
-                       // try {
-                            verifyTransactionVouchers(transaction);
-                                //CafeteriaRestTerminalUsage.confirmTransaction(readerActivity, params);
-                        /*} catch (JSONException e) {
+                       try {
+                           CafeteriaRestTerminalUsage.confirmTransaction(readerActivity, params);
+                        } catch (JSONException e) {
                             e.printStackTrace();
-                        }*/
+                        }
                     else {
                         TransactionsList.getInstance().add(transaction);
 
@@ -130,11 +142,11 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
 
                 } catch (JSONException e) {
                     e.printStackTrace();
-                } catch (NoSuchAlgorithmException e) {
+                }/* catch (NoSuchAlgorithmException e) {
                     e.printStackTrace();
                 } catch (NoSuchProviderException e) {
                     e.printStackTrace();
-                }
+                }*/
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data);
@@ -144,10 +156,10 @@ public class ReaderActivity extends AppCompatActivity implements CallbackTransac
     private boolean verifyTransactionVouchers(Transaction transaction) throws NoSuchProviderException, NoSuchAlgorithmException {
         Signature signature = Signature.getInstance("SHA1withRSA");
 
-        signature.initVerify(public_key);
-        signature.update(pair.getKey().toString().getBytes());
+        //signature.initVerify(public_key);
+        //signature.update(pair.getKey().toString().getBytes());
 
-        boolean verify_result = signature.verify(sig); //sign é a signature do voucher em bytes
+        //boolean verify_result = signature.verify(sig); //sign é a signature do voucher em bytes
 
         return false;
     }

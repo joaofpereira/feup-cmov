@@ -5,10 +5,6 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by josec on 12/11/2016.
- */
-
 public class VoucherList{
     private static VoucherList instance = null;
 
@@ -41,12 +37,19 @@ public class VoucherList{
         return instance;
     }
 
-    public  void deleteVoucher(Voucher v){
-        Log.i("Number of vouchers In:", ""+ vouchers.size());
-        Log.i("Voucher id:", ""+ v.getId());
+    public  void deleteVoucher(int id){
         for(int i = 0 ; i < vouchers.size(); i++){
-            if(vouchers.get(i).getId() == v.getId())
+            if(vouchers.get(i).getId() == id)
                 vouchers.remove(i);
         }
+    }
+
+    public String toString() {
+        String res = new String();
+
+        for(Voucher v : vouchers)
+            res += "serial number: " + v.getSerial() + "\n";
+
+        return res;
     }
 }

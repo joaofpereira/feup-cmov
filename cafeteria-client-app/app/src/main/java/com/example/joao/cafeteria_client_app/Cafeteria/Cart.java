@@ -91,7 +91,6 @@ public class Cart {
     public void clearCart() {
         this.cart.clear();
         this.totalValue = 0;
-        this.cartVouchers.clear();
     }
 
     public int getProductAmountOfProduct(Product product) {

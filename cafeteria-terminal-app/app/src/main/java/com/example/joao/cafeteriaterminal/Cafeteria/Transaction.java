@@ -11,11 +11,13 @@ public class Transaction implements Serializable {
     private UUID userID;
     private float totalValue;
     private List<Pair<Integer, Integer>> products;
+    private List<TransactionVoucher> vouchers;
 
-    public Transaction(UUID userID, float totalValue, List<Pair<Integer, Integer>> products) {
+    public Transaction(UUID userID, float totalValue, List<Pair<Integer, Integer>> products, List<TransactionVoucher> vouchers) {
         this.userID = userID;
         this.totalValue = totalValue;
         this.products = products;
+        this.vouchers = vouchers;
     }
 
     public UUID getUserID() {
@@ -30,13 +32,20 @@ public class Transaction implements Serializable {
         return products;
     }
 
+    public List<TransactionVoucher> getVouchers() {
+        return vouchers;
+    }
+
     public String toString() {
-        String result = new String();
+        String productsS = new String(), vouchersS = new String();
+
+        for (int i = 0; i < vouchers.size(); i++)
+            vouchersS += vouchers.get(i).toString();
 
         for (int i = 0; i < products.size(); i++)
-            result += products.get(i).first + ":" + products.get(i).second + "\n";
+            productsS += products.get(i).first + ":" + products.get(i).second + "\n";
 
-        return "UserID: " + userID.toString() + "\nTotalValue: " + this.totalValue + "\nProducts: \n" + result;
+        return "UserID: " + userID.toString() + "\nTotalValue: " + this.totalValue + "\nVouchers: \n" + vouchersS + "\nProducts: \n" + productsS;
     }
 }
 
