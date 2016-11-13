@@ -365,7 +365,7 @@ app.get('/api/blacklist', function(req,res){
 
 app.get('/api/blacklist/:userID', function(req,res){
 		db.getBlacklistedUserMotive(req, res, callback);
-
+});
 app.get('/api/publickey', function(req, res){
 		getPublicKey(req, res, callback);
 
