@@ -48,8 +48,8 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.MyView
                         } else {
                             Cart.getInstance().remove(product.getID());
                         }
-                        amount.setText(Integer.toString(product_amount));
                     }
+                    amount.setText(Integer.toString(product_amount));
                 }
             });
         }

@@ -2,14 +2,20 @@ package com.example.joao.cafeteriaterminal.Cafeteria;
 
 public class TransactionVoucher {
 
+    private int id;
     private int serial;
     private String signature;
     private int type;
 
-    public TransactionVoucher(int serial, String signature, int type) {
+    public TransactionVoucher(int id, int serial, String signature, int type) {
+        this.id = id;
         this.serial = serial;
         this.signature = signature;
         this.type = type;
+    }
+
+    public int getID() {
+        return this.id;
     }
 
     public int getType() {
@@ -25,6 +31,6 @@ public class TransactionVoucher {
     }
 
     public String toString() {
-        return "\nSerial: " + serial + "\nType: " + type + "\nSignature: " + signature + "\n";
+        return "\nID: " + id + "\nSerial: " + serial + "\nType: " + type + "\nSignature: " + signature + "\n";
     }
 }
