@@ -22,7 +22,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".Cafeteria.TransactionResumeActivity" />
-        <activity android:name=".Cafeteria.BlacklistActivity"></activity>
+        <activity android:name=".Cafeteria.BlacklistActivity" />
+        <activity android:name=".Cafeteria.ErrorActivity"></activity>
     </application>
 
 </manifest>

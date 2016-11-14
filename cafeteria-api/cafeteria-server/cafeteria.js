@@ -391,6 +391,23 @@ exports.insertUserOnBlackList = function insertUserOnBlackList(res, callback, us
 					callback(res, result.rows[0], "invalid vouchers");
 				else if(message == "Invalid CreditCard")
 					callback(res, result.rows[0], "invalid creditcard");
+					else if(message == "Vouchers not exists")
+					callback(res, result.rows[0], "vouchers not exists");
+			}
+	});
+}
+
+exports.getUserByID = function getUserByID(req, res, callbackGetUserByID) {
+	var client = initClient();
+	client.connect();
+
+	const query = client.query("SELECT users.id FROM users WHERE users.id='" + req.body.userID +"'",
+		function(err, result) {
+			client.end();
+			if (err) {
+				callback(res, null, err);
+			} else {
+				callbackGetUserByID(req, res, result.rows);
 			}
 	});
 }
@@ -506,8 +523,6 @@ exports.getProducts = function getProducts(res, callback) {
 exports.getCreditCardByUserID = function getCreditCardByUserID(req, res, callbackGetCreditCard) {
 	var client = initClient();
 	client.connect();
-
-	console.log(req.body.userID);
 
 	const query = client.query("SELECT creditcards.expmonth as month, creditcards.expyear as year FROM creditcards INNER JOIN users ON (creditcards.id = users.creditcard) WHERE users.id = '" + req.body.userID + "'",
 	function(err, result) {
@@ -664,7 +679,7 @@ exports.deleteVouchers = function deleteVouchers(req, res, insertTransaction, ca
 				if(result.rowCount > 0)
 					insertTransaction(req, res, callback, callbackTransactionRows, typeOfVouchers);
 				else
-					callback(res, null, "vouchers not exists");
+					callback(res, null, "Vouchers not exists");
 			}
 	});
 }

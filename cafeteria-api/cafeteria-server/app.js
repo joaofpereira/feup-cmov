@@ -4,12 +4,13 @@ var dotenv = require('dotenv');
 var crypto = require('crypto');
 var assert = require('assert');
 var fs = require('fs');
+var path = require('path');
 
 dotenv.load();
 
 var db = require('./cafeteria.js');
 var Transaction = require('./transaction.js');
-var Product = require('./product.js')
+var Product = require('./product.js');
 
 var app = express();
 
@@ -86,7 +87,7 @@ function callback(res, obj, err) {
 			res.json({
 				code: 405,
 				success: false,
-				message: "Vouchers does not exists."
+				data: obj
 			});
 		} else if(err == "invalid vouchers") {
 			res.json({
@@ -111,6 +112,12 @@ function callback(res, obj, err) {
 				code: 409,
 				success: false,
 				message: "Wrong password."
+			});
+		} else if(err == "no user") {
+			res.json({
+				code: 410,
+				success: false,
+				message: "User does not exists."
 			});
 		} else {
 			res.json({
@@ -236,6 +243,17 @@ function getRandomVoucherType () {
 		return Math.floor(Math.random() * 2) + 1;
 }
 
+function checkUserID(req, res) {
+	db.getUserByID(req, res, callbackGetUserByID);
+}
+
+function callbackGetUserByID(req, res, result) {
+	if(result.length == 0)
+		callback(res, null, "no user")
+	else
+		checkCreditCardDate(req, res, callbackGetCreditCard);
+}
+
 function checkCreditCardDate(req, res, callbackGetCreditCard) {
 	db.getCreditCardByUserID(req, res, callbackGetCreditCard);
 }
@@ -289,7 +307,7 @@ function validateVouchers(req, res) {
 }
 
 function getPublicKey(req, res, callback) {
-	var filePath = './cafeteria-api/cafeteria-server/pubkeyonly.pem';
+	var filePath = path.join(__dirname, 'pubkeyonly.pem');
 
 	var publicKey = fs.readFileSync(filePath, 'utf8');
 
@@ -301,10 +319,11 @@ function getPublicKey(req, res, callback) {
 function testVouchers() {
 		var serial_number = generateVoucherSerialNumber();
 
-		console.log(serial_number);
+		var pubkey_path = path.join(__dirname, 'pubkey.pem');
+		var privkey_path = path.join(__dirname, 'privkey.pem');
 
-		var privateKey = fs.readFileSync('privkey.pem');
-		var publicKey = fs.readFileSync('pubkey.pem');
+		var privateKey = fs.readFileSync('privkey_path');
+		var publicKey = fs.readFileSync('pubkey_path');
 
     var crypto = require('crypto');
 
@@ -417,8 +436,7 @@ app.post('/api/updateCreditCard', function(req,res) {
 });
 
 app.post('/api/transaction', function(req, res) {
-	//validateVouchers(req, res);
-	checkCreditCardDate(req, res, callbackGetCreditCard);
+	checkUserID(req, res);
 });
 
 app.listen(process.env.PORT || 5000);

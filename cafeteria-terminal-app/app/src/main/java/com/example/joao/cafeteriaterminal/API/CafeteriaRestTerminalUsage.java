@@ -162,9 +162,7 @@ public class CafeteriaRestTerminalUsage {
 
                         readerActivity.onTransactionRegisterComplete(t);
 
-                    } else if(code == 405) {
-                        Log.i("VOUCHERS: ", "nao existem");
-                    } else if(code == 406 || code == 407) {
+                    } else if(code == 405 || code == 406 || code == 407) {
                         JSONObject data = response.getJSONObject("data");
 
                         int id = data.getInt("id");
@@ -174,8 +172,11 @@ public class CafeteriaRestTerminalUsage {
                         BlackListUser blackListUser = new BlackListUser(id, userID, message);
 
                         readerActivity.onBlackListInserted(blackListUser);
-                    }else
-                        Log.i("ERRO: ", "");
+                    } else if(code == 410) {
+                        String message = response.getString("message");
+
+                        readerActivity.onUserNotExists(message);
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -204,7 +205,7 @@ public class CafeteriaRestTerminalUsage {
 
                         readerActivity.onUpdateTransactionsComplete();
 
-                    }  else if(code == 406 || code == 407) {
+                    }  else if(code == 405 || code == 406 || code == 407) {
                         JSONObject data = response.getJSONObject("data");
 
                         int id = data.getInt("id");
@@ -214,8 +215,11 @@ public class CafeteriaRestTerminalUsage {
                         BlackListUser blackListUser = new BlackListUser(id, userID, message);
 
                         readerActivity.onBlackListInsertedInUpdateTransactions(blackListUser);
-                    }else
-                        Log.i("ERRO: ", "");
+                    } else if(code == 410) {
+                        String message = response.getString("message");
+
+                        readerActivity.onUserNotExistsInUpdateTransactions();
+                    }
 
                 } catch (JSONException e) {
                     e.printStackTrace();

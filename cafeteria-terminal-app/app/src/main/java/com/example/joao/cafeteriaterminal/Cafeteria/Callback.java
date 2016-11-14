@@ -16,4 +16,8 @@ public interface Callback {
     public void onBlackListInserted(BlackListUser blu);
 
     public void onBlackListInsertedInUpdateTransactions(BlackListUser blu);
+
+    public void onUserNotExists(String message);
+
+    public void onUserNotExistsInUpdateTransactions();
 }

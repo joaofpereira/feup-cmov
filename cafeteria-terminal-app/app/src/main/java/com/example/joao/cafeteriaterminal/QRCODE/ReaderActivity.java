@@ -18,6 +18,7 @@ import com.example.joao.cafeteriaterminal.Cafeteria.BlackList;
 import com.example.joao.cafeteriaterminal.Cafeteria.BlackListUser;
 import com.example.joao.cafeteriaterminal.Cafeteria.BlacklistActivity;
 import com.example.joao.cafeteriaterminal.Cafeteria.Callback;
+import com.example.joao.cafeteriaterminal.Cafeteria.ErrorActivity;
 import com.example.joao.cafeteriaterminal.Cafeteria.Product;
 import com.example.joao.cafeteriaterminal.Cafeteria.ProductComplete;
 import com.example.joao.cafeteriaterminal.Cafeteria.ProductsList;
@@ -412,6 +413,23 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
         saveBlacklist(BlackList.getInstance().getBlacklist());
 
         onUpdateTransactionsComplete();
+    }
+
+    @Override
+    public void onUserNotExists(String message) {
+        startErrorActivity(message);
+    }
+
+    @Override
+    public void onUserNotExistsInUpdateTransactions() {
+        onUpdateTransactionsComplete();
+    }
+
+    private void startErrorActivity(String message) {
+        Intent intent = new Intent(getBaseContext(), ErrorActivity.class);
+
+        intent.putExtra("message", message);
+        startActivity(intent);
     }
 
     private void saveProductsList(List<Product> products) {
