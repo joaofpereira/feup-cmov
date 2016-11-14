@@ -677,11 +677,11 @@ exports.startDB = function startDB() {
 	createTableTransactions();
 	createTableTransactionRows();
 	createTableVouchers();
-	//createTableBlacklist();
+	createTableBlacklist();
 }
 
 exports.dropTables = function dropTables() {
-	//dropTableBlacklist();
+	dropTableBlacklist();
 	dropTableTransactionRows();
 	dropTableTransactions();
 	//dropTableUsers();
