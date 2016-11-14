@@ -289,7 +289,9 @@ function validateVouchers(req, res) {
 }
 
 function getPublicKey(req, res, callback) {
-	var publicKey = fs.readFileSync('pubkeyonly.pem', 'utf8');
+	var filePath = path.join(__dirname, 'pubkeyonly.pem');
+
+	var publicKey = fs.readFileSync(filePath, 'utf8');
 
 	console.log(publicKey);
 
