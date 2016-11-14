@@ -58,6 +58,10 @@
             android:name=".Cafeteria.SettingsActivity"
             android:label="@string/settings"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".Authentication.PastTransactionAuthActivity"
+            android:label="@string/authentication"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".Cafeteria.TransactionActivity"></activity>
 
     </application>

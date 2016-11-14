@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.joao.cafeteria_client_app.API.CafeteriaRestClientUsage;
 import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
+import com.example.joao.cafeteria_client_app.Authentication.PastTransactionAuthActivity;
 import com.example.joao.cafeteria_client_app.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -106,6 +107,8 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
 
     @Override
     public void onBackPressed() {
+
+        sharedPreferences.edit().remove("AlreadyLogged").commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.products_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
@@ -130,7 +133,7 @@ public class ProductsActivity extends AppCompatActivity implements CallbackProdu
             startActivity(intent);
 
         } else if (id == R.id.nav_past_transactions) {
-            Intent intent = new Intent(getApplicationContext(), PastTransactionsActivity.class);
+            Intent intent = new Intent(getApplicationContext(), PastTransactionAuthActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
             Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
