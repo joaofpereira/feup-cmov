@@ -231,7 +231,7 @@ public class CafeteriaRestTerminalUsage {
         });
     }
 
-    public static Transaction createTransaction(String data) throws JSONException {
+    public static Transaction createTransaction(String data) {
         String lines[] = data.split("\\r?\\n");
 
         List<TransactionVoucher> vouchers = new ArrayList<>();

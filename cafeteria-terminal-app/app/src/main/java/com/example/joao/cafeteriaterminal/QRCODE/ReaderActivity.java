@@ -131,7 +131,15 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
                 Toast.makeText(this, "Scanner canceled", Toast.LENGTH_LONG).show();
             } else {
                 try {
-                    Transaction transaction = CafeteriaRestTerminalUsage.createTransaction(result.getContents());
+                    Transaction transaction = null;
+
+                    try {
+                        transaction = CafeteriaRestTerminalUsage.createTransaction(result.getContents());
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        Toast.makeText(this, "Invalid QR Code", Toast.LENGTH_LONG).show();
+                        startScan();
+                        return;
+                    }
 
                     RequestParams params = new RequestParams();
 
