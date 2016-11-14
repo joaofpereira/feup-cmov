@@ -391,7 +391,7 @@ exports.insertUserOnBlackList = function insertUserOnBlackList(res, callback, us
 					callback(res, result.rows[0], "invalid vouchers");
 				else if(message == "Invalid CreditCard")
 					callback(res, result.rows[0], "invalid creditcard");
-					else if(message == "Vouchers not exists")
+				else if(message == "Vouchers not exists")
 					callback(res, result.rows[0], "vouchers not exists");
 			}
 	});
@@ -681,13 +681,12 @@ exports.deleteVouchers = function deleteVouchers(req, res, insertTransaction, ca
 					insertTransaction(req, res, callback, callbackTransactionRows, typeOfVouchers);
 				}
 				else {
-					console.log("entrei no else: vouchers not exists")
-					callback(res, null, "Vouchers not exists");
+					console.log("entrei no else: ")
+					insertUserOnBlackList(req, callback, req.body.userID, "vouchers not exists");
 				}
 			}
 	});
 }
-
 
 exports.startDB = function startDB() {
 	//createTableCreditCards();
