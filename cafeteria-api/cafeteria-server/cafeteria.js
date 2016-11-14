@@ -682,7 +682,7 @@ exports.deleteVouchers = function deleteVouchers(req, res, insertTransaction, in
 				}
 				else {
 					console.log("entrei no else: ")
-					insertUserOnBlackList(req, callback, req.body.userID, "vouchers not exists");
+					insertUserOnBlackList(req, callback, req.body.userID, "Vouchers not exists");
 				}
 			}
 	});
