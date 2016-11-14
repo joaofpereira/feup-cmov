@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.joao.cafeteriaterminal.API.CafeteriaRestTerminalUsage;
@@ -27,6 +29,7 @@ import com.example.joao.cafeteriaterminal.Cafeteria.TransactionResumeActivity;
 import com.example.joao.cafeteriaterminal.Cafeteria.TransactionTransmitted;
 import com.example.joao.cafeteriaterminal.Cafeteria.TransactionsList;
 
+import com.example.joao.cafeteriaterminal.R;
 import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -54,11 +57,22 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
 
     ReaderActivity readerActivity;
 
+    Button scan;
+
     SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_reader);
+
+        scan = (Button) findViewById(R.id.scan_btn);
+        scan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startScan();
+            }
+        });
 
         readerActivity = this;
 
@@ -101,7 +115,7 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() == null) {
-                Toast.makeText(this, "You cancelled the scanning", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Scanner canceled", Toast.LENGTH_LONG).show();
             } else {
                 try {
                     Transaction transaction = CafeteriaRestTerminalUsage.createTransaction(result.getContents());
@@ -190,8 +204,7 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
 
                             } else {
                                 BlackListUser blu = new BlackListUser(0, transaction.getUserID(), "Invalid Vouchers");
-                                BlackList.getInstance().add(blu);
-                                saveBlacklist(BlackList.getInstance().getBlacklist());
+                                onBlackListInserted(blu);
                             }
                         }
                     else
@@ -386,7 +399,7 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
 
         Log.i("Print Black List: ", blacklist.toString());
 
-        startScan();
+        //startScan();
     }
 
     @Override

@@ -178,7 +178,7 @@ function createVouchersCoffeePopCorn(res, callback, transactionID, transaction, 
 	if(transaction.totalValue >= 20) {
 		var privkey_path = path.join(__dirname, 'privkey.pem');
 
-		var privateKey = fs.readFileSync('privkey_path');
+		var privateKey = fs.readFileSync(privkey_path);
 
     var signer = crypto.createSign('sha1');
     signer.update(serialNumber);
@@ -202,7 +202,7 @@ function createDiscountVoucher(res, callback, transactionID, transaction, totalV
 	if(qT != qD) {
 		var privkey_path = path.join(__dirname, 'privkey.pem');
 
-		var privateKey = fs.readFileSync('privkey_path');
+		var privateKey = fs.readFileSync(privkey_path);
 
     var signer = crypto.createSign('sha1');
     signer.update(serialNumber);
@@ -274,7 +274,7 @@ function validateVouchers(req, res) {
 
 	var pubkey_path = path.join(__dirname, 'pubkey.pem');
 
-	var publicKey = fs.readFileSync('pubkey_path');
+	var publicKey = fs.readFileSync(pubkey_path);
 
 	var verifier = crypto.createVerify('sha1');
 
