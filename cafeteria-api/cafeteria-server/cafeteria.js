@@ -224,9 +224,6 @@ exports.updateUserCreditCard = function updateUserCreditCard(req, res, callbackD
 
 	var user = req.body;
 	var client = initClient();
-	console.log("Entrei no update user");
-	console.log(user);
-	console.log("creditCard " + creditCard.id);
 
 	client.connect();
 	const query = client.query("UPDATE users SET creditcard ='"+ creditCard.id + "' WHERE users.id ='"+ user.userID +"'",
@@ -235,6 +232,7 @@ exports.updateUserCreditCard = function updateUserCreditCard(req, res, callbackD
 			if (err) {
 				console.log(err);
 			} else {
+				console.log("entrei no else para o callbackDeleteUserFromBlackList");
 				callbackDeleteUserFromBlackList(res, callback, {'userID': user.userID, 'creditCardID': creditCard.id})
 			}
 		});
@@ -244,13 +242,15 @@ exports.deleteUserFromBlackList = function deleteUserFromBlackList(res, callback
 	var client = initClient();
 	client.connect();
 
-	const query = client.query("DELETE FROM blacklist WHERE blacklist.userid='" + obj.userID + "' AND blacklist.motive='Invalid Credit Card'",
+	console.log("UserID: " + obj.userID);
+
+	const query = client.query("DELETE FROM blacklist WHERE blacklist.userid='" + obj.userID + "' AND blacklist.motive='Invalid CreditCard'",
 		function(err, result) {
 			client.end();
 			if (err) {
 				callback(res, null, err);
 			} else {
-				console.log(callback);
+				console.log("result: " + result);
 				console.log("credit card: " + obj.creditCardID);
 				callback(res, {'creditCardID': obj.creditCardID}, null)
 			}

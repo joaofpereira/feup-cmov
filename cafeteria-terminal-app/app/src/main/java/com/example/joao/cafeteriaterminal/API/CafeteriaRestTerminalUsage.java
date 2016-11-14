@@ -216,8 +216,6 @@ public class CafeteriaRestTerminalUsage {
 
                         readerActivity.onBlackListInsertedInUpdateTransactions(blackListUser);
                     } else if(code == 410) {
-                        String message = response.getString("message");
-
                         readerActivity.onUserNotExistsInUpdateTransactions();
                     }
 

@@ -78,11 +78,15 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
 
         sharedPreferences = getSharedPreferences("com.example.joao.cafeteria_terminal_app", Activity.MODE_PRIVATE);
 
+        Log.i("ENTRADA: ", "1");
+
         try {
             if (sharedPreferences.contains("publicKey")) {
                 publicKey = PublicKeyReader.getKey(sharedPreferences.getString("publicKey", ""));
             } else
                 CafeteriaRestTerminalUsage.getPublicKey(this);
+
+            Log.i("ENTRADA: ", "2");
 
             if (sharedPreferences.contains("products")) {
                 String json = sharedPreferences.getString("products", "");
@@ -94,17 +98,26 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
                 CafeteriaRestTerminalUsage.getProducts(this);
             }
 
+            Log.i("ENTRADA: ", "3");
+
             if (sharedPreferences.contains("blacklist")) {
+                Log.i("Entrei no: ", "if do getBlacklist do Create ou seja ja tenho blacklist interna");
                 String json = sharedPreferences.getString("blacklist", "");
 
                 Type listType = new TypeToken<ArrayList<BlackListUser>>() {
                 }.getType();
                 BlackList.getInstance().setBlackList((List<BlackListUser>) new Gson().fromJson(json, listType));
             } else {
+                Log.i("Entrei no: ", "else do getBlacklist do Create");
                 CafeteriaRestTerminalUsage.getBlacklist(this);
             }
 
-            loadLocallyTransactions();
+            if(isOnline()) {
+                Log.i("Entrei no: ", "isOnline do Create");
+                loadLocallyTransactions();
+            }
+
+            startScan();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -203,6 +216,15 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
                                 onTransactionRegisterComplete(new TransactionTransmitted(popcorn, coffee, discount, products_trans, transactionTotalPrice, id));
 
                             } else {
+                                TransactionsList.getInstance().add(transaction);
+
+                                Gson gson = new Gson();
+                                String transactions_list = gson.toJson(TransactionsList.getInstance().getTransactions());
+
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("transactions", transactions_list);
+                                editor.apply();
+
                                 BlackListUser blu = new BlackListUser(0, transaction.getUserID(), "Invalid Vouchers");
                                 onBlackListInserted(blu);
                             }
@@ -267,7 +289,8 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
 
             updateTransactionsOnServer();
         } else {
-            startScan();
+            Log.i("Entrei no: ", "else do getBlacklist do loadLocallyTransactions");
+            CafeteriaRestTerminalUsage.getBlacklist(this);
         }
     }
 
@@ -282,54 +305,50 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
     }
 
     public void updateTransactionsOnServer() {
-        if (isOnline()) {
-            Log.i("Entrei no isOn", "ok");
-            RequestParams params = new RequestParams();
+        Log.i("Entrei no isOn", "ok");
+        RequestParams params = new RequestParams();
 
-            Transaction t = TransactionsList.getInstance().get(0);
+        Transaction t = TransactionsList.getInstance().get(0);
+
+        try {
+            params.put("userID", t.getUserID());
+            params.put("totalValue", t.getTotalValue());
+
+            JSONArray vouchers = new JSONArray();
+
+            for (int i = 0; i < t.getVouchers().size(); i++) {
+                JSONObject obj = new JSONObject();
+                obj.put("id", t.getVouchers().get(i).getID());
+                obj.put("type", t.getVouchers().get(i).getType());
+                obj.put("serial", t.getVouchers().get(i).getSerial());
+                obj.put("signature", t.getVouchers().get(i).getSignature());
+
+                vouchers.put(obj);
+            }
+
+            params.put("vouchers", vouchers);
+
+            JSONArray products = new JSONArray();
+
+            for (int j = 0; j < t.getProducts().size(); j++) {
+                JSONObject obj = new JSONObject();
+                obj.put("product-id", t.getProducts().get(j).first.toString());
+                obj.put("product-amount", t.getProducts().get(j).second.toString());
+
+                products.put(obj);
+            }
+
+            params.put("products", products);
 
             try {
-                params.put("userID", t.getUserID());
-                params.put("totalValue", t.getTotalValue());
-
-                JSONArray vouchers = new JSONArray();
-
-                for (int i = 0; i < t.getVouchers().size(); i++) {
-                    JSONObject obj = new JSONObject();
-                    obj.put("id", t.getVouchers().get(i).getID());
-                    obj.put("type", t.getVouchers().get(i).getType());
-                    obj.put("serial", t.getVouchers().get(i).getSerial());
-                    obj.put("signature", t.getVouchers().get(i).getSignature());
-
-                    vouchers.put(obj);
-                }
-
-                params.put("vouchers", vouchers);
-
-                JSONArray products = new JSONArray();
-
-                for (int j = 0; j < t.getProducts().size(); j++) {
-                    JSONObject obj = new JSONObject();
-                    obj.put("product-id", t.getProducts().get(j).first.toString());
-                    obj.put("product-amount", t.getProducts().get(j).second.toString());
-
-                    products.put(obj);
-                }
-
-                params.put("products", products);
-
-                try {
-                    Log.i("Entrei no try", "ok");
-                    CafeteriaRestTerminalUsage.postTransactions(readerActivity, params);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
+                Log.i("Entrei no try", "ok");
+                CafeteriaRestTerminalUsage.postTransactions(readerActivity, params);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        } else {
-            startScan();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -340,8 +359,6 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
         if (TransactionsList.getInstance().getSize() > 0)
             updateTransactionsOnServer();
         else {
-            startScan();
-
             TransactionsList.getInstance().getTransactions().clear();
             sharedPreferences.edit().remove("transactions").commit();
 
@@ -349,8 +366,13 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
                 Log.i("SHAREDPREFERENCES: ", "TEM TRANSACTIONS");
             else
                 Log.i("SHAREDPREFERENCES: ", "NAO TEM TRANSACTIONS");
-        }
 
+            try {
+                CafeteriaRestTerminalUsage.getBlacklist(readerActivity);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -360,12 +382,6 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("publicKey", publicKey);
         editor.apply();
-
-        try {
-            CafeteriaRestTerminalUsage.getProducts(this);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
@@ -383,12 +399,6 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
         ProductsList.getInstance().setProducts(products);
 
         saveProductsList(products);
-
-        try {
-            CafeteriaRestTerminalUsage.getBlacklist(this);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
