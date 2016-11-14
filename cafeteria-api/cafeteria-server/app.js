@@ -295,7 +295,7 @@ function getPublicKey(req, res, callback) {
 
 	console.log(publicKey);
 
-	callback(res, filePath, null);
+	callback(res, publicKey, null);
 }
 
 function testVouchers() {
