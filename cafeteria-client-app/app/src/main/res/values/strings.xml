@@ -15,7 +15,7 @@
     <string name="logout">Logout</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
-    <string name="authentication">Authentication</string>
+    <string name="authentication">Past Transactions Auth</string>
     <string name="refresh">Refresh</string>
     <string name="checkout">Checkout</string>
     <string name="qrcode">QR Code</string>

@@ -79,8 +79,10 @@ public class PastTransactionAuthActivity extends AppCompatActivity implements Ca
                 String password = input_password.getText().toString();
 
                 validFields(username, password);
-
-                check(username, password);
+                if (!username.equals(User.getInstance().getUserame()))
+                    displayInputTextError(input_username, "Wrong Username");
+                else
+                    check(username, password);
             }
         });
 
@@ -107,6 +109,7 @@ public class PastTransactionAuthActivity extends AppCompatActivity implements Ca
 
         return true;
     }
+
 
     private void check(String username, String password) {
         if (!Cart.getInstance().getCart().isEmpty())
@@ -182,7 +185,6 @@ public class PastTransactionAuthActivity extends AppCompatActivity implements Ca
 
     private void saveSharedPreferences() {
         sharedPreferences = getSharedPreferences("com.example.joao.cafeteria_client_app", Activity.MODE_PRIVATE);
-
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("AlreadyLogged", "ok");

@@ -29,6 +29,9 @@ public class User implements Serializable {
         return this.name;
     }
 
+    public String getUserame() {
+        return this.username;
+    }
 
     public String getEmail() {
         return this.email;
