@@ -6,6 +6,7 @@ import android.util.Pair;
 
 import org.json.*;
 
+import com.example.joao.cafeteriaterminal.Cafeteria.BlackListUser;
 import com.example.joao.cafeteriaterminal.Cafeteria.Product;
 import com.example.joao.cafeteriaterminal.Cafeteria.ProductComplete;
 import com.example.joao.cafeteriaterminal.Cafeteria.ProductsList;
@@ -81,6 +82,43 @@ public class CafeteriaRestTerminalUsage {
         });
     }
 
+    public static void getBlacklist(final ReaderActivity readerActivity) throws JSONException {
+
+        CafeteriaRestTerminal.get("blacklist/", null, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+
+                try {
+                    JSONArray blacklistJSON = response.getJSONObject("data").getJSONArray("blacklist-users");
+
+                    List<BlackListUser> blacklist = new ArrayList<>();
+
+                    for (int i = 0; i < blacklistJSON.length(); i++) {
+                        JSONObject blacklistUser = blacklistJSON.getJSONObject(i);
+
+                        int id = blacklistUser.getInt("id");
+                        UUID userID = UUID.fromString(blacklistUser.getString("userid"));
+                        String message = blacklistUser.getString("motive");
+
+                        BlackListUser blu = new BlackListUser(id, userID, message);
+
+                        blacklist.add(blu);
+                    }
+
+                    readerActivity.onGetBlacklistCompleted(blacklist);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject object) {
+                Log.i("ERRO SERVER: ", "Falhou getBlacklist : " + throwable.toString());
+            }
+        });
+    }
+
     public static void confirmTransaction(final ReaderActivity readerActivity, RequestParams params) throws JSONException {
 
         CafeteriaRestTerminal.post("transaction/", params, new JsonHttpResponseHandler() {
@@ -126,12 +164,17 @@ public class CafeteriaRestTerminalUsage {
 
                     } else if(code == 405) {
                         Log.i("VOUCHERS: ", "nao existem");
-                    } else if(code == 406) {
+                    } else if(code == 406 || code == 407) {
                         JSONObject data = response.getJSONObject("data");
 
-                        Log.i("BLACKLIST: ", data.toString());
-                    }
-                    else
+                        int id = data.getInt("id");
+                        UUID userID = UUID.fromString(data.getString("userid"));
+                        String message = data.getString("motive");
+
+                        BlackListUser blackListUser = new BlackListUser(id, userID, message);
+
+                        readerActivity.onBlackListInserted(blackListUser);
+                    }else
                         Log.i("ERRO: ", "");
 
                 } catch (JSONException e) {
@@ -161,8 +204,18 @@ public class CafeteriaRestTerminalUsage {
 
                         readerActivity.onUpdateTransactionsComplete();
 
-                    } else
-                        Log.i("", "failed");
+                    }  else if(code == 406 || code == 407) {
+                        JSONObject data = response.getJSONObject("data");
+
+                        int id = data.getInt("id");
+                        UUID userID = UUID.fromString(data.getString("userid"));
+                        String message = data.getString("motive");
+
+                        BlackListUser blackListUser = new BlackListUser(id, userID, message);
+
+                        readerActivity.onBlackListInsertedInUpdateTransactions(blackListUser);
+                    }else
+                        Log.i("ERRO: ", "");
 
                 } catch (JSONException e) {
                     e.printStackTrace();

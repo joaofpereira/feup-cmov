@@ -111,6 +111,7 @@ public class CheckoutActivity extends AppCompatActivity implements NavigationVie
             @Override
             public void onClick(View view) {
                 Cart.getInstance().clearCart();
+                Cart.getInstance().clearVouchers();
                 Intent intent = new Intent(getApplicationContext(), ProductsActivity.class);
                 startActivity(intent);
             }

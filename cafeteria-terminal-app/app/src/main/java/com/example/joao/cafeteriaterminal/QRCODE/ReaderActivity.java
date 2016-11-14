@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 import com.example.joao.cafeteriaterminal.API.CafeteriaRestTerminalUsage;
 import com.example.joao.cafeteriaterminal.API.PublicKeyReader;
+import com.example.joao.cafeteriaterminal.Cafeteria.BlackList;
+import com.example.joao.cafeteriaterminal.Cafeteria.BlackListUser;
+import com.example.joao.cafeteriaterminal.Cafeteria.BlacklistActivity;
 import com.example.joao.cafeteriaterminal.Cafeteria.Callback;
 import com.example.joao.cafeteriaterminal.Cafeteria.Product;
 import com.example.joao.cafeteriaterminal.Cafeteria.ProductComplete;
@@ -76,6 +79,16 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
                 CafeteriaRestTerminalUsage.getProducts(this);
             }
 
+            if (sharedPreferences.contains("blacklist")) {
+                String json = sharedPreferences.getString("blacklist", "");
+
+                Type listType = new TypeToken<ArrayList<BlackListUser>>() {
+                }.getType();
+                BlackList.getInstance().setBlackList((List<BlackListUser>) new Gson().fromJson(json, listType));
+            } else {
+                CafeteriaRestTerminalUsage.getBlacklist(this);
+            }
+
             loadLocallyTransactions();
         } catch (JSONException e) {
             e.printStackTrace();
@@ -123,60 +136,65 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
 
                     params.put("products", products);
 
-                    if (isOnline())
-                        try {
-                            CafeteriaRestTerminalUsage.confirmTransaction(readerActivity, params);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    else {
-                        if (verifyTransactionVouchers(transaction)) {
-                            TransactionsList.getInstance().add(transaction);
-
-                            Gson gson = new Gson();
-                            String transactions_list = gson.toJson(TransactionsList.getInstance().getTransactions());
-
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putString("transactions", transactions_list);
-                            editor.apply();
-
-                            // start presentation to the user
-
-                            int id = 0;
-
-                            List<ProductComplete> products_trans = new ArrayList<>();
-
-                            for (int i = 0; i < transaction.getProducts().size(); i++) {
-                                Product p = ProductsList.getInstance().getProductByID(transaction.getProducts().get(i).first);
-                                int amount = transaction.getProducts().get(i).second;
-
-                                products_trans.add(new ProductComplete(p.getName(), amount, p.getPrice() * amount));
+                    if (!BlackList.getInstance().userExistsInBlacklist(transaction.getUserID()))
+                        if (isOnline())
+                            try {
+                                CafeteriaRestTerminalUsage.confirmTransaction(readerActivity, params);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
+                        else {
+                            if (verifyTransactionVouchers(transaction)) {
+                                TransactionsList.getInstance().add(transaction);
 
-                            boolean coffee = false, popcorn = false, discount = false;
+                                Gson gson = new Gson();
+                                String transactions_list = gson.toJson(TransactionsList.getInstance().getTransactions());
 
-                            for (int i = 0; i < transaction.getVouchers().size(); i++) {
-                                if (transaction.getVouchers().get(i).getType() == 1)
-                                    popcorn = true;
-                                else if (transaction.getVouchers().get(i).getType() == 2)
-                                    coffee = true;
+                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                editor.putString("transactions", transactions_list);
+                                editor.apply();
+
+                                // start presentation to the user
+
+                                int id = 0;
+
+                                List<ProductComplete> products_trans = new ArrayList<>();
+
+                                for (int i = 0; i < transaction.getProducts().size(); i++) {
+                                    Product p = ProductsList.getInstance().getProductByID(transaction.getProducts().get(i).first);
+                                    int amount = transaction.getProducts().get(i).second;
+
+                                    products_trans.add(new ProductComplete(p.getName(), amount, p.getPrice() * amount));
+                                }
+
+                                boolean coffee = false, popcorn = false, discount = false;
+
+                                for (int i = 0; i < transaction.getVouchers().size(); i++) {
+                                    if (transaction.getVouchers().get(i).getType() == 1)
+                                        popcorn = true;
+                                    else if (transaction.getVouchers().get(i).getType() == 2)
+                                        coffee = true;
+                                    else
+                                        discount = true;
+                                }
+
+                                float transactionTotalPrice;
+
+                                if (discount)
+                                    transactionTotalPrice = (float) ((double) transaction.getTotalValue() * 0.95);
                                 else
-                                    discount = true;
+                                    transactionTotalPrice = transaction.getTotalValue();
+
+                                onTransactionRegisterComplete(new TransactionTransmitted(popcorn, coffee, discount, products_trans, transactionTotalPrice, id));
+
+                            } else {
+                                BlackListUser blu = new BlackListUser(0, transaction.getUserID(), "Invalid Vouchers");
+                                BlackList.getInstance().add(blu);
+                                saveBlacklist(BlackList.getInstance().getBlacklist());
                             }
-
-                            float transactionTotalPrice;
-
-                            if (discount)
-                                transactionTotalPrice = (float) ((double) transaction.getTotalValue() * 0.95);
-                            else
-                                transactionTotalPrice = transaction.getTotalValue();
-
-                            onTransactionRegisterComplete(new TransactionTransmitted(popcorn, coffee, discount, products_trans, transactionTotalPrice, id));
-
-                        } else {
-                            // TODO users black list
                         }
-                    }
+                    else
+                        startBlacklistActivity(BlackList.getInstance().getByID(transaction.getUserID()));
 
                     Log.i("Transactions: ", TransactionsList.getInstance().toString());
 
@@ -305,7 +323,7 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
     public void onUpdateTransactionsComplete() {
         TransactionsList.getInstance().getTransactions().remove(0);
 
-        if(TransactionsList.getInstance().getSize() > 0)
+        if (TransactionsList.getInstance().getSize() > 0)
             updateTransactionsOnServer();
         else {
             startScan();
@@ -352,7 +370,48 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
 
         saveProductsList(products);
 
+        try {
+            CafeteriaRestTerminalUsage.getBlacklist(this);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onGetBlacklistCompleted(List<BlackListUser> blacklist) {
+        BlackList.getInstance().setBlackList(blacklist);
+
+        saveBlacklist(blacklist);
+
+        Log.i("Print Black List: ", blacklist.toString());
+
         startScan();
+    }
+
+    @Override
+    public void onBlackListInserted(BlackListUser blu) {
+        BlackList.getInstance().add(blu);
+        saveBlacklist(BlackList.getInstance().getBlacklist());
+
+        startBlacklistActivity(blu);
+    }
+
+    public void startBlacklistActivity(BlackListUser blu) {
+        Gson gson = new Gson();
+        String blacklist_user = gson.toJson(blu);
+
+        Intent intent = new Intent(getBaseContext(), BlacklistActivity.class);
+
+        intent.putExtra("blacklistUser", blacklist_user);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onBlackListInsertedInUpdateTransactions(BlackListUser blu) {
+        BlackList.getInstance().add(blu);
+        saveBlacklist(BlackList.getInstance().getBlacklist());
+
+        onUpdateTransactionsComplete();
     }
 
     private void saveProductsList(List<Product> products) {
@@ -361,6 +420,15 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
 
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString("products", products_list);
+        editor.apply();
+    }
+
+    private void saveBlacklist(List<BlackListUser> blacklist) {
+        Gson gson = new Gson();
+        String blacklistS = gson.toJson(blacklist);
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("blacklist", blacklistS);
         editor.apply();
     }
 }

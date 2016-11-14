@@ -275,41 +275,6 @@ exports.insertUser= function insertUser(req, res, creditCard, callback){
 		});
 }
 
-exports.insertAllTransactions = function insertAllTransactions(client, req, res, indexT, callback, callBackAllTransactions, callbackAllTransactionRows){
-
-	var transactions = JSON.parse(req.body.transactions);
-
-	if(client == null) {
-		client = initClient();
-		client.connect();
-	}
-
-	const query = client.query('INSERT INTO transactions (userID, totalvalue, date) VALUES ($1, $2, current_timestamp) RETURNING transactions.id', [transactions[indexT].userID, transactions[indexT].totalValue.toFixed(2)],
-		function(err, result) {
-
-			if (err) {
-				callback(res, null, err);
-			} else {
-				console.log("DENTRO DA CHAMADA " + transactions[0].products);
-				callbackAllTransactionRows(client, req, res, transactions, indexT, callback, callBackAllTransactions, callbackAllTransactionRows, result.rows[0].id, transactions[indexT], 0);
-			}
-		});
-}
-
-exports.insertAllTransactionRows = function insertTransactionRows(client, req, res, transactions, indexT, callback, callBackAllTransactions, callbackAllTransactionRows, transactionID, transaction, indexR) {
-
-		const query = client.query('INSERT INTO transactionrows (transactionID, productID, amount) VALUES ($1, $2 ,$3) RETURNING transactionrows.id', [transactionID, transaction.products[indexR]['product-id'], transaction.products[indexR]['product-amount']],
-		function(err, result) {
-
-			if (err) {
-					console.log(err);
-					callback(res, null, err);
-			} else {
-					callbackAllTransactionRows(client, req,  res, transactions, indexT, callback, callBackAllTransactions, callbackAllTransactionRows, transactionID, transaction, indexR + 1);
-			}
-		});
-}
-
 exports.insertTransaction = function insertTransaction(req, res, callback, callbackTransactionRows, typeOfVouchers){
 
 	var transaction = req.body;
@@ -422,7 +387,10 @@ exports.insertUserOnBlackList = function insertUserOnBlackList(res, callback, us
 			if (err) {
 					console.log(err);
 			} else {
-				callback(res, result.rows[0], "invalid vouchers");
+				if(message == "Invalid Vouchers")
+					callback(res, result.rows[0], "invalid vouchers");
+				else if(message == "Invalid CreditCard")
+					callback(res, result.rows[0], "invalid creditcard");
 			}
 	});
 }
@@ -505,6 +473,43 @@ exports.getProducts = function getProducts(res, callback) {
 	});
 }
 
+exports.getCreditCardByUserID = function getCreditCardByUserID(req, res, callbackGetCreditCard) {
+	var client = initClient();
+	client.connect();
+
+	console.log(req.body.userID);
+
+	const query = client.query("SELECT creditcards.expmonth as month, creditcards.expyear as year FROM creditcards INNER JOIN users ON (creditcards.id = users.creditcard) WHERE users.id = '" + req.body.userID + "'",
+	function(err, result) {
+		client.end();
+		if (err) {
+				console.log(err);
+		} else {
+				var d = new Date();
+				var monthCR = result.rows[0].month;
+				var monthJ = d.getMonth() + 1;
+				var yearCR = result.rows[0].year;
+				var yearJ = ("" + d.getFullYear()).substr(2)
+
+				var result;
+
+				if(yearJ < yearCR)
+					result = true;
+				else if(yearJ == yearCR)
+					if(monthJ <= monthCR)
+						result = true;
+					else
+						result = false;
+				else
+					result = false;
+
+				console.log("RESULT: " + result);
+
+				callbackGetCreditCard(req, res, result);
+		}
+});
+}
+
 exports.getBlacklistedUsers = function getProducts(res, callback) {
 	var client = initClient();
 
@@ -515,24 +520,7 @@ exports.getBlacklistedUsers = function getProducts(res, callback) {
 			if (err) {
 					callback(res, null, err);
 			} else {
-					callback(res, {'blacklist users': result.rows}, null);
-			}
-	});
-}
-
-
-exports.getBlacklistedUserMotive = function getProducts(req, res, callback) {
-	var client = initClient();
-	var userID = req.params['userID']
-
-	client.connect();
-	const query = client.query("SELECT blacklist.motive FROM blacklist WHERE  blacklist.userID='" + userID +"'",
-		function(err, result) {
-			client.end();
-			if (err) {
-					callback(res, null, err);
-			} else {
-					callback(res, result.rows, null);
+					callback(res, {'blacklist-users': result.rows}, null);
 			}
 	});
 }

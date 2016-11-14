@@ -10,4 +10,10 @@ public interface Callback {
     public void onTransactionRegisterComplete(TransactionTransmitted t);
 
     public void onUpdateTransactionsComplete();
+
+    public void onGetBlacklistCompleted(List<BlackListUser> blacklist);
+
+    public void onBlackListInserted(BlackListUser blu);
+
+    public void onBlackListInsertedInUpdateTransactions(BlackListUser blu);
 }

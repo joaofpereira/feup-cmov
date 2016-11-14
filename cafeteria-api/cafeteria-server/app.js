@@ -94,7 +94,13 @@ function callback(res, obj, err) {
 				success: false,
 				data: obj
 			});
-		}else {
+		}  else if(err == "invalid creditcard") {
+			res.json({
+				code: 407,
+				success: false,
+				data: obj
+			});
+		} else {
 			res.json({
 				code: 404,
 				success: false,
@@ -144,28 +150,6 @@ function callbackTransactionRows(res, callback, transactionID, transaction, inde
 			db.insertTransactionRows(res, callback, callbackTransactionRows, transactionID, transaction, index, typeOfVouchers);
 		} else {
 			db.getTotalValueOfTransactions(res, callback, createVouchersCoffeePopCorn, transactionID, transaction, typeOfVouchers);
-		}
-}
-
-function callBackAllTransactions(client, req, res, callback, callBackAllTransactions, callbackAllTransactionRows, indexT) {
-		if(JSON.parse(req.body.transactions).length >= indexT + 1) {
-			db.insertAllTransactions(client, req, res, indexT, callback, callBackAllTransactions, callbackAllTransactionRows);
-		} else {
-			client.end();
-
-			console.log("CHEGUEI AO CALLBACK");
-
-			callback(res, {
-				'mensagem': 'deu certo'
-			}, null);
-		}
-}
-
-function callbackAllTransactionRows(client, req, res, transactions, indexT, callback, callBackAllTransactions, callbackAllTransactionRows, transactionID, transaction, indexR) {
-	if(Object.keys(transaction.products).length >= indexR + 1) {
-			db.insertAllTransactionRows(client, req, res, transactions, indexT, callback, callBackAllTransactions, callbackAllTransactionRows, transactionID, transaction, indexR);
-		} else {
-			callBackAllTransactions(client, req, res, callback, callBackAllTransactions, callbackAllTransactionRows, indexT + 1);
 		}
 }
 
@@ -238,6 +222,17 @@ function generateVoucherSerialNumber () {
 
 function getRandomVoucherType () {
 		return Math.floor(Math.random() * 2) + 1;
+}
+
+function checkCreditCardDate(req, res, callbackGetCreditCard) {
+	db.getCreditCardByUserID(req, res, callbackGetCreditCard);
+}
+
+function callbackGetCreditCard(req, res, result) {
+	if(result)
+		validateVouchers(req, res);
+	else
+		db.insertUserOnBlackList(res, callback, req.body.userID, "Invalid CreditCard");
 }
 
 function validateVouchers(req, res) {
@@ -374,14 +369,10 @@ app.get('/api/vouchers/:userID', function(req, res){
 		db.getVouchersByUserID(req, res, callback);
 });
 
-
 app.get('/api/blacklist', function(req,res){
 		db.getBlacklistedUsers(res, callback);
 });
 
-app.get('/api/blacklist/:userID', function(req,res){
-		db.getBlacklistedUserMotive(req, res, callback);
-});
 app.get('/api/publickey', function(req, res){
 		getPublicKey(req, res, callback);
 
@@ -407,12 +398,9 @@ app.post('/api/updateCreditCard', function(req,res) {
 	db.updateCreditCard(req, res, callbackUpdateUserCreditCard, callback);
 });
 
-app.post('/api/updateTransactions', function(req, res) {
-	db.insertAllTransactions(null, req, res, 0, callback, callBackAllTransactions, callbackAllTransactionRows);
-});
-
 app.post('/api/transaction', function(req, res) {
-	validateVouchers(req, res);
+	//validateVouchers(req, res);
+	checkCreditCardDate(req, res, callbackGetCreditCard);
 });
 
 app.listen(process.env.PORT || 5000);

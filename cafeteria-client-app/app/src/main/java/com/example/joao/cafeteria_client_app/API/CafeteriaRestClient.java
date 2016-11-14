@@ -13,7 +13,7 @@ public class CafeteriaRestClient {
     }
 
     public static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        client.setTimeout(40 * 1000);
+        client.setTimeout(60 * 1000);
 
         client.post(getAbsoluteUrl(url), params, responseHandler);
     }
