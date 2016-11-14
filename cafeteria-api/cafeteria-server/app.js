@@ -305,7 +305,7 @@ function validateVouchers(req, res) {
 	};
 
 	if(result && vouchers.length > 0)
-		db.deleteVouchers(req, res, db.insertTransaction, callback, callbackTransactionRows, vouchers, typeOfVouchers);
+		db.deleteVouchers(req, res, db.insertTransaction, db.insertUserOnBlackList, callback, callbackTransactionRows, vouchers, typeOfVouchers);
 	else if (!result && vouchers.length > 0) {
 		db.insertUserOnBlackList(res, callback, req.body.userID, "Invalid Vouchers");
 	} else {

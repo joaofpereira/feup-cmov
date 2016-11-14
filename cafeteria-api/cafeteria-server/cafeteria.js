@@ -656,7 +656,7 @@ function updateUserHashPin(userID, pin, creditCard, res, callback) {
 	});
 }
 
-exports.deleteVouchers = function deleteVouchers(req, res, insertTransaction, callback, callbackTransactionRows, vouchers, typeOfVouchers) {
+exports.deleteVouchers = function deleteVouchers(req, res, insertTransaction, insertUserOnBlackList, callback, callbackTransactionRows, vouchers, typeOfVouchers) {
 	var client = initClient();
 
 	var q = "DELETE FROM vouchers WHERE vouchers.id in (";
