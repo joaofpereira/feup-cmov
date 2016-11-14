@@ -6,9 +6,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +25,7 @@ import com.devmarvel.creditcardentry.library.CreditCardForm;
 import com.example.joao.cafeteria_client_app.API.CafeteriaRestClientUsage;
 import com.example.joao.cafeteria_client_app.Authentication.CallbackRegister;
 import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
+import com.example.joao.cafeteria_client_app.Authentication.PastTransactionAuthActivity;
 import com.example.joao.cafeteria_client_app.Authentication.RegisterActivity;
 import com.example.joao.cafeteria_client_app.Authentication.ShowPinActivity;
 import com.example.joao.cafeteria_client_app.R;
@@ -31,12 +38,13 @@ import org.json.JSONException;
  * Created by josec on 13/11/2016.
  */
 
-public class SettingsActivity extends AppCompatActivity implements CallbackSettings {
+public class SettingsActivity extends AppCompatActivity implements CallbackSettings, NavigationView.OnNavigationItemSelectedListener {
 
     CreditCardForm creditCardForm;
     Button card_btn = null;
     ProgressDialog progressDialog;
 
+    NavigationView navigationView;
     SettingsActivity settingsActivity;
     SharedPreferences sharedPreferences;
 
@@ -58,6 +66,18 @@ public class SettingsActivity extends AppCompatActivity implements CallbackSetti
         setSupportActionBar(toolbar);
 
         settingsActivity = this;
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.settings_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View header = navigationView.getHeaderView(0);
+
 
         card_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -127,5 +147,39 @@ public class SettingsActivity extends AppCompatActivity implements CallbackSetti
     private void removeInputTextError(EditText ed) {
         ed.setError(null);
         ed.setTextColor(Color.parseColor("#000000"));
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_products) {
+            Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_cart) {
+            Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_vouchers) {
+            Intent intent = new Intent(getApplicationContext(), VoucherActivity.class);
+            startActivity(intent);
+
+        } else if (id == R.id.nav_past_transactions) {
+            Intent intent = new Intent(getApplicationContext(), PastTransactionAuthActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_settings) {
+
+        } else if (id == R.id.nav_logout) {
+            sharedPreferences.edit().clear().commit();
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+
+            settingsActivity.finish();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.settings_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

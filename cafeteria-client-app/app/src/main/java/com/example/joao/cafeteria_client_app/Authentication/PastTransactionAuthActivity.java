@@ -6,11 +6,15 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -20,9 +24,12 @@ import android.widget.Toast;
 
 import com.example.joao.cafeteria_client_app.API.CafeteriaRestClientUsage;
 import com.example.joao.cafeteria_client_app.Cafeteria.Cart;
+import com.example.joao.cafeteria_client_app.Cafeteria.CartActivity;
 import com.example.joao.cafeteria_client_app.Cafeteria.PastTransactionsActivity;
 import com.example.joao.cafeteria_client_app.Cafeteria.ProductsActivity;
+import com.example.joao.cafeteria_client_app.Cafeteria.SettingsActivity;
 import com.example.joao.cafeteria_client_app.Cafeteria.User;
+import com.example.joao.cafeteria_client_app.Cafeteria.VoucherActivity;
 import com.example.joao.cafeteria_client_app.R;
 import com.google.gson.Gson;
 import com.loopj.android.http.RequestParams;
@@ -33,7 +40,7 @@ import org.json.JSONException;
  * Created by josec on 13/11/2016.
  */
 
-public class PastTransactionAuthActivity extends AppCompatActivity implements CallbackPastTransactionAuth {
+public class PastTransactionAuthActivity extends AppCompatActivity implements CallbackPastTransactionAuth, NavigationView.OnNavigationItemSelectedListener {
 
     Button login_button;
     EditText input_username, input_password;
@@ -41,6 +48,8 @@ public class PastTransactionAuthActivity extends AppCompatActivity implements Ca
 
     PastTransactionAuthActivity pastTransactionAuthActivity;
     SharedPreferences sharedPreferences;
+
+    NavigationView navigationView;
 
     String username;
     String password;
@@ -57,9 +66,19 @@ public class PastTransactionAuthActivity extends AppCompatActivity implements Ca
 
         login_button = (Button) findViewById(R.id.btn_login);
 
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.past_transactions_auth_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        View header = navigationView.getHeaderView(0);
 
         pastTransactionAuthActivity = this;
 
@@ -200,5 +219,38 @@ public class PastTransactionAuthActivity extends AppCompatActivity implements Ca
     private void removeInputTextError(EditText ed) {
         ed.setError(null);
         ed.setTextColor(Color.parseColor("#000000"));
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_products) {
+
+            Intent intent = new Intent(getApplicationContext(), ProductsActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_cart) {
+            Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_vouchers) {
+            Intent intent = new Intent(getApplicationContext(), VoucherActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_past_transactions) {
+        } else if (id == R.id.nav_settings) {
+            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_logout) {
+            sharedPreferences.edit().clear().commit();
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(intent);
+
+            pastTransactionAuthActivity.finish();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.past_transactions_auth_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

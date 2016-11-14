@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.joao.cafeteria_client_app.API.CafeteriaRestClientUsage;
 import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
+import com.example.joao.cafeteria_client_app.Authentication.PastTransactionAuthActivity;
 import com.example.joao.cafeteria_client_app.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -137,9 +138,11 @@ public class VoucherActivity extends AppCompatActivity implements CallbackVouche
             startActivity(intent);
         } else if (id == R.id.nav_vouchers) {
         } else if (id == R.id.nav_past_transactions) {
-            Intent intent = new Intent(getApplicationContext(), PastTransactionsActivity.class);
+            Intent intent = new Intent(getApplicationContext(), PastTransactionAuthActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
+            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_logout) {
             sharedPreferences.edit().clear().commit();

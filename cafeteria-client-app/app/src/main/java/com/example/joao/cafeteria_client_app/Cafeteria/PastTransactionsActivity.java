@@ -111,10 +111,15 @@ public class PastTransactionsActivity extends AppCompatActivity implements Callb
             Intent intent = new Intent(getApplicationContext(), ProductsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_cart) {
+            Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_vouchers) {
+            Intent intent = new Intent(getApplicationContext(), VoucherActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_past_transactions) {
         } else if (id == R.id.nav_settings) {
-
+            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_logout) {
             sharedPreferences.edit().clear().commit();
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

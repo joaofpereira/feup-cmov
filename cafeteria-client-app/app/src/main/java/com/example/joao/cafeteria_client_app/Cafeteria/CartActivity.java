@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.joao.cafeteria_client_app.Authentication.LoginActivity;
+import com.example.joao.cafeteria_client_app.Authentication.PastTransactionAuthActivity;
 import com.example.joao.cafeteria_client_app.R;
 
 public class CartActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -96,7 +97,7 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(getApplicationContext(), VoucherActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_past_transactions) {
-            Intent intent = new Intent(getApplicationContext(), PastTransactionsActivity.class);
+            Intent intent = new Intent(getApplicationContext(), PastTransactionAuthActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
 
