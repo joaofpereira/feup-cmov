@@ -289,13 +289,13 @@ function validateVouchers(req, res) {
 }
 
 function getPublicKey(req, res, callback) {
-	var filePath = path.join(__dirname, 'pubkeyonly.pem');
+	var filePath = './cafeteria-api/cafeteria-server/pubkeyonly.pem';
 
 	var publicKey = fs.readFileSync(filePath, 'utf8');
 
 	console.log(publicKey);
 
-	callback(res, publicKey, null);
+	callback(res, filePath, null);
 }
 
 function testVouchers() {
