@@ -297,11 +297,11 @@ public class CafeteriaRestClientUsage {
                                     // get voucher type
                                     String voucher_type;
                                     if (voucher.getInt("type") == 1) {
-                                        voucher_type = "popcorn";
+                                        voucher_type = "Free Popcorn";
                                     } else if (voucher.getInt("type") == 2) {
-                                        voucher_type = "coffee";
+                                        voucher_type = "Free Coffee";
                                     } else {
-                                        voucher_type = "discount";
+                                        voucher_type = "Discount";
                                     }
                                     Log.i("",voucher_type);
                                     // get voucher serial

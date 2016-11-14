@@ -674,21 +674,20 @@ exports.startDB = function startDB() {
 	//createTableCreditCards();
 	//createTableProducts();
 	//createTableUsers();
-	createTableTransactions();
-	createTableTransactionRows();
-	createTableVouchers();
-	createTableBlacklist();
+	//createTableTransactions();
+	//createTableTransactionRows();
+	//createTableVouchers();
+	//createTableBlacklist();
 }
 
 exports.dropTables = function dropTables() {
-	dropTableBlacklist();
-	dropTableTransactionRows();
-	dropTableTransactions();
+	//dropTableBlacklist();
+	//dropTableTransactionRows();
+	//dropTableTransactions();
 	//dropTableUsers();
 	//dropTableCreditCards();
 	//dropTableProducts();
-	dropTableVouchers();
-
+	//dropTableVouchers();
 }
 
 function generatePin () {

@@ -10,20 +10,21 @@ public class Cart {
 
     List<CartProduct> cart;
     List<Voucher> cartVouchers;
-    float totalValue;
 
     public Cart() {
-        this.cart = new ArrayList<CartProduct>();
-        this.cartVouchers = new ArrayList<Voucher>();
+        this.cart = new ArrayList<>();
+        this.cartVouchers = new ArrayList<>();
     }
 
     public List<CartProduct> getCart() {
         return this.cart;
     }
 
-    public List<Voucher> getCartVouchers() {return this.cartVouchers;}
+    public List<Voucher> getCartVouchers() {
+        return this.cartVouchers;
+    }
 
-    public void addVoucherToCart(Voucher voucher){
+    public void addVoucherToCart(Voucher voucher) {
         this.cartVouchers.add(voucher);
     }
 
@@ -38,7 +39,7 @@ public class Cart {
 
     public void remove(int id) {
         for (int i = 0; i < cart.size(); i++) {
-            if(cart.get(i).getID() == id) {
+            if (cart.get(i).getID() == id) {
                 cart.remove(i);
             }
         }
@@ -46,7 +47,7 @@ public class Cart {
 
     public void removeVoucher(int id) {
         for (int i = 0; i < cartVouchers.size(); i++)
-            if(cartVouchers.get(i).getId() == id)
+            if (cartVouchers.get(i).getId() == id)
                 cartVouchers.remove(i);
 
     }
@@ -68,6 +69,17 @@ public class Cart {
         return false;
     }
 
+    private boolean existsDiscountVoucher() {
+        if (cartVouchers.isEmpty())
+            return false;
+
+        for (Voucher v : cartVouchers)
+            if (v.getType().equals("Discount"))
+                return true;
+
+        return false;
+    }
+
     public boolean sameTypeOfVoucherInCart(Voucher voucher) {
         for (int i = 0; i < cartVouchers.size(); i++)
             if (cartVouchers.get(i).getType().equals(voucher.getType()))
@@ -78,10 +90,13 @@ public class Cart {
     public float getTotalValue() {
         float totalValue = 0;
 
-        for(int i = 0; i < cart.size(); i++)
+        for (int i = 0; i < cart.size(); i++)
             totalValue += cart.get(i).getPrice() * cart.get(i).getAmount();
 
-        return totalValue;
+        if (existsDiscountVoucher())
+            return (float) ((double) totalValue * 0.95);
+        else
+            return totalValue;
     }
 
     public void clearCart() {
@@ -89,11 +104,11 @@ public class Cart {
     }
 
     public int getProductAmountOfProduct(Product product) {
-        if(cart.isEmpty())
+        if (cart.isEmpty())
             return 0;
 
-        for(int i = 0; i < cart.size(); i++) {
-            if(cart.get(i).getID() == product.getID())
+        for (int i = 0; i < cart.size(); i++) {
+            if (cart.get(i).getID() == product.getID())
                 return cart.get(i).getAmount();
         }
 
@@ -104,10 +119,10 @@ public class Cart {
         this.cartVouchers.clear();
     }
 
-    public boolean voucherInUse(Voucher v){
+    public boolean voucherInUse(Voucher v) {
 
-        for (int i = 0 ; i < cartVouchers.size(); i++){
-            if(cartVouchers.get(i).getSerial() == v.getSerial())
+        for (int i = 0; i < cartVouchers.size(); i++) {
+            if (cartVouchers.get(i).getSerial() == v.getSerial())
                 return true;
         }
 
@@ -118,21 +133,21 @@ public class Cart {
         String result = new String();
 
         result += User.getInstance().getID() + "\n" + getTotalValue();
-        result += "\n"+cartVouchers.size();
+        result += "\n" + cartVouchers.size();
 
-        for(int i = 0; i < cartVouchers.size(); i++) {
+        for (int i = 0; i < cartVouchers.size(); i++) {
             int type = 0;
 
-            if (cartVouchers.get(i).getType().equals("popcorn"))
-                type=1;
-            else if(cartVouchers.get(i).getType().equals("coffee"))
-                type=2;
-            else if (cartVouchers.get(i).getType().equals("discount"))
-                type=3;
+            if (cartVouchers.get(i).getType().equals("Free popcorn"))
+                type = 1;
+            else if (cartVouchers.get(i).getType().equals("Free coffee"))
+                type = 2;
+            else if (cartVouchers.get(i).getType().equals("Discount"))
+                type = 3;
 
-            result += "\n" + cartVouchers.get(i).getId() +"\n" +type + "\n" + cartVouchers.get(i).getSerial() + "\n" + cartVouchers.get(i).getSignature();
+            result += "\n" + cartVouchers.get(i).getId() + "\n" + type + "\n" + cartVouchers.get(i).getSerial() + "\n" + cartVouchers.get(i).getSignature();
         }
-        for(int i = 0; i < cart.size(); i++)
+        for (int i = 0; i < cart.size(); i++)
             result += "\n" + cart.get(i).getID() + ":" + cart.get(i).getAmount();
 
         return result;
@@ -145,21 +160,19 @@ public class Cart {
         return instance;
     }
 
-    public String getStringOfVouchers(){
-
-        Log.i("TESTE: ", "Entrei");
-        Log.i("NumVouchers: ", "" + cartVouchers.size());
+    public String getStringOfVouchers() {
 
         String temp = new String();
 
-        if(!cartVouchers.isEmpty())
+        if(cartVouchers.isEmpty())
+            return "None";
+        else
             temp += cartVouchers.get(0).getType();
 
-        for (int i = 1 ; i < cartVouchers.size(); i++)
+        for (int i = 1; i < cartVouchers.size(); i++)
             temp += ", " + cartVouchers.get(i).getType();
 
-        Log.i("STRING TEMP: ", temp);
-        Log.i("STRING: ", "ksnjnfsm");
+        Log.i("STRING CartVouchers: ", temp);
 
         return temp;
     }
