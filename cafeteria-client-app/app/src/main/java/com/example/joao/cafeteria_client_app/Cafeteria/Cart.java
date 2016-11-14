@@ -138,9 +138,9 @@ public class Cart {
         for (int i = 0; i < cartVouchers.size(); i++) {
             int type = 0;
 
-            if (cartVouchers.get(i).getType().equals("Free popcorn"))
+            if (cartVouchers.get(i).getType().equals("Free Popcorn"))
                 type = 1;
-            else if (cartVouchers.get(i).getType().equals("Free coffee"))
+            else if (cartVouchers.get(i).getType().equals("Free Coffee"))
                 type = 2;
             else if (cartVouchers.get(i).getType().equals("Discount"))
                 type = 3;

@@ -676,10 +676,14 @@ exports.deleteVouchers = function deleteVouchers(req, res, insertTransaction, ca
 			if (err) {
 				console.log(err);
 			} else {
-				if(result.rowCount > 0)
+				if(result.rowCount > 0) {
+					console.log("tava tudo bem");
 					insertTransaction(req, res, callback, callbackTransactionRows, typeOfVouchers);
-				else
+				}
+				else {
+					console.log("entrei no else: vouchers not exists")
 					callback(res, null, "Vouchers not exists");
+				}
 			}
 	});
 }
