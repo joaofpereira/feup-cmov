@@ -101,19 +101,19 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
             Log.i("ENTRADA: ", "3");
 
             if (sharedPreferences.contains("blacklist")) {
-                Log.i("Entrei no: ", "if do getBlacklist do Create ou seja ja tenho blacklist interna");
+                Log.w("Entrei no: ", "if do getBlacklist do Create ou seja ja tenho blacklist interna");
                 String json = sharedPreferences.getString("blacklist", "");
 
                 Type listType = new TypeToken<ArrayList<BlackListUser>>() {
                 }.getType();
                 BlackList.getInstance().setBlackList((List<BlackListUser>) new Gson().fromJson(json, listType));
             } else {
-                Log.i("Entrei no: ", "else do getBlacklist do Create");
+                Log.w("Entrei no: ", "else do getBlacklist do Create");
                 CafeteriaRestTerminalUsage.getBlacklist(this);
             }
 
             if(isOnline()) {
-                Log.i("Entrei no: ", "isOnline do Create");
+                Log.w("Entrei no: ", "isOnline do Create");
                 loadLocallyTransactions();
             }
 
@@ -289,7 +289,7 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
 
             updateTransactionsOnServer();
         } else {
-            Log.i("Entrei no: ", "else do getBlacklist do loadLocallyTransactions");
+            Log.w("Entrei no: ", "else do getBlacklist do loadLocallyTransactions");
             CafeteriaRestTerminalUsage.getBlacklist(this);
         }
     }
@@ -305,7 +305,6 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
     }
 
     public void updateTransactionsOnServer() {
-        Log.i("Entrei no isOn", "ok");
         RequestParams params = new RequestParams();
 
         Transaction t = TransactionsList.getInstance().get(0);
@@ -341,7 +340,6 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
             params.put("products", products);
 
             try {
-                Log.i("Entrei no try", "ok");
                 CafeteriaRestTerminalUsage.postTransactions(readerActivity, params);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -407,7 +405,7 @@ public class ReaderActivity extends AppCompatActivity implements Callback {
 
         saveBlacklist(blacklist);
 
-        Log.i("Print Black List: ", blacklist.toString());
+        Log.w("Print Black List: ", blacklist.toString());
 
         //startScan();
     }
