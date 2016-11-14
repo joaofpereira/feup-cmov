@@ -94,11 +94,23 @@ function callback(res, obj, err) {
 				success: false,
 				data: obj
 			});
-		}  else if(err == "invalid creditcard") {
+		} else if(err == "invalid creditcard") {
 			res.json({
 				code: 407,
 				success: false,
 				data: obj
+			});
+		} else if(err == "no username found") {
+			res.json({
+				code: 408,
+				success: false,
+				message: "No user with that username found."
+			});
+		} else if(err == "wrong password") {
+			res.json({
+				code: 409,
+				success: false,
+				message: "Wrong password."
 			});
 		} else {
 			res.json({

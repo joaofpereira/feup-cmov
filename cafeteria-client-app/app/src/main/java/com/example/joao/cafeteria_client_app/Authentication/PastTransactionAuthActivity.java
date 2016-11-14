@@ -80,69 +80,42 @@ public class PastTransactionAuthActivity extends AppCompatActivity implements Ca
 
                 validFields(username, password);
 
-                login(username, password);
+                check(username, password);
             }
         });
 
 
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.past_transactions_auth_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+    private boolean validFields(String username, String password) {
+
+
+        if (username.isEmpty() || username.split("\\s+").length > 1) {
+            displayInputTextError(input_username, "Insert only one word");
+            return false;
         } else {
-            super.onBackPressed();
+            removeInputTextError(input_username);
         }
+
+
+        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
+            displayInputTextError(input_password, "Between 4 and 10 alphanumeric characters");
+            return false;
+        } else {
+            removeInputTextError(input_password);
+        }
+
+        return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private boolean validFields(String username, String password){
-
-
-            if (username.isEmpty() || username.split("\\s+").length > 1) {
-                displayInputTextError(input_username, "Insert only one word");
-                return false;
-            } else {
-                removeInputTextError(input_username);
-            }
-
-
-            if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-                displayInputTextError(input_password, "Between 4 and 10 alphanumeric characters");
-                return false;
-            } else {
-                removeInputTextError(input_password);
-            }
-
-            return true;
-        }
-
-
-    private void login(String username, String password) {
-        if(!Cart.getInstance().getCart().isEmpty())
+    private void check(String username, String password) {
+        if (!Cart.getInstance().getCart().isEmpty())
             Cart.getInstance().clearCart();
 
-        if (hasSharedPreferences() && sharedPreferences.getString("alreadyLogged","").equals("ok")) {
+        if (hasSharedPreferences() && sharedPreferences.getString("alreadyLogged", "").equals("ok")) {
 
             String storageUsername = sharedPreferences.getString("username", "");
             String storagePassword = sharedPreferences.getString("password", "");
-
 
 
             Log.i("Username Storage: ", "" + storageUsername);

@@ -434,7 +434,7 @@ exports.getUserByUsernamePassword = function getUserByEmail(req, res, callback, 
 				callback(res, null, err);
 			} else {
 				if(result.rows.length == 0)
-					callback(res, null, "no user found");
+					callback(res, null, "no username found");
 				else {
 					console.log("vou validar o user");
 					if(bcrypt.compareSync(password, result.rows[0].password)){
@@ -444,7 +444,7 @@ exports.getUserByUsernamePassword = function getUserByEmail(req, res, callback, 
 						},null);
 					}
 					else
-						callback(res, null, "wrong pin");
+						callback(res, null, "wrong password");
 				}
 			}
 	});
