@@ -100,7 +100,8 @@ public class CartActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(getApplicationContext(), PastTransactionAuthActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_settings) {
-
+            Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+            startActivity(intent);
         } else if (id == R.id.nav_logout) {
             sharedPreferences.edit().clear().commit();
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

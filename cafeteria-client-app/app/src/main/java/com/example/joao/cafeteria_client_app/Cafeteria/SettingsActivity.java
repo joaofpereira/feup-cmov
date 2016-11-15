@@ -156,7 +156,7 @@ public class SettingsActivity extends AppCompatActivity implements CallbackSetti
         int id = item.getItemId();
 
         if (id == R.id.nav_products) {
-            Intent intent = new Intent(getApplicationContext(), CartActivity.class);
+            Intent intent = new Intent(getApplicationContext(), ProductsActivity.class);
             startActivity(intent);
         } else if (id == R.id.nav_cart) {
             Intent intent = new Intent(getApplicationContext(), CartActivity.class);
