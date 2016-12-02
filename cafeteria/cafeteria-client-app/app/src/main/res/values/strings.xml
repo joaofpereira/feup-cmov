@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Cafeteria</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="products">Products</string>
+    <string name="products_list">Products List</string>
+    <string name="voucher_list">Vouchers List</string>
+    <string name="cart">Cart</string>
+    <string name="vouchers">Vouchers</string>
+    <string name="past_transactions">Past Transactions</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="authentication">Past Transactions Auth</string>
+    <string name="refresh">Refresh</string>
+    <string name="checkout">Checkout</string>
+    <string name="qrcode">QR Code</string>
+</resources>

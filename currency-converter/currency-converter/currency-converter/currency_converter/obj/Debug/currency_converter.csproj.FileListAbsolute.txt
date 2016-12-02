@@ -1,0 +1,13 @@
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\currency_converter.dll
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\currency_converter.pdb
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\Xamarin.Forms.Core.dll
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\Xamarin.Forms.Platform.dll
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\Xamarin.Forms.Xaml.dll
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\Xamarin.Forms.Core.pdb
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\Xamarin.Forms.Core.xml
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\Xamarin.Forms.Platform.pdb
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\Xamarin.Forms.Xaml.pdb
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\Xamarin.Forms.Xaml.xml
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\obj\Debug\currency_converter.csprojResolveAssemblyReference.cache
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\obj\Debug\currency_converter.dll
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\obj\Debug\currency_converter.pdb

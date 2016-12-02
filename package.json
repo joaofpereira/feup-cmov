@@ -1,9 +1,9 @@
 {
   "name": "cafeteria",
   "version": "0.0.0",
-  "main": "./cafeteria-api/cafeteria-server/app.js",
+  "main": "./cafeteria/cafeteria-api/cafeteria-server/app.js",
   "scripts": {
-    "start": "npm install && node ./cafeteria-api/cafeteria-server/app.js"
+    "start": "npm install && node ./cafeteria/cafeteria-api/cafeteria-server/app.js"
   },
   "dependencies": {
     "bcrypt": "^0.8.7",
