@@ -13,7 +13,7 @@ namespace currency_converter
         {
             InitializeComponent();
 
-            MainPage = new currency_converter.MainPage();
+            MainPage = new MainPage();
         }
 
         protected override void OnStart()
