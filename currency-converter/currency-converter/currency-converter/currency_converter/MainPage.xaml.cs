@@ -32,6 +32,14 @@ namespace currency_converter
                     BackgroundColor = Color.White,
                     TextColor = Color.Black,
                     Margin = new Thickness(0, 20, 0, 20)
+                },
+                Default: () => add_currency_btn = new Button()
+                {
+                    Text = "Add Currency",
+                    Font = Font.SystemFontOfSize(NamedSize.Large),
+                    BorderWidth = 1,
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center
                 }
             );
             add_currency_btn.Clicked += OnAddCurrencyButtonClicked;
@@ -60,6 +68,14 @@ namespace currency_converter
                     BackgroundColor = Color.White,
                     TextColor = Color.Black,
                     Margin = new Thickness(0, 20, 0, 20)
+                },
+                Default: () => wallet_btn = new Button()
+                {
+                    Text = "View Wallet",
+                    Font = Font.SystemFontOfSize(NamedSize.Large),
+                    BorderWidth = 1,
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center
                 }
             );
             wallet_btn.Clicked += OnWalletButtonClicked;
@@ -73,7 +89,6 @@ namespace currency_converter
             // Build the page.
             this.Content = new StackLayout
             {
-                Padding = new Thickness(5, Device.OnPlatform(20, 0, 0)),
                 Children =
                 {
                     new StackLayout
