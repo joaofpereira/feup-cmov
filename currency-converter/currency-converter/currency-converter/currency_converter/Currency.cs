@@ -11,14 +11,14 @@ namespace currency_converter
 
         private string code { get; set; }
         private string name { get; set; }
-        private float toEUR { get; set; }
+        private float toCurrency { get; set; }
 
 
         public Currency(string code, string name)
         {
             this.code = code;
             this.name = name;
-            this.toEUR = 1;
+            this.toCurrency = 1;
         }
 
     }
