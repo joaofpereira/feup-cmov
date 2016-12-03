@@ -7,40 +7,66 @@ namespace currency_converter
     {
         public MainPage()
         {
-            Label header = new Label
-            {
-                Text = "Currency Converter",
-                Font = Font.BoldSystemFontOfSize(30),
-                HorizontalOptions = LayoutOptions.Center
-            };
+            Title = "Currency Converter";
 
-            Button add_currency_btn = new Button
-            {
-                Text = "Add Currency",
-                Font = Font.SystemFontOfSize(NamedSize.Large),
-                BorderWidth = 1,
-                HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center,
-                BackgroundColor = Color.FromHex("#00BFFF"),
-                Margin = new Thickness(0, 20, 0, 20)
-            };
+            Button add_currency_btn = new Button();
+            Device.OnPlatform(
+                Android: () => add_currency_btn = new Button()
+                {
+                    Text = "Add Currency",
+                    Font = Font.SystemFontOfSize(NamedSize.Large),
+                    BorderWidth = 1,
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center,
+                    BackgroundColor = Color.FromHex("#3498DB"),
+                    TextColor = Color.White,
+                    Margin = new Thickness(0, 20, 0, 20)
+                },
+                WinPhone: () => add_currency_btn = new Button()
+                {
+                    Text = "Add Currency",
+                    Font = Font.SystemFontOfSize(NamedSize.Large),
+                    BorderWidth = 1,
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center,
+                    BackgroundColor = Color.White,
+                    TextColor = Color.Black,
+                    Margin = new Thickness(0, 20, 0, 20)
+                }
+            );
             add_currency_btn.Clicked += OnAddCurrencyButtonClicked;
 
-            Button wallet_btn = new Button
-            {
-                Text = "View Wallet",
-                Font = Font.SystemFontOfSize(NamedSize.Large),
-                BorderWidth = 1,
-                HorizontalOptions = LayoutOptions.Center,
-                VerticalOptions = LayoutOptions.Center,
-                BackgroundColor = Color.FromHex("#00BFFF"),
-                Margin = new Thickness(0, 20, 0, 20)
-            };
+            Button wallet_btn = new Button();
+            Device.OnPlatform(
+                Android: () => wallet_btn = new Button()
+                {
+                    Text = "View Wallet",
+                    Font = Font.SystemFontOfSize(NamedSize.Large),
+                    BorderWidth = 1,
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center,
+                    BackgroundColor = Color.FromHex("#3498DB"),
+                    TextColor = Color.White,
+                    Margin = new Thickness(0, 20, 0, 20)
+                    
+                },
+                WinPhone: () => wallet_btn = new Button()
+                {
+                    Text = "View Wallet",
+                    Font = Font.SystemFontOfSize(NamedSize.Large),
+                    BorderWidth = 1,
+                    HorizontalOptions = LayoutOptions.Center,
+                    VerticalOptions = LayoutOptions.Center,
+                    BackgroundColor = Color.White,
+                    TextColor = Color.Black,
+                    Margin = new Thickness(0, 20, 0, 20)
+                }
+            );
             wallet_btn.Clicked += OnWalletButtonClicked;
 
             BoxView divider = new BoxView();
             Device.OnPlatform(
-                Android: () => divider = new BoxView() { Color = Color.Black, WidthRequest = 100, HeightRequest = 2 },
+                Android: () => divider = new BoxView() { Color = Color.FromHex("#3498DB"), WidthRequest = 100, HeightRequest = 2 },
                 WinPhone: () => divider = new BoxView() { Color = Color.White, WidthRequest = 100, HeightRequest = 2 }
             );
 
@@ -50,17 +76,24 @@ namespace currency_converter
                 Padding = new Thickness(5, Device.OnPlatform(20, 0, 0)),
                 Children =
                 {
-                    header,
-                    add_currency_btn,
-                    divider,
-                    wallet_btn
+                    new StackLayout
+                    {
+                        VerticalOptions = LayoutOptions.CenterAndExpand,
+                        Children =
+                        {
+                            add_currency_btn,
+                            divider,
+                            wallet_btn
+                        }
+                    }
                 }
             };
         }
 
-        void OnAddCurrencyButtonClicked(object sender, EventArgs e)
+        async void OnAddCurrencyButtonClicked(object sender, EventArgs e)
         {
-
+            AddCurrencyPage newPage = new AddCurrencyPage();
+            await Navigation.PushAsync(newPage, true);
         }
 
         void OnWalletButtonClicked(object sender, EventArgs e)
