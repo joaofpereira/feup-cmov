@@ -1,2 +1,0 @@
-android.app.Application
-currency_converter.Droid

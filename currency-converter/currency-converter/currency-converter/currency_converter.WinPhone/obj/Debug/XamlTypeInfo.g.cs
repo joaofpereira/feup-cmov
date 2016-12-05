@@ -622,3 +622,12 @@ namespace currency_converter.WinPhone.currency_converter_WinPhone_XamlTypeInfo
 }
 
 
+<<<<<<< HEAD
+=======
+
+
+
+
+
+
+>>>>>>> de0c10fb0bd5227501f5d1a60d273938b445ecb0
