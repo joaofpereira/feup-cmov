@@ -19,6 +19,7 @@ namespace currency_converter
         public void DropTables()
         {
             dbConn.DropTable<CurrencyModel>();
+            dbConn.DropTable<WalletModel>();
         }
 
         public void CreateTablesIfNotExists()
@@ -31,6 +32,12 @@ namespace currency_converter
                 reader.readCSVToDB();
                 reader.printCurrencyTableContent();
             }
+
+            if (!TableExists("WalletModel"))
+            {
+                dbConn.CreateTable<WalletModel>();
+                
+            }
         }
 
         public List<CurrencyModel> GetAllCurrency()
@@ -40,6 +47,35 @@ namespace currency_converter
         public int SaveCurrency(CurrencyModel aCurrency)
         {
             return dbConn.Insert(aCurrency);
+        }
+
+        public int deleteCurrency(CurrencyModel aCurrency)
+        {
+            return dbConn.Delete(aCurrency);
+        }
+
+        public void UpdateCurrencyToEUR(CurrencyModel aCurrency)
+        {/*
+            List<CurrencyModel> oldCurrency = dbConn.Query<CurrencyModel>("Select * From [CurrencyModel] where  [CurrencyModel].code = '" + aCurrency.code + "'");
+            deleteCurrency(oldCurrency[0]);
+            SaveCurrency(aCurrency);*/
+            dbConn.Update(aCurrency);
+         }
+
+
+        public int DeleteWalletEntry(WalletModel aWalletEntry)
+        {
+            return dbConn.Delete(aWalletEntry);
+        }
+
+        public List<WalletModel> GetWalletEntries()
+        {
+            return dbConn.Query<WalletModel>("Select * From [WalletModel]");
+        }
+
+        public int SaveWalletEntry(WalletModel aWalletEntry)
+        {
+            return dbConn.Insert(aWalletEntry);
         }
 
         public bool TableExists(string tableName)
