@@ -12,13 +12,13 @@ namespace currency_converter
         {
             dbConn = DependencyService.Get<ISQLite>().GetConnection();
             // create the table(s)
-            dbConn.CreateTable<Currency>();
+            dbConn.CreateTable<CurrencyModel>();
         }
-        public List<Currency> GetAllCurrency()
+        public List<CurrencyModel> GetAllCurrency()
         {
-            return dbConn.Query<Currency>("Select * From [Currency]");
+            return dbConn.Query<CurrencyModel>("Select * From [Currency]");
         }
-        public int SaveCurrency(Currency aCurrency)
+        public int SaveCurrency(CurrencyModel aCurrency)
         {
             return dbConn.Insert(aCurrency);
         }
