@@ -24,6 +24,18 @@
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\currency_converter.dll">
       <PackagePath>currency_converter.dll</PackagePath>
     </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\packages\SQLitePCLRaw.bundle_green.1.1.0\lib\win81\SQLitePCLRaw.batteries_green.dll">
+      <PackagePath>SQLitePCLRaw.batteries_green.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\packages\SQLitePCLRaw.bundle_green.1.1.0\lib\win81\SQLitePCLRaw.batteries_v2.dll">
+      <PackagePath>SQLitePCLRaw.batteries_v2.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\packages\SQLitePCLRaw.core.1.1.0\lib\win81\SQLitePCLRaw.core.dll">
+      <PackagePath>SQLitePCLRaw.core.dll</PackagePath>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\packages\SQLitePCLRaw.provider.e_sqlite3.win81.1.1.0\lib\win81\SQLitePCLRaw.provider.e_sqlite3.dll">
+      <PackagePath>SQLitePCLRaw.provider.e_sqlite3.dll</PackagePath>
+    </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\packages\Xamarin.Forms.2.3.3.168\lib\win81\Xamarin.Forms.Core.dll">
       <PackagePath>Xamarin.Forms.Core.dll</PackagePath>
     </AppxPackagedFile>
@@ -41,12 +53,6 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\SQLite-net.dll">
       <PackagePath>SQLite-net.dll</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\SQLitePCLRaw.core.dll">
-      <PackagePath>SQLitePCLRaw.core.dll</PackagePath>
-    </AppxPackagedFile>
-    <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\SQLitePCLRaw.batteries_v2.dll">
-      <PackagePath>SQLitePCLRaw.batteries_v2.dll</PackagePath>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\Assets\Logo.scale-100.png">
       <PackagePath>Assets\Logo.scale-100.png</PackagePath>

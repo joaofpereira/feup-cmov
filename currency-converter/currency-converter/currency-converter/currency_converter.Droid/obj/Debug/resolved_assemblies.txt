@@ -33,8 +33,9 @@ C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\c
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.Diagnostics.Tools.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.Diagnostics.Debug.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.Threading.Tasks.dll
-C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.Runtime.Extensions.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.Reflection.dll
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.IO.dll
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.Runtime.Extensions.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.Linq.Expressions.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.Linq.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.Threading.dll
@@ -43,7 +44,6 @@ C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\c
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.ObjectModel.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.ComponentModel.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.Xml.ReaderWriter.dll
-C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.IO.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.Dynamic.Runtime.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.Net.Http.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Droid\obj\Debug\android\assets\System.Runtime.Serialization.dll

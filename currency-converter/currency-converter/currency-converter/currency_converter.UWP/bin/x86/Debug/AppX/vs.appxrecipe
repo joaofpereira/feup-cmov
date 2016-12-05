@@ -22,13 +22,13 @@
     <AppXManifest Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-12-03T21:43:15.602</Modified>
+      <Modified>2016-12-05T19:06:35.536</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\currency_converter.UWP.exe">
       <PackagePath>entrypoint\currency_converter.UWP.exe</PackagePath>
-      <Modified>2016-12-03T21:43:15.117</Modified>
+      <Modified>2016-12-05T19:06:32.477</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\.nuget\packages\Microsoft.CSharp\4.0.0\lib\netcore50\Microsoft.CSharp.dll">
       <PackagePath>Microsoft.CSharp.dll</PackagePath>
@@ -460,7 +460,19 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\currency_converter.dll">
       <PackagePath>currency_converter.dll</PackagePath>
-      <Modified>2016-12-03T21:43:13.326</Modified>
+      <Modified>2016-12-05T19:06:02.518</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\SQLite-net.dll">
+      <PackagePath>SQLite-net.dll</PackagePath>
+      <Modified>2016-12-05T15:48:35.368</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\SQLitePCLRaw.core.dll">
+      <PackagePath>SQLitePCLRaw.core.dll</PackagePath>
+      <Modified>2016-12-05T15:48:10.536</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\SQLitePCLRaw.batteries_v2.dll">
+      <PackagePath>SQLitePCLRaw.batteries_v2.dll</PackagePath>
+      <Modified>2016-12-05T15:48:26.486</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\Properties\Default.rd.xml">
       <PackagePath>Properties\Default.rd.xml</PackagePath>
@@ -526,11 +538,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2016-12-03T21:34:27.260</Modified>
+      <Modified>2016-12-05T19:06:35.045</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\Core\currency_converter.UWP.exe">
       <PackagePath>currency_converter.UWP.exe</PackagePath>
-      <Modified>2016-12-03T21:43:15.594</Modified>
+      <Modified>2016-12-05T19:06:35.534</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>

@@ -1,24 +1,15 @@
 <XamlCompilerSaveState>
   <ReferenceAssemblyList>
-<<<<<<< HEAD
     <LocalAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.windows\obj\debug\intermediatexaml\currency_converter.windows.exe" HashGuid="0bdc71d0-c522-f015-755f-9eb34baeb470" />
-    <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\debug\currency_converter.dll" HashGuid="b237805e-bd1a-45df-b84a-6502a9568860" />
+    <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\debug\currency_converter.dll" HashGuid="1ce96386-48ba-ee9f-0eb8-721e32463180" />
+    <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\packages\sqlitepclraw.bundle_green.1.1.0\lib\win81\sqlitepclraw.batteries_green.dll" HashGuid="39f21040-4875-6272-89df-7d99d9436971" />
+    <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\packages\sqlitepclraw.bundle_green.1.1.0\lib\win81\sqlitepclraw.batteries_v2.dll" HashGuid="2ac16958-7d08-0826-efe2-e0251f98c9e2" />
+    <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\packages\sqlitepclraw.core.1.1.0\lib\win81\sqlitepclraw.core.dll" HashGuid="5ecf9ccc-1b19-e615-1a4d-f3884e09019a" />
+    <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\packages\sqlitepclraw.provider.e_sqlite3.win81.1.1.0\lib\win81\sqlitepclraw.provider.e_sqlite3.dll" HashGuid="af006c6c-92f8-0b54-0d77-7122dcd7a885" />
     <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\packages\xamarin.forms.2.3.3.168\lib\win81\xamarin.forms.core.dll" HashGuid="8fd6d715-5b1e-67fd-feee-b3bb9cc9acd7" />
     <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\packages\xamarin.forms.2.3.3.168\lib\win81\xamarin.forms.platform.dll" HashGuid="6b938cd4-44c0-2618-7eb6-4caa3f482076" />
     <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\packages\xamarin.forms.2.3.3.168\lib\win81\xamarin.forms.platform.winrt.dll" HashGuid="fe4acc44-27ba-0e4e-a08b-26ae7dccb678" />
     <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\packages\xamarin.forms.2.3.3.168\lib\win81\xamarin.forms.platform.winrt.tablet.dll" HashGuid="6cda1a83-1d8e-d2d4-211d-d5f3a06554ab" />
     <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\packages\xamarin.forms.2.3.3.168\lib\win81\xamarin.forms.xaml.dll" HashGuid="5a0f8f23-7317-5e4b-74d2-2bf18c289c53" />
-=======
-    <ReferenceAssembly PathName="e:\github\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\debug\currency_converter.dll" HashGuid="fe0b9dda-dc5c-4cdc-f650-53cc7692a6e3" />
-    <ReferenceAssembly PathName="e:\github\feup-cmov\currency-converter\currency-converter\packages\sqlitepclraw.bundle_green.1.1.0\lib\win81\sqlitepclraw.batteries_green.dll" HashGuid="39f21040-4875-6272-89df-7d99d9436971" />
-    <ReferenceAssembly PathName="e:\github\feup-cmov\currency-converter\currency-converter\packages\sqlitepclraw.bundle_green.1.1.0\lib\win81\sqlitepclraw.batteries_v2.dll" HashGuid="2ac16958-7d08-0826-efe2-e0251f98c9e2" />
-    <ReferenceAssembly PathName="e:\github\feup-cmov\currency-converter\currency-converter\packages\sqlitepclraw.core.1.1.0\lib\win81\sqlitepclraw.core.dll" HashGuid="5ecf9ccc-1b19-e615-1a4d-f3884e09019a" />
-    <ReferenceAssembly PathName="e:\github\feup-cmov\currency-converter\currency-converter\packages\sqlitepclraw.provider.e_sqlite3.win81.1.1.0\lib\win81\sqlitepclraw.provider.e_sqlite3.dll" HashGuid="af006c6c-92f8-0b54-0d77-7122dcd7a885" />
-    <ReferenceAssembly PathName="e:\github\feup-cmov\currency-converter\currency-converter\packages\xamarin.forms.2.3.3.168\lib\win81\xamarin.forms.core.dll" HashGuid="8fd6d715-5b1e-67fd-feee-b3bb9cc9acd7" />
-    <ReferenceAssembly PathName="e:\github\feup-cmov\currency-converter\currency-converter\packages\xamarin.forms.2.3.3.168\lib\win81\xamarin.forms.platform.dll" HashGuid="6b938cd4-44c0-2618-7eb6-4caa3f482076" />
-    <ReferenceAssembly PathName="e:\github\feup-cmov\currency-converter\currency-converter\packages\xamarin.forms.2.3.3.168\lib\win81\xamarin.forms.platform.winrt.dll" HashGuid="fe4acc44-27ba-0e4e-a08b-26ae7dccb678" />
-    <ReferenceAssembly PathName="e:\github\feup-cmov\currency-converter\currency-converter\packages\xamarin.forms.2.3.3.168\lib\win81\xamarin.forms.platform.winrt.tablet.dll" HashGuid="6cda1a83-1d8e-d2d4-211d-d5f3a06554ab" />
-    <ReferenceAssembly PathName="e:\github\feup-cmov\currency-converter\currency-converter\packages\xamarin.forms.2.3.3.168\lib\win81\xamarin.forms.xaml.dll" HashGuid="5a0f8f23-7317-5e4b-74d2-2bf18c289c53" />
->>>>>>> de0c10fb0bd5227501f5d1a60d273938b445ecb0
   </ReferenceAssemblyList>
 </XamlCompilerSaveState>

@@ -13,9 +13,9 @@ namespace currency_converter
         public static DataAccess dbUtils;
         public App()
         {
-            CSVreader reader = new CSVreader();
-            reader.readCSVToDB();
-            reader.printCurrencyTableContent();
+            //CSVreader reader = new CSVreader();
+            //reader.readCSVToDB();
+            //reader.printCurrencyTableContent();
 
             MainPage = new NavigationPage(new MainPage());
         }
@@ -33,7 +33,7 @@ namespace currency_converter
         protected override void OnStart()
         {
             // Handle when your app starts
-            dbUtils = new DataAccess();
+            //dbUtils = new DataAccess();
         }
 
         protected override void OnSleep()
