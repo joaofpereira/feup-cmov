@@ -13,7 +13,7 @@ namespace currency_converter
             Device.OnPlatform(
                 Android: () => add_currency_btn = new Button()
                 {
-                    Text = "Add Currency",
+                    Text = "Add/Remove Currency",
                     Font = Font.SystemFontOfSize(NamedSize.Large),
                     BorderWidth = 1,
                     HorizontalOptions = LayoutOptions.Center,
@@ -24,7 +24,7 @@ namespace currency_converter
                 },
                 WinPhone: () => add_currency_btn = new Button()
                 {
-                    Text = "Add Currency",
+                    Text = "Add/Remove Currency",
                     Font = Font.SystemFontOfSize(NamedSize.Large),
                     BorderWidth = 1,
                     HorizontalOptions = LayoutOptions.Center,
@@ -35,7 +35,7 @@ namespace currency_converter
                 },
                 Default: () => add_currency_btn = new Button()
                 {
-                    Text = "Add Currency",
+                    Text = "Add/Remove Currency",
                     Font = Font.SystemFontOfSize(NamedSize.Large),
                     BorderWidth = 1,
                     HorizontalOptions = LayoutOptions.Center,
@@ -82,8 +82,13 @@ namespace currency_converter
 
             BoxView divider = new BoxView();
             Device.OnPlatform(
-                Android: () => divider = new BoxView() { Color = Color.FromHex("#3498DB"), WidthRequest = 100, HeightRequest = 2 },
-                WinPhone: () => divider = new BoxView() { Color = Color.White, WidthRequest = 100, HeightRequest = 2 }
+                Android: () => {
+                    divider = new BoxView() { Color = Color.FromHex("#3498DB"), WidthRequest = 100, HeightRequest = 2 };
+                },
+                WinPhone: () =>
+                {
+                    divider = new BoxView() { Color = Color.White, WidthRequest = 100, HeightRequest = 2 };
+                }
             );
 
             // Build the page.
@@ -107,7 +112,7 @@ namespace currency_converter
 
         async void OnAddCurrencyButtonClicked(object sender, EventArgs e)
         {
-            AddCurrencyPage newPage = new AddCurrencyPage();
+            AddRemoveCurrencyPage newPage = new AddRemoveCurrencyPage();
             await Navigation.PushAsync(newPage, true);
         }
 

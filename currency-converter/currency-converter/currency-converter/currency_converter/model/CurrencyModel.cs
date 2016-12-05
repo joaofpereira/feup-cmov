@@ -2,7 +2,7 @@
 
 namespace currency_converter.model
 {
-    public class Currency
+    public class CurrencyModel
     {
         [PrimaryKey, AutoIncrement]
         public int id { get; set; }

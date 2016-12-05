@@ -12,11 +12,15 @@ C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\c
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\bin\Debug\Xamarin.Forms.Platform.WinRT.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\bin\Debug\Xamarin.Forms.Platform.WinRT.Tablet.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\bin\Debug\Xamarin.Forms.Xaml.dll
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\bin\Debug\SQLite-net.dll
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\bin\Debug\SQLitePCLRaw.core.dll
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\bin\Debug\SQLitePCLRaw.batteries_v2.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\bin\Debug\currency_converter.pdb
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\bin\Debug\Xamarin.Forms.Core.xml
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\bin\Debug\Xamarin.Forms.Platform.WinRT.pri
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\bin\Debug\Xamarin.Forms.Platform.WinRT.Tablet.pri
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\bin\Debug\Xamarin.Forms.Xaml.xml
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\bin\Debug\SQLite-net.xml
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\obj\Debug\currency_converter.Windows.csprojResolveAssemblyReference.cache
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\obj\Debug\App.g.i.cs
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\obj\Debug\App.g.cs
