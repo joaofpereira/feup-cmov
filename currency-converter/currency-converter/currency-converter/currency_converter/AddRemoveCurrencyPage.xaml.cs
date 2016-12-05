@@ -1,9 +1,7 @@
-﻿using System;
+﻿using System.Diagnostics;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xamarin.Forms;
+using currency_converter.model;
 
 namespace currency_converter
 {
@@ -18,6 +16,13 @@ namespace currency_converter
 
         public AddRemoveCurrencyPage()
         {
+            List<CurrencyModel> dbContent = new List<CurrencyModel>();
+            dbContent = App.dbUtils.GetAllCurrencyNames();
+            for (int i = 0; i < dbContent.Count; i++)
+            {
+                Debug.WriteLine("Currency code: " + dbContent[i].code);
+            }
+
             Title = "Add/Remove Currency";
 
             Label operation = new Label();

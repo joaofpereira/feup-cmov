@@ -120,7 +120,6 @@ C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\c
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\SQLitePCLRaw.core.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\SQLitePCLRaw.batteries_v2.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\currency_converter.pdb
-C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\SQLite-net.xml
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\obj\x86\Debug\currency_converter.UWP.csprojResolveAssemblyReference.cache
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\obj\x86\Debug\App.g.i.cs
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\obj\x86\Debug\App.g.cs
@@ -202,3 +201,6 @@ C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\c
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\obj\x86\Debug\MultipleQualifiersPerDimensionFound.txt
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\obj\x86\Debug\Xamarin.Forms.Platform.UAP.pri.xml
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\obj\x86\Debug\ProjectArchitectures.txt
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\e_sqlite3.dll
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\SQLitePCLRaw.batteries_green.dll
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\SQLitePCLRaw.provider.e_sqlite3.dll

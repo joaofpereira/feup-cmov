@@ -46,7 +46,7 @@ namespace currency_converter.API
         }
         public void printCurrencyTableContent()
         {
-            List<CurrencyModel> dbContent = new List<CurrencyModel>();
+           List<CurrencyModel> dbContent = new List<CurrencyModel>();
            dbContent = App.dbUtils.GetAllCurrency();
 
             for ( int i = 0; i < dbContent.Count; i++)
