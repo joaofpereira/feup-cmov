@@ -2,7 +2,7 @@
 
 namespace currency_converter.model
 {
-    public class CurrencyModel
+    public class WalletModel
     {
         [PrimaryKey, AutoIncrement]
         public long id { get; set; }
@@ -11,7 +11,7 @@ namespace currency_converter.model
         [NotNull]
         public string name { get; set; }
         [NotNull]
-        public float toCurrency { get; set; }
+        public float amount { get; set; }
        
     }
 }
