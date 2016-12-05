@@ -42,11 +42,6 @@ namespace currency_converter
             return dbConn.Insert(aCurrency);
         }
 
-        public List<CurrencyModel> GetAllCurrencyNames()
-        {
-            return dbConn.Query<CurrencyModel>("Select code From [CurrencyModel]");
-        }
-
         public bool TableExists(string tableName)
         {
             var tableExistsQuery = "SELECT name FROM sqlite_master WHERE type='table' AND name='" + tableName + "';";
