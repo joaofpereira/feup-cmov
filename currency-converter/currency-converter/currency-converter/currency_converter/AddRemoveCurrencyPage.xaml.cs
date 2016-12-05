@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using currency_converter.model;
 using System;
+using System.Net;
+using System.IO;
 
 namespace currency_converter
 {
@@ -19,6 +21,7 @@ namespace currency_converter
 
         Picker operationPicker, currenciesPicker;
         Entry amountEntry;
+        Label currencyValueLabel;
 
         public AddRemoveCurrencyPage()
         {
@@ -159,6 +162,8 @@ namespace currency_converter
 
             amountEntry.TextChanged += (sender, args) =>
             {
+                currencyValueLabel.Text = "";
+
                 if (amountEntry.Text.Length != 0 && amountEntry.Text != null)
                 {
                     Device.OnPlatform(
@@ -179,7 +184,38 @@ namespace currency_converter
                         Default: () => currenciesPicker.BackgroundColor = Color.Transparent
                     );
                 }
+
+                if (amountEntry.Text != null && amountEntry.Text.Length != 0 && currenciesPicker.SelectedIndex != -1)
+                {
+                    //Debug.WriteLine("Valor: " + currenciesPicker.Items[currenciesPicker.SelectedIndex]);
+
+                    var uri = string.Format("http://download.finance.yahoo.com/d/quotes?f=sl1d1t1&s=EUR{0}=X", currenciesPicker.Items[currenciesPicker.SelectedIndex]);
+                    var cb = new AsyncCallback(CallHandler);
+                    CallWebAsync(uri, currencyValueLabel, cb);
+                }
             };
+
+            currencyValueLabel = new Label();
+            Device.OnPlatform(
+                Android: () => currencyValueLabel = new Label()
+                {
+                    Text = "",
+                    FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                    TextColor = Color.FromHex("#3498DB"),
+                    VerticalOptions = LayoutOptions.Center,
+                    HorizontalOptions = LayoutOptions.Center,
+                    WidthRequest = 250
+                },
+                WinPhone: () => currencyValueLabel = new Label()
+                {
+                    Text = "",
+                    FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                    TextColor = Color.Black,
+                    VerticalOptions = LayoutOptions.Center,
+                    HorizontalOptions = LayoutOptions.Center,
+                    WidthRequest = 250
+                }
+            );
 
             Button confirm_btn = new Button();
             Device.OnPlatform(
@@ -204,15 +240,6 @@ namespace currency_converter
                     BackgroundColor = Color.White,
                     TextColor = Color.Black,
                     WidthRequest = 250
-                },
-                Default: () => confirm_btn = new Button()
-                {
-                    Text = "Confirm",
-                    Font = Font.SystemFontOfSize(NamedSize.Medium),
-                    BorderWidth = 1,
-                    HorizontalOptions = LayoutOptions.Center,
-                    VerticalOptions = LayoutOptions.Center,
-                    WidthRequest = 250
                 }
             );
             confirm_btn.Clicked += OnConfirmButtonClicked;
@@ -231,6 +258,7 @@ namespace currency_converter
                             amountLabel,
                             amountEntry,
                             currenciesPicker,
+                            currencyValueLabel,
                             confirm_btn
                         }
                     }
@@ -294,7 +322,35 @@ namespace currency_converter
         {
             if(CheckValues())
             {
+                Debug.WriteLine("Resposta: " + currencyValueLabel.Text);
+            }
+        }
 
+        private void CallWebAsync(string uri, Label response, AsyncCallback cb)
+        {
+            var request = HttpWebRequest.Create(uri);
+            request.Method = "GET";
+            var state = new Tuple<Label, WebRequest>(response, request);
+
+            request.BeginGetResponse(cb, state);
+        }
+
+        private void CallHandler(IAsyncResult ar)
+        {
+            var state = (Tuple<Label, WebRequest>)ar.AsyncState;
+            var request = state.Item2;
+
+            using (HttpWebResponse response = request.EndGetResponse(ar) as HttpWebResponse)
+            {
+                if (response.StatusCode == HttpStatusCode.OK)
+                    using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                    {
+                        var content = reader.ReadToEnd();
+
+                        var tokens = content.Split(',');
+
+                        Device.BeginInvokeOnMainThread(() => state.Item1.Text = "1 EUR = " + tokens[1] + " " + currenciesPicker.Items[currenciesPicker.SelectedIndex]);
+                    }
             }
         }
     }
