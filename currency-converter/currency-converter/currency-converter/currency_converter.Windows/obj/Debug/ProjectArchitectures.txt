@@ -1,2 +1,0 @@
-C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.Windows\currency_converter.Windows.csproj;neutral
-C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\currency_converter.csproj;neutral
