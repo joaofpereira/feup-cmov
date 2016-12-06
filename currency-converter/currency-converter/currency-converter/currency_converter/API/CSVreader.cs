@@ -31,15 +31,11 @@ namespace currency_converter.API
                     var currencyLine = reader.ReadLine();
                     var tokens = currencyLine.Split(',');
 
-                    var vCurrency = new CurrencyModel()
-                    {
-                        code = tokens[0],
-                        name = tokens[1],
-                        toCurrency = 1
-                    };
+                    var vCurrency = new CurrencyModel(tokens[0], tokens[1]);
+
                     Debug.WriteLine("token code: " + vCurrency.code + " token name: " + vCurrency.name);
                     
-                    App.dbUtils.SaveCurrency(vCurrency);
+                    DataAccess.GetDB.SaveCurrency(vCurrency);
 
                 }
             }
@@ -47,7 +43,7 @@ namespace currency_converter.API
         public void printCurrencyTableContent()
         {
            List<CurrencyModel> dbContent = new List<CurrencyModel>();
-           dbContent = App.dbUtils.GetAllCurrency();
+           dbContent = DataAccess.GetDB.GetAllCurrency();
 
             for ( int i = 0; i < dbContent.Count; i++)
             {

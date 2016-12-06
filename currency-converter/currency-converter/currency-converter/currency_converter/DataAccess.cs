@@ -5,12 +5,30 @@ using System.Diagnostics;
 
 using currency_converter.model;
 using currency_converter.API;
+using System;
+using System.Net;
+using System.IO;
 
 namespace currency_converter
 {
     public class DataAccess
     {
         SQLiteConnection dbConn;
+        public static object locker = new object();
+        public static DataAccess db;
+
+        public static DataAccess GetDB
+        {
+            get
+            {
+                if (db == null)
+                {
+                    db = new DataAccess();
+                }
+                return db;
+            }
+        }
+
         public DataAccess()
         {
             dbConn = DependencyService.Get<ISQLite>().GetConnection();
@@ -24,7 +42,7 @@ namespace currency_converter
 
         public void CreateTablesIfNotExists()
         {
-            if(!TableExists("CurrencyModel"))
+            if (!TableExists("CurrencyModel"))
             {
                 dbConn.CreateTable<CurrencyModel>();
 
@@ -36,36 +54,49 @@ namespace currency_converter
             if (!TableExists("WalletModel"))
             {
                 dbConn.CreateTable<WalletModel>();
-                
+
             }
         }
 
         public List<CurrencyModel> GetAllCurrency()
         {
-            return dbConn.Query<CurrencyModel>("Select * From [CurrencyModel]");
+            lock (locker)
+            {
+                return dbConn.Query<CurrencyModel>("Select * From [CurrencyModel]");
+            }
         }
         public int SaveCurrency(CurrencyModel aCurrency)
         {
-            return dbConn.Insert(aCurrency);
+            lock (locker)
+            {
+                return dbConn.Insert(aCurrency);
+            }
         }
 
-        public int deleteCurrency(CurrencyModel aCurrency)
+        public int UpdateCurrency(CurrencyModel aCurrency)
         {
-            return dbConn.Delete(aCurrency);
+            lock (locker)
+            {
+                Debug.WriteLine("Entrei no update");
+
+                return dbConn.Update(aCurrency);
+            }
         }
 
-        public void UpdateCurrencyToEUR(CurrencyModel aCurrency)
-        {/*
-            List<CurrencyModel> oldCurrency = dbConn.Query<CurrencyModel>("Select * From [CurrencyModel] where  [CurrencyModel].code = '" + aCurrency.code + "'");
-            deleteCurrency(oldCurrency[0]);
-            SaveCurrency(aCurrency);*/
-            dbConn.Update(aCurrency);
-         }
-
-
-        public int DeleteWalletEntry(WalletModel aWalletEntry)
+        public CurrencyModel GetCurrency(string code)
         {
-            return dbConn.Delete(aWalletEntry);
+            lock (locker)
+            {
+                return dbConn.Table<CurrencyModel>().FirstOrDefault(currency => currency.code == code);
+            }
+        }
+
+        public int DeleteCurrency(CurrencyModel aCurrency)
+        {
+            lock (locker)
+            {
+                return dbConn.Delete(aCurrency);
+            }
         }
 
         public List<WalletModel> GetWalletEntries()
@@ -75,8 +106,35 @@ namespace currency_converter
 
         public int SaveWalletEntry(WalletModel aWalletEntry)
         {
-            return dbConn.Insert(aWalletEntry);
+            lock (locker)
+            {
+                return dbConn.Insert(aWalletEntry);
+            }
         }
+        public int DeleteWalletEntry(WalletModel aWalletEntry)
+        {
+            lock (locker)
+            {
+                return dbConn.Delete(aWalletEntry);
+            }
+        }
+
+        public int UpdateWalletEntry(WalletModel aWalletEntry)
+        {
+            lock (locker)
+            {
+                return dbConn.Update(aWalletEntry);
+            }
+        }
+
+        public WalletModel GetWalletEntry(string code)
+        {
+            lock (locker)
+            {
+                return dbConn.Table<WalletModel>().FirstOrDefault(walletAmount => walletAmount.code == code);
+            }
+        }
+
 
         public bool TableExists(string tableName)
         {
@@ -94,6 +152,28 @@ namespace currency_converter
                 Debug.WriteLine("Result: " + result.ToString());
                 Debug.WriteLine("Nao esta nulo!");
                 return true;
+            }
+        }
+
+        public void printListOfCurrencies()
+        {
+            List<CurrencyModel> dbContent = new List<CurrencyModel>();
+            dbContent = DataAccess.GetDB.GetAllCurrency();
+
+            for (int i = 0; i < dbContent.Count; i++)
+            {
+                Debug.WriteLine("123Currency code: " + dbContent[i].code + " Currency name: " + dbContent[i].name + " Currency Value: " + dbContent[i].toCurrency);
+            }
+        }
+
+        public void printWallet()
+        {
+            List<WalletModel> dbContent = new List<WalletModel>();
+            dbContent = DataAccess.GetDB.GetWalletEntries();
+
+            for (int i = 0; i < dbContent.Count; i++)
+            {
+                Debug.WriteLine("Wallet -> Code: " + dbContent[i].code + " Amount: " + dbContent[i].amount);
             }
         }
     }

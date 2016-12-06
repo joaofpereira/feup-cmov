@@ -1,4 +1,6 @@
-﻿using System;
+﻿using currency_converter.API;
+using currency_converter.model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,27 +11,23 @@ namespace currency_converter
 {
     public partial class App : Application
     {
-        public static DataAccess dbUtils;
+        public DataAccess db;
+
         public App()
         {
+            db = DataAccess.GetDB;
             MainPage = new NavigationPage(new MainPage());
         }
-        public static DataAccess DAUtil
-        {
-            get
-            {
-                if (dbUtils == null)
-                {
-                    dbUtils = new DataAccess();
-                }
-                return dbUtils;
-            }
-        }
+        
         protected override void OnStart()
         {
-            //DAUtil.DropTables();
-            //DAUtil.TableExists("CurrencyModel");
-            DAUtil.CreateTablesIfNotExists();
+            db.DropTables();
+            db.CreateTablesIfNotExists();
+
+            List<CurrencyModel> currencies = db.GetAllCurrency();
+            HttpRequest.RefreshRates(currencies, db);
+
+            db.printListOfCurrencies();
         }
 
         protected override void OnSleep()

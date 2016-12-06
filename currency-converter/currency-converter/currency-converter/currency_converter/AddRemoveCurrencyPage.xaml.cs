@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using currency_converter.model;
 using System;
-using System.Net;
-using System.IO;
 
 namespace currency_converter
 {
@@ -22,17 +20,35 @@ namespace currency_converter
         Picker operationPicker, currenciesPicker;
         Entry amountEntry;
         Label currencyValueLabel;
+        Label errorLabel;
 
         public AddRemoveCurrencyPage()
         {
             List<CurrencyModel> dbContent = new List<CurrencyModel>();
-            dbContent = App.dbUtils.GetAllCurrency();
+            dbContent = DataAccess.GetDB.GetAllCurrency();
+
+            for (int i = 0; i < dbContent.Count; i++)
+            {
+                Debug.WriteLine("Lista: Currency code: " + dbContent[i].code + " Currency name: " + dbContent[i].name + " Currency Value: " + dbContent[i].toCurrency);
+            }
+
             for (int i = 0; i < dbContent.Count; i++)
             {
                 currencies.Add(dbContent[i].code, dbContent[i]);
             }
 
             Title = "Add/Remove Currency";
+
+            errorLabel = new Label()
+            {
+                Text = "",
+                FontSize = Device.GetNamedSize(NamedSize.Small, typeof(Label)),
+                TextColor = Color.Red,
+                HorizontalTextAlignment = TextAlignment.Center,
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.Center,
+                WidthRequest = 250
+            };
 
             Label operation = new Label();
             Device.OnPlatform(
@@ -154,8 +170,7 @@ namespace currency_converter
                 {
                     Device.OnPlatform(
                         Android: () => operationPicker.BackgroundColor = Color.Transparent,
-                        WinPhone: () => operationPicker.BackgroundColor = Color.Transparent,
-                        Default: () => operationPicker.BackgroundColor = Color.Transparent
+                        WinPhone: () => operationPicker.BackgroundColor = Color.Transparent
                     );
                 }
             };
@@ -163,35 +178,34 @@ namespace currency_converter
             amountEntry.TextChanged += (sender, args) =>
             {
                 currencyValueLabel.Text = "";
+                errorLabel.Text = "";
 
                 if (amountEntry.Text.Length != 0 && amountEntry.Text != null)
                 {
                     Device.OnPlatform(
                         Android: () => amountEntry.BackgroundColor = Color.Transparent,
-                        WinPhone: () => amountEntry.BackgroundColor = Color.Transparent,
-                        Default: () => amountEntry.BackgroundColor = Color.Transparent
+                        WinPhone: () => amountEntry.BackgroundColor = Color.Transparent
                     );
                 }
             };
 
             currenciesPicker.SelectedIndexChanged += (sender, args) =>
             {
+                currencyValueLabel.Text = "";
+                errorLabel.Text = "";
+
                 if (currenciesPicker.SelectedIndex != -1)
                 {
                     Device.OnPlatform(
                         Android: () => currenciesPicker.BackgroundColor = Color.Transparent,
-                        WinPhone: () => currenciesPicker.BackgroundColor = Color.Transparent,
-                        Default: () => currenciesPicker.BackgroundColor = Color.Transparent
+                        WinPhone: () => currenciesPicker.BackgroundColor = Color.Transparent
                     );
                 }
 
-                if (amountEntry.Text != null && amountEntry.Text.Length != 0 && currenciesPicker.SelectedIndex != -1)
+                if (currenciesPicker.SelectedIndex != -1 && amountEntry.Text != null && amountEntry.Text.Length != 0)
                 {
-                    //Debug.WriteLine("Valor: " + currenciesPicker.Items[currenciesPicker.SelectedIndex]);
-
-                    var uri = string.Format("http://download.finance.yahoo.com/d/quotes?f=sl1d1t1&s=EUR{0}=X", currenciesPicker.Items[currenciesPicker.SelectedIndex]);
-                    var cb = new AsyncCallback(CallHandler);
-                    CallWebAsync(uri, currencyValueLabel, cb);
+                    CurrencyModel c = DataAccess.GetDB.GetCurrency(currenciesPicker.Items[currenciesPicker.SelectedIndex]);
+                    currencyValueLabel.Text = "1 EUR = " + c.toCurrency + " " + currenciesPicker.Items[currenciesPicker.SelectedIndex];
                 }
             };
 
@@ -244,7 +258,23 @@ namespace currency_converter
             );
             confirm_btn.Clicked += OnConfirmButtonClicked;
 
-            this.Content = new StackLayout
+            ToolbarItem walletToolbarItem = new ToolbarItem();
+            Device.OnPlatform(
+                Android: () => walletToolbarItem = new ToolbarItem()
+                {
+                    Text = "Wallet",
+                    Order = ToolbarItemOrder.Primary
+                },
+                WinPhone: () => walletToolbarItem = new ToolbarItem()
+                {
+                    Text = "Confirm"
+                }
+            );
+            walletToolbarItem.Clicked += OnClickedWalletToolbarItem;
+
+            ToolbarItems.Add(walletToolbarItem);
+
+            Content = new StackLayout
             {
                 Children =
                 {
@@ -253,6 +283,7 @@ namespace currency_converter
                         VerticalOptions = LayoutOptions.CenterAndExpand,
                         Children =
                         {
+                            errorLabel,
                             operation,
                             operationPicker,
                             amountLabel,
@@ -274,12 +305,16 @@ namespace currency_converter
                 amountEntry.BackgroundColor = Color.Red;
                 currenciesPicker.BackgroundColor = Color.Red;
 
+                errorLabel.Text = "Missing operation, amount and currency!";
+
                 return false;
 
             }
             else if (operationPicker.SelectedIndex == -1 && (amountEntry.Text == null || amountEntry.Text.Length == 0)) {
                 operationPicker.BackgroundColor = Color.Red;
                 amountEntry.BackgroundColor = Color.Red;
+
+                errorLabel.Text = "Missing operation and amount!";
 
                 return false;
             }
@@ -288,6 +323,8 @@ namespace currency_converter
                 amountEntry.BackgroundColor = Color.Red;
                 currenciesPicker.BackgroundColor = Color.Red;
 
+                errorLabel.Text = "Missing amount and currency!";
+
                 return false;
             }
             else if (operationPicker.SelectedIndex == -1 && currenciesPicker.SelectedIndex == -1)
@@ -295,11 +332,15 @@ namespace currency_converter
                 operationPicker.BackgroundColor = Color.Red;
                 currenciesPicker.BackgroundColor = Color.Red;
 
+                errorLabel.Text = "Missing operation and currency!";
+
                 return false;
             }
             else if (operationPicker.SelectedIndex == -1)
             {
                 operationPicker.BackgroundColor = Color.Red;
+
+                errorLabel.Text = "Missing operation!";
 
                 return false;
             }
@@ -307,11 +348,16 @@ namespace currency_converter
             {
                 amountEntry.BackgroundColor = Color.Red;
 
+                errorLabel.Text = "Missing amount!";
+
                 return false;
             } 
             else if (currenciesPicker.SelectedIndex == -1)
             {
                 currenciesPicker.BackgroundColor = Color.Red;
+
+                errorLabel.Text = "Missing currency!";
+
                 return false;
             }
 
@@ -322,36 +368,105 @@ namespace currency_converter
         {
             if(CheckValues())
             {
+                string typeOfOperation = operationPicker.Items[operationPicker.SelectedIndex];
+                double amount = double.Parse(amountEntry.Text);
+                string code = currenciesPicker.Items[currenciesPicker.SelectedIndex];
+
+                switch (typeOfOperation)
+                {
+                    case "Add":
+                        Debug.WriteLine("Operation: " + typeOfOperation + " Amount: " + amount + " Code: " + code);
+                        AddWalletEntry(code, amount);
+                        break;
+                    case "Remove":
+                        Debug.WriteLine("Operation: " + typeOfOperation + " Amount: " + amount + " Code: " + code);
+                        RemoveWalletEntry(code, amount);
+                        break;
+                }
+
+                ClearInputValues();
+
                 Debug.WriteLine("Resposta: " + currencyValueLabel.Text);
+
+                /*WalletModel w = new WalletModel()
+                {
+                    code = currenciesPicker.Items[currenciesPicker.SelectedIndex],
+                    amount = double.Parse(amountEntry.Text)
+                };
+                DataAccess.GetDB.SaveWalletEntry(w);
+
+                DataAccess.GetDB.printWallet();*/
             }
         }
-
-        private void CallWebAsync(string uri, Label response, AsyncCallback cb)
+        
+        async void OnClickedWalletToolbarItem(object sender, EventArgs e)
         {
-            var request = HttpWebRequest.Create(uri);
-            request.Method = "GET";
-            var state = new Tuple<Label, WebRequest>(response, request);
-
-            request.BeginGetResponse(cb, state);
+            WalletPage newPage = new WalletPage();
+            await Navigation.PushAsync(newPage, true);
         }
 
-        private void CallHandler(IAsyncResult ar)
+        private void AddWalletEntry(string code, double amount)
         {
-            var state = (Tuple<Label, WebRequest>)ar.AsyncState;
-            var request = state.Item2;
+            DataAccess db = DataAccess.GetDB;
 
-            using (HttpWebResponse response = request.EndGetResponse(ar) as HttpWebResponse)
+            WalletModel w = db.GetWalletEntry(code);
+
+            if (w == null)
             {
-                if (response.StatusCode == HttpStatusCode.OK)
-                    using (StreamReader reader = new StreamReader(response.GetResponseStream()))
-                    {
-                        var content = reader.ReadToEnd();
+                Debug.WriteLine("Wallet Amount Nulo");
 
-                        var tokens = content.Split(',');
+                w = new WalletModel()
+                {
+                    code = currenciesPicker.Items[currenciesPicker.SelectedIndex],
+                    amount = double.Parse(amountEntry.Text)
+                };
 
-                        Device.BeginInvokeOnMainThread(() => state.Item1.Text = "1 EUR = " + tokens[1] + " " + currenciesPicker.Items[currenciesPicker.SelectedIndex]);
-                    }
+                db.SaveWalletEntry(w);
             }
+            else
+            {
+                Debug.WriteLine("Wallet Amount Existe");
+
+                w.amount += amount;
+
+                db.UpdateWalletEntry(w);
+            }
+
+            db.printWallet();
+        }
+
+        private void RemoveWalletEntry(string code, double amount)
+        {
+            DataAccess db = DataAccess.GetDB;
+
+            WalletModel w = db.GetWalletEntry(code);
+
+            if (w == null)
+            {
+                // TODO invocar label de erro antes de tudo para avisar que a wallet que pretende apagar nao existe
+            }
+            else
+            {
+                if(w.amount > amount)
+                {
+                    w.amount -= amount;
+
+                    db.UpdateWalletEntry(w);
+                }
+                else
+                {
+                    db.DeleteWalletEntry(w);
+                }
+            }
+
+            db.printWallet();
+        }
+
+        private void ClearInputValues()
+        {
+            operationPicker.SelectedIndex = -1;
+            currenciesPicker.SelectedIndex = -1;
+            amountEntry.Text = "";
         }
     }
 }

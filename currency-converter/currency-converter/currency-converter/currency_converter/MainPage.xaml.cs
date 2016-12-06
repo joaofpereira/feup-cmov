@@ -116,9 +116,10 @@ namespace currency_converter
             await Navigation.PushAsync(newPage, true);
         }
 
-        void OnWalletButtonClicked(object sender, EventArgs e)
+        async void OnWalletButtonClicked(object sender, EventArgs e)
         {
-
+            WalletPage newPage = new WalletPage();
+            await Navigation.PushAsync(newPage, true);
         }
     }
 }

@@ -22,13 +22,13 @@
     <AppXManifest Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\Core\AppxManifest.xml">
       <PackagePath>AppxManifest.xml</PackagePath>
       <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
-      <Modified>2016-12-05T23:47:01.610</Modified>
+      <Modified>2016-12-06T16:05:06.189</Modified>
     </AppXManifest>
   </ItemGroup>
   <ItemGroup>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\currency_converter.UWP.exe">
       <PackagePath>entrypoint\currency_converter.UWP.exe</PackagePath>
-      <Modified>2016-12-05T23:47:01.125</Modified>
+      <Modified>2016-12-06T16:05:05.652</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\.nuget\packages\Microsoft.CSharp\4.0.0\lib\netcore50\Microsoft.CSharp.dll">
       <PackagePath>Microsoft.CSharp.dll</PackagePath>
@@ -484,7 +484,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\currency_converter.dll">
       <PackagePath>currency_converter.dll</PackagePath>
-      <Modified>2016-12-05T23:46:59.340</Modified>
+      <Modified>2016-12-06T16:03:33.435</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\Properties\Default.rd.xml">
       <PackagePath>Properties\Default.rd.xml</PackagePath>
@@ -530,7 +530,7 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\resources\img\wallet-windows.png">
       <PackagePath>currency_converter\resources\img\wallet-windows.png</PackagePath>
-      <Modified>2016-12-03T20:10:29.729</Modified>
+      <Modified>2016-12-06T14:51:24.433</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\currency_converter.UWP.xr.xml">
       <PackagePath>currency_converter.UWP.xr.xml</PackagePath>
@@ -550,11 +550,11 @@
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\resources.pri">
       <PackagePath>resources.pri</PackagePath>
-      <Modified>2016-12-05T20:07:09.068</Modified>
+      <Modified>2016-12-06T10:51:54.780</Modified>
     </AppxPackagedFile>
     <AppxPackagedFile Include="C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.UWP\bin\x86\Debug\Core\currency_converter.UWP.exe">
       <PackagePath>currency_converter.UWP.exe</PackagePath>
-      <Modified>2016-12-05T23:47:01.608</Modified>
+      <Modified>2016-12-06T16:05:06.182</Modified>
     </AppxPackagedFile>
   </ItemGroup>
   <ItemGroup>
