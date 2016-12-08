@@ -1,7 +1,6 @@
 <XamlCompilerSaveState>
   <ReferenceAssemblyList>
-    <LocalAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter.windows\obj\debug\intermediatexaml\currency_converter.windows.exe" HashGuid="0bdc71d0-c522-f015-755f-9eb34baeb470" />
-    <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\debug\currency_converter.dll" HashGuid="e5e05572-c91e-3067-5abf-e066cbaf4ffe" />
+    <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\debug\currency_converter.dll" HashGuid="cb3bd76f-40a6-24a8-8991-0852dcc816e1" />
     <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\packages\sqlitepclraw.bundle_green.1.1.0\lib\win81\sqlitepclraw.batteries_green.dll" HashGuid="39f21040-4875-6272-89df-7d99d9436971" />
     <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\packages\sqlitepclraw.bundle_green.1.1.0\lib\win81\sqlitepclraw.batteries_v2.dll" HashGuid="2ac16958-7d08-0826-efe2-e0251f98c9e2" />
     <ReferenceAssembly PathName="c:\users\joao\documents\github\feup-cmov\currency-converter\currency-converter\packages\sqlitepclraw.core.1.1.0\lib\win81\sqlitepclraw.core.dll" HashGuid="5ecf9ccc-1b19-e615-1a4d-f3884e09019a" />

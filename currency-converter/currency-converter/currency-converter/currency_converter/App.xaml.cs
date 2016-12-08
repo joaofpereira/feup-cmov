@@ -2,9 +2,7 @@
 using currency_converter.model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+using System.Diagnostics;
 using Xamarin.Forms;
 
 namespace currency_converter
@@ -12,22 +10,27 @@ namespace currency_converter
     public partial class App : Application
     {
         public DataAccess db;
+        public HttpRequest httpRequest;
 
         public App()
         {
             db = DataAccess.GetDB;
+            httpRequest = new HttpRequest();
+
+            //db.DropTables();
+            db.CreateTablesIfNotExists();
+
+            List<CurrencyModel> currencies = db.GetAllCurrency();
+            httpRequest.RefreshRates(currencies, db);
+
+            db.printListOfCurrencies();
+
             MainPage = new NavigationPage(new MainPage());
         }
         
         protected override void OnStart()
         {
-            db.DropTables();
-            db.CreateTablesIfNotExists();
-
-            List<CurrencyModel> currencies = db.GetAllCurrency();
-            HttpRequest.RefreshRates(currencies, db);
-
-            db.printListOfCurrencies();
+            
         }
 
         protected override void OnSleep()

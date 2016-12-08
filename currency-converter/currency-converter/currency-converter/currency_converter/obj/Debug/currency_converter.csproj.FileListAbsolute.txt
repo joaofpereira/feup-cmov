@@ -16,9 +16,9 @@ C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\c
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\obj\Debug\currency_converter.App.xaml.g.cs
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\obj\Debug\currency_converter.MainPage.xaml.g.cs
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\obj\Debug\currency_converter.AddRemoveCurrencyPage.xaml.g.cs
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\obj\Debug\currency_converter.WalletPage.xaml.g.cs
+C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\obj\Debug\currency_converter.RatesPage.xaml.g.cs
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\obj\Debug\currency_converter.dll
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\obj\Debug\currency_converter.pdb
-C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\obj\Debug\currency_converter.csprojResolveAssemblyReference.cache
-C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\obj\Debug\currency_converter.WalletPage.xaml.g.cs
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\obj\Debug\currency_converter.dll.mdb
 C:\Users\joao\Documents\GitHub\feup-cmov\currency-converter\currency-converter\currency-converter\currency_converter\bin\Debug\currency_converter.dll.mdb

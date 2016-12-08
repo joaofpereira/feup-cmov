@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Xamarin.Forms;
 using currency_converter.model;
 using System;
+using currency_converter.utils;
 
 namespace currency_converter
 {
@@ -21,12 +22,13 @@ namespace currency_converter
         Entry amountEntry;
         Label currencyValueLabel;
         Label errorLabel;
+        int favouriteCurrencyIndex;
 
         public AddRemoveCurrencyPage()
         {
             List<CurrencyModel> dbContent = new List<CurrencyModel>();
             dbContent = DataAccess.GetDB.GetAllCurrency();
-
+            
             for (int i = 0; i < dbContent.Count; i++)
             {
                 Debug.WriteLine("Lista: Currency code: " + dbContent[i].code + " Currency name: " + dbContent[i].name + " Currency Value: " + dbContent[i].toCurrency);
@@ -34,6 +36,9 @@ namespace currency_converter
 
             for (int i = 0; i < dbContent.Count; i++)
             {
+                if (dbContent[i].isFavourite)
+                    favouriteCurrencyIndex = i;
+
                 currencies.Add(dbContent[i].code, dbContent[i]);
             }
 
@@ -164,6 +169,8 @@ namespace currency_converter
                 currenciesPicker.Items.Add(currencyName);
             }
 
+            currenciesPicker.SelectedIndex = favouriteCurrencyIndex;
+
             operationPicker.SelectedIndexChanged += (sender, args) =>
             {
                 if (operationPicker.SelectedIndex != -1)
@@ -204,8 +211,13 @@ namespace currency_converter
 
                 if (currenciesPicker.SelectedIndex != -1 && amountEntry.Text != null && amountEntry.Text.Length != 0)
                 {
-                    CurrencyModel c = DataAccess.GetDB.GetCurrency(currenciesPicker.Items[currenciesPicker.SelectedIndex]);
-                    currencyValueLabel.Text = "1 EUR = " + c.toCurrency + " " + currenciesPicker.Items[currenciesPicker.SelectedIndex];
+                    CurrencyModel euroC = Utils.GetEuroCurrency(dbContent);
+                    CurrencyModel mainC = dbContent[favouriteCurrencyIndex];
+                    CurrencyModel selectedC = dbContent[currenciesPicker.SelectedIndex];
+
+                    double rate_main_selected = Utils.ConvertValue(euroC, mainC, selectedC);
+                     
+                    currencyValueLabel.Text = "1 " + mainC.code + " = " + string.Format("{0:0.0000}", rate_main_selected) + " " + selectedC.code;
                 }
             };
 
@@ -267,12 +279,30 @@ namespace currency_converter
                 },
                 WinPhone: () => walletToolbarItem = new ToolbarItem()
                 {
-                    Text = "Confirm"
+                    Text = "Wallet",
+                    Order = ToolbarItemOrder.Secondary
+                    
                 }
             );
             walletToolbarItem.Clicked += OnClickedWalletToolbarItem;
 
+            ToolbarItem viewRatesToolbarItem = new ToolbarItem();
+            Device.OnPlatform(
+                Android: () => viewRatesToolbarItem = new ToolbarItem()
+                {
+                    Text = "View All Rates",
+                    Order = ToolbarItemOrder.Secondary
+                },
+                WinPhone: () => viewRatesToolbarItem = new ToolbarItem()
+                {
+                    Text = "View Rates",
+                    Order = ToolbarItemOrder.Secondary
+                }
+            );
+            viewRatesToolbarItem.Clicked += OnClickedViewRatesToolbarItem;
+
             ToolbarItems.Add(walletToolbarItem);
+            ToolbarItems.Add(viewRatesToolbarItem);
 
             Content = new StackLayout
             {
@@ -387,21 +417,18 @@ namespace currency_converter
                 ClearInputValues();
 
                 Debug.WriteLine("Resposta: " + currencyValueLabel.Text);
-
-                /*WalletModel w = new WalletModel()
-                {
-                    code = currenciesPicker.Items[currenciesPicker.SelectedIndex],
-                    amount = double.Parse(amountEntry.Text)
-                };
-                DataAccess.GetDB.SaveWalletEntry(w);
-
-                DataAccess.GetDB.printWallet();*/
             }
         }
         
         async void OnClickedWalletToolbarItem(object sender, EventArgs e)
         {
             WalletPage newPage = new WalletPage();
+            await Navigation.PushAsync(newPage, true);
+        }
+
+        async void OnClickedViewRatesToolbarItem(object sender, EventArgs e)
+        {
+            RatesPage newPage = new RatesPage();
             await Navigation.PushAsync(newPage, true);
         }
 
@@ -465,7 +492,7 @@ namespace currency_converter
         private void ClearInputValues()
         {
             operationPicker.SelectedIndex = -1;
-            currenciesPicker.SelectedIndex = -1;
+            currenciesPicker.SelectedIndex = favouriteCurrencyIndex;
             amountEntry.Text = "";
         }
     }

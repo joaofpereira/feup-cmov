@@ -5,9 +5,6 @@ using System.Diagnostics;
 
 using currency_converter.model;
 using currency_converter.API;
-using System;
-using System.Net;
-using System.IO;
 
 namespace currency_converter
 {

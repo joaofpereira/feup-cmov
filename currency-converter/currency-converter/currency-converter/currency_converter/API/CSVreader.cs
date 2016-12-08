@@ -31,7 +31,12 @@ namespace currency_converter.API
                     var currencyLine = reader.ReadLine();
                     var tokens = currencyLine.Split(',');
 
-                    var vCurrency = new CurrencyModel(tokens[0], tokens[1]);
+                    CurrencyModel vCurrency = null;
+
+                    if (tokens[0] == "EUR")
+                        vCurrency = new CurrencyModel(tokens[0], tokens[1], true);
+                    else
+                        vCurrency = new CurrencyModel(tokens[0], tokens[1]);
 
                     Debug.WriteLine("token code: " + vCurrency.code + " token name: " + vCurrency.name);
                     
@@ -47,7 +52,7 @@ namespace currency_converter.API
 
             for ( int i = 0; i < dbContent.Count; i++)
             {
-                Debug.WriteLine("Currency code: " + dbContent[i].code + " Currency name: " + dbContent[i].name);
+                Debug.WriteLine("Currency code: " + dbContent[i].code + " Currency name: " + dbContent[i].name + "IsFavourite: " + dbContent[i].isFavourite);
             }
 
         }

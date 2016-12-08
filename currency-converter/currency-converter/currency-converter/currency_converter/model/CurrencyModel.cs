@@ -10,6 +10,8 @@ namespace currency_converter.model
         public string name { get; set; }
         [NotNull]
         public double toCurrency { get; set; }
+        [NotNull]
+        public bool isFavourite { get; set; }
 
         public CurrencyModel() { }
         
@@ -17,14 +19,24 @@ namespace currency_converter.model
         {
             this.code = code;
             this.name = name;
-            this.toCurrency = 1;
+            toCurrency = 1;
+            isFavourite = false;
         }
 
-        public CurrencyModel(string code, string name, double toCurrency)
+        public CurrencyModel(string code, string name, bool isFavourite)
+        {
+            this.code = code;
+            this.name = name;
+            toCurrency = 1;
+            this.isFavourite = isFavourite;
+        }
+
+        public CurrencyModel(string code, string name, double toCurrency, bool isFavourite)
         {
             this.code = code;
             this.name = name;
             this.toCurrency = toCurrency;
+            this.isFavourite = isFavourite;
         }
     }
 }
